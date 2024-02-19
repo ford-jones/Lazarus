@@ -1,0 +1,66 @@
+//              .,                                                                                                          .(*      ,*,                
+//                ((.     (.    ,                                                                          */*  ,%##%%%%%%%%%%%%%%%#(*           .      
+//         .//**/#%%%%%%%%%%%%%%#*   .,                                                             ,**   .(%%%%%%#(******,***,/#%%%%%%%%###(/,         
+//             #%%%#*.#%/***,,..,*(%(.    ,,                                                     *     /#%##/*****,,,,,,,,,.,...,,#%,  .#%#.            
+//    .,     *%&#/   %#**,,*..,....,.*#,     ..                                               *     ,%#%#/*,,*,*,,,,,.,.,,.,...,...((     /#(//*/**.    
+//           (%#    *#*...,.,,..........*/      ,                                          .      *#%(#(**,,,,,,,,..,..,..,,........(.     *#(          
+//           *#     *(......,.............(#      ,                                       .     ,((, ##,,,.....,.................. ./       **  .,.     
+//            *     ./........ ...........*#*,                                          ,      ,(,  ./*,,,..,,.................  .. *                   
+//                   /, ........    ... ../(  *.                                              ,*     /,...,,.,,.....   ............**                   
+//                    *... .............  /    ,                                             *,      ,*,,............  ,....     ...                    
+//                     *.   ..... .... ..*                                                  .*        *...................   .  ...                     
+//               *       ... ......... ,.                                                   ,          ... ..........  ...     ..       ,               
+//                ((        .,.,.. ...                                                                   .  . .. .  .  ... .  ..      //                
+//              ,/(#%#*                                                                                     .....  ... ......       .#*                 
+//                 /((##%#(*                                                                                      .......        ,(#(*,                 
+//               (.           .,,,,,                                                                                        .*#%%(                      
+//                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+/*  LAZARUS ENGINE */
+
+#include <vector>
+#include <string>
+#include "glm/glm.hpp"
+#include "../../materials/hdr/materialLoader.h"
+
+using std::vector;
+using std::string;
+using glm::vec3;
+using glm::vec2;
+
+#ifndef MESH_LOADER_H
+#define MESH_LOADER_H
+
+class MeshLoader 
+{
+    public:
+        FILE *file;                                                                                             //  A file returned from the absolute path
+
+        vector<unsigned int> vertexIndices, uvIndices, normalIndices;                                           //  Vector containing matched index positions
+        vector<vec3> temp_vertices;                                                                             //  Temporary buffer for storing each set of 3 corresponding vertex indexes
+        vector<vec2> temp_uvs;                                                                                  //  Temporary buffer for storing each set of 3 corresponding uv indexes
+        vector<vec3> temp_normals;                                                                              //  Temporary buffer for storing each set of 3 corresponding normal indexes
+        vector<vec3> temp_diffuse;
+        vector<string> fileVec;                                                                                 //  A vector containing files who's name matches the function input at the absolute path
+
+        string foundMaterial;
+        
+        string findMesh(string filename);
+        bool loadMesh(
+            const char *path,                                                                                       //  The absolute path to the file readers target
+            vector<vec3> &out_vertices,                                                                             //  Location of the loaders vertices vector output
+            vector<vec2> &out_uvs,                                                                                  //  Location of the loaders uv vector output
+            vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
+            vector<vec3> &out_diffuse
+        );
+
+    private:
+        vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
+        vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector
+        vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
+        char *matFn;
+
+        MaterialLoader *matFinder;
+        MaterialLoader *matLoader;
+};
+
+#endif
