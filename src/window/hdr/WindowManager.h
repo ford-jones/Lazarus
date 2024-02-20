@@ -21,9 +21,9 @@ class WindowManager
 
         virtual ~WindowManager();
 
-    private:
-        int errorCode;
-        const char** errorMessage;
+    // private:
+    //     int errorCode;
+    //     const char** errorMessage;
 };
 
 #endif

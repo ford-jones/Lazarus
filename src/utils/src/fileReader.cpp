@@ -31,7 +31,7 @@ using std::string;
 
 const char *FileReader::readShader(string filename)
 {
-    path = "renderer/shaders/" + filename;
+    path = "src/shaders/" + filename;
 
     if(fs::exists(path))
     {
