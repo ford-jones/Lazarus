@@ -6,11 +6,13 @@ int main()
     eventManager        =   new EventManager;
     lightBuilder        =   new Light;
     cameraBuilder       =   new Camera;
-    houseBuilder        =   new Mesh;
+    beachballBuilder    =   new Mesh;
     transformer         =   new Transform;
     shader              =   new Shader;
 
     windowBuilder->Initialise();
+    //  TODO: create window config functions which take optional params
+    //      : call them here
     
     win = glfwGetCurrentContext();
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
@@ -34,8 +36,7 @@ int main()
     light   = lightBuilder->createAmbientLight(shaderProgram, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0);
     camera  = cameraBuilder->createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-    house   = houseBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/house.obj");
-
+    beachball   = beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj");
 
     while(!glfwWindowShouldClose(win))
     {
@@ -55,12 +56,12 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        if( house.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( beachball.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            // house = transformer->applyRotation(house, eventManager->xangle, eventManager->yangle);
-            house = transformer->applyTranslation(house, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
-            houseBuilder->instantiateMesh(house);
-            houseBuilder->drawMesh(house);
+            beachball = transformer->applyRotation(beachball, eventManager->xangle, eventManager->yangle);
+            beachball = transformer->applyTranslation(beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
+            beachballBuilder->instantiateMesh(beachball);
+            beachballBuilder->drawMesh(beachball);
         }
         else
         {
@@ -82,7 +83,7 @@ int main()
     
     delete lightBuilder;
     delete cameraBuilder;
-    delete houseBuilder;
+    delete beachballBuilder;
     delete transformer;
     delete shader;
     delete windowBuilder;

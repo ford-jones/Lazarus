@@ -42,7 +42,6 @@ namespace fs = std::filesystem;
 
 string MeshLoader::findMesh(string filepath) 
 {
-    // fs::path fn     =   "assets/mesh/" + filepath;                                              //  Create a target path, comprised of the target file's name prefixed by it's directory
     string fns      =   fs::absolute(filepath).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
 
     fileVec.push_back(fns);                                                                     //  Push the absolute path into a temporary storage buffer

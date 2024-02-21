@@ -25,12 +25,19 @@
 class WindowManager
 {
     public:
-        int height, width;
-        const char *title;
-        GLFWmonitor *monitor;
-        GLFWwindow *fullscreen, *window;
+        struct Window
+        {
+            int height, width;
+            const char *title;
+            GLFWmonitor *monitor;
+            GLFWwindow *fullscreen;
+        };
+
+        Window frame;
+        GLFWwindow *window;
 
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
+
         int Initialise();
 
         virtual ~WindowManager();
