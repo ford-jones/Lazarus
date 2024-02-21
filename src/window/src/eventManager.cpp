@@ -23,17 +23,28 @@
 
 #include "../hdr/eventManager.h"
 
-int EventManager::processEvents(GLFWwindow *win)
+
+int EventManager::monitorEvents()
 {
-    up = glfwGetKey(win, GLFW_KEY_UP);
-    down = glfwGetKey(win, GLFW_KEY_DOWN);
+    glfwPollEvents();
+    win = glfwGetCurrentContext();
+
+    this->updateKeyState();
+};
+
+void EventManager::updateKeyState()
+{
+    up      = glfwGetKey(win, GLFW_KEY_UP);
+    down    = glfwGetKey(win, GLFW_KEY_DOWN);
+    left    = glfwGetKey(win, GLFW_KEY_LEFT);
+    right   = glfwGetKey(win, GLFW_KEY_RIGHT);
 
     if (up == GLFW_PRESS)
     {
         xangle += 0.0;
         yangle += 0.5;
 
-        return 1;
+        return;
     };
 
     if (down == GLFW_PRESS)
@@ -41,8 +52,25 @@ int EventManager::processEvents(GLFWwindow *win)
         xangle += 0.0;
         yangle += -0.5;
 
-        return 1;
+        return;
     };
 
-    return 1;
+    if (left == GLFW_PRESS)
+    {
+        xangle += 0.5;
+        yangle += 0.0;
+
+        return;
+    };
+
+    if (right == GLFW_PRESS)
+    {
+        xangle += -0.5;
+        yangle += 0.0;
+
+        return;
+    };
+
+    xangle = 0.0;
+    yangle = 0.0;
 };

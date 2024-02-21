@@ -40,9 +40,8 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         /*Setup*/
-        glfwPollEvents();
-        eventManager->processEvents(win);
-        
+        eventManager->monitorEvents();
+
         glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
 
         /*Render*/
@@ -58,7 +57,8 @@ int main()
 
         if( house.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            house = transformer->applyRotation(house, eventManager->xangle, eventManager->yangle);
+            // house = transformer->applyRotation(house, eventManager->xangle, eventManager->yangle);
+            house = transformer->applyTranslation(house, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
             houseBuilder->instantiateMesh(house);
             houseBuilder->drawMesh(house);
         }

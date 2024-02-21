@@ -25,12 +25,14 @@
 class EventManager
 {
     public:
+        int monitorEvents();
+        char *keyState;
         float xangle, yangle;
-        int processEvents(GLFWwindow *win);
 
     private:
-        int up;
-        int down;
+        void updateKeyState();
+        int up, down, left, right;
+        GLFWwindow *win;
 };
 
 #endif
