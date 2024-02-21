@@ -2,21 +2,24 @@
 
 int main()
 {
+    windowBuilder       =   new WindowManager(800, 600, "Lazarus::Experimental", NULL, NULL);
+    eventManager        =   new EventManager;
     lightBuilder        =   new Light;
     cameraBuilder       =   new Camera;
     houseBuilder        =   new Mesh;
+    transformer         =   new Transform;
     shader              =   new Shader;
-    // transformer         =   new Transform;
-    windowBuilder       =   new WindowManager(800, 600, "Lazarus::Experimental", NULL, NULL);
 
     windowBuilder->Initialise();
-
-    printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-    printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
     
     win = glfwGetCurrentContext();
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
     glewInit();                                                                                                         //  Initialise GLEW graphics library
+
+    printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
+    printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+    std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
+    printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
 
     shaderProgram = shader->initialiseShader();
 
@@ -26,43 +29,43 @@ int main()
 
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
 
-    glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
-
     glUseProgram        (shaderProgram);                                                                                //  Use the newly created shader program
 
-    //  Light + Camera
     light   = lightBuilder->createAmbientLight(shaderProgram, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0);
     camera  = cameraBuilder->createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    if( camera.projectionLocation >= 0 )
-    {
-        lightBuilder->initialiseLight(light); //  Pass the values for each uniform into the shader program
-        cameraBuilder->initialiseCamera(camera);
-    }
-    else
-    {
-        std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
-    };
 
-    // //  House
-    house = houseBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/house.obj");
-    if( house.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-    {
-        // house = transformer->applyTranslation(house, (xangle / 50), 0.0f, (yangle / 50));
-        houseBuilder->instantiateMesh(house);
-    }
-    else
-    {
-        std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-    };
+    house   = houseBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/house.obj");
+
 
     while(!glfwWindowShouldClose(win))
     {
         /*Setup*/
         glfwPollEvents();
+        eventManager->processEvents(win);
+        
         glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
 
         /*Render*/
-        houseBuilder->drawMesh(house);
+        if( camera.projectionLocation >= 0 )
+        {
+            lightBuilder->initialiseLight(light); //  Pass the values for each uniform into the shader program
+            cameraBuilder->initialiseCamera(camera);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
+        };
+
+        if( house.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            house = transformer->applyRotation(house, eventManager->xangle, eventManager->yangle);
+            houseBuilder->instantiateMesh(house);
+            houseBuilder->drawMesh(house);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
 
         /*Check errors*/
         errorCode = glfwGetError(errorMessage); 
@@ -73,7 +76,6 @@ int main()
 
             return errorCode;
         };
-        
         /*Swap Buffers*/
         glfwSwapBuffers(win);
     };
@@ -81,8 +83,10 @@ int main()
     delete lightBuilder;
     delete cameraBuilder;
     delete houseBuilder;
+    delete transformer;
     delete shader;
     delete windowBuilder;
+    delete eventManager;
     
     return 0;
 };

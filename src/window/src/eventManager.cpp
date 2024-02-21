@@ -16,26 +16,33 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
-#include <iostream>
 
-#include "../../shaders/shaderProgram/hdr/shader.h"
-
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
-#ifndef GL_CONTEXT_H
-#define GL_CONTEXT_H
-
-class OpenGLContext
-{
-public:
-    OpenGLContext();
-    virtual ~OpenGLContext();
-
-private:
-    GLuint shaderProgram;                                                               //  Stores the shader program being passed to OpenGL
-    Shader *shader;
-};
-
+#ifndef __GLEW_H__
+    #include "../../utils/hdr/gl_includes.h"
 #endif
+
+#include "../hdr/eventManager.h"
+
+int EventManager::processEvents(GLFWwindow *win)
+{
+    up = glfwGetKey(win, GLFW_KEY_UP);
+    down = glfwGetKey(win, GLFW_KEY_DOWN);
+
+    if (up == GLFW_PRESS)
+    {
+        xangle += 0.0;
+        yangle += 0.5;
+
+        return 1;
+    };
+
+    if (down == GLFW_PRESS)
+    {
+        xangle += 0.0;
+        yangle += -0.5;
+
+        return 1;
+    };
+
+    return 1;
+};

@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "./src/window/hdr/WindowManager.h"
+#include "./src/window/hdr/eventManager.h"
 #include "./src/mesh/hdr/mesh.h"
 #include "./src/transforms/hdr/transforms.h"
 #include "./src/shaders/shaderProgram/hdr/shader.h"
@@ -25,17 +26,16 @@ int errorCode;
 const char** errorMessage;
 
 WindowManager *windowBuilder;
-// int errorCode;
+EventManager  *eventManager;
+
 Shader *shader;
 Light *lightBuilder;
 Camera *cameraBuilder;
-Mesh *cubeBuilder;
 Mesh *houseBuilder;
 Transform *transformer;
 
 Light::AmbientLight light;
 Camera::StaticCamera camera;
-Mesh::TriangulatedMesh cube;
 Mesh::TriangulatedMesh house;
 
 #endif

@@ -16,26 +16,21 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+
 #include <iostream>
 
-#include "../../shaders/shaderProgram/hdr/shader.h"
+#ifndef LAZARUS_EVENT_MANAGER_H
+#define LAZARUS_EVENT_MANAGER_H
 
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
-#ifndef GL_CONTEXT_H
-#define GL_CONTEXT_H
-
-class OpenGLContext
+class EventManager
 {
-public:
-    OpenGLContext();
-    virtual ~OpenGLContext();
+    public:
+        float xangle, yangle;
+        int processEvents(GLFWwindow *win);
 
-private:
-    GLuint shaderProgram;                                                               //  Stores the shader program being passed to OpenGL
-    Shader *shader;
+    private:
+        int up;
+        int down;
 };
 
 #endif
