@@ -23,7 +23,7 @@
 
 #include "../hdr/mesh.h"
 
-Mesh::TriangulatedMesh Mesh::createTriangulatedMesh(GLuint shader, string filepath)
+Mesh::TriangulatedMesh *Mesh::createTriangulatedMesh(GLuint shader, string filepath)
 {
     finder = new MeshLoader();
     loader = new MeshLoader();
@@ -47,10 +47,12 @@ Mesh::TriangulatedMesh Mesh::createTriangulatedMesh(GLuint shader, string filepa
     delete finder;
     delete loader;
 
-    return triangulatedMesh;
+    return &triangulatedMesh;
 };
 
-Mesh::TriangulatedMesh Mesh::initialiseMesh(TriangulatedMesh meshData)
+//  TODO: Investigate why an invocation from this function triggers a SIGTRAP SIGSEGV
+
+Mesh::TriangulatedMesh *Mesh::initialiseMesh(TriangulatedMesh &meshData)
 {
     glGenVertexArrays           (1, &VAO);                                                                                                  //  Generate a vertex array object to store the buffers
 	glBindVertexArray           (VAO);                                                                                                      //  Bind the VAO to this openGL context
@@ -74,17 +76,17 @@ Mesh::TriangulatedMesh Mesh::initialiseMesh(TriangulatedMesh meshData)
 
     this->checkErrors("initialiseMesh");
 
-    return meshData;
+    return &meshData;
 };
 
-void Mesh::loadMesh(TriangulatedMesh meshData)
+void Mesh::loadMesh(TriangulatedMesh &meshData)
 {
     glUniformMatrix4fv(meshData.modelviewUniformLocation, 1, GL_FALSE, &meshData.modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
 
     this->checkErrors("loadMesh");
 };
 
-void Mesh::drawMesh(TriangulatedMesh meshData)
+void Mesh::drawMesh(TriangulatedMesh &meshData)
 {
     glDrawArrays(GL_TRIANGLES, 0, meshData.vertices.size());                                                                                //  Draw the contents of the enabled VAO's stored in this context
 

@@ -25,8 +25,8 @@
 class Transform
 {
     public:
-        Mesh::TriangulatedMesh applyRotation(Mesh::TriangulatedMesh mesh, float x, float y);
-        Mesh::TriangulatedMesh applyTranslation(Mesh::TriangulatedMesh mesh, float x, float y, float z);
+        Mesh::TriangulatedMesh *applyRotation(Mesh::TriangulatedMesh &mesh, float x, float y);
+        Mesh::TriangulatedMesh *applyTranslation(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
 };
 
 #endif

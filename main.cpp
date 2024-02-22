@@ -7,14 +7,14 @@ int main()
     lightBuilder        =   new Light;
     cameraBuilder       =   new Camera;
     worldBuilder        =   new Mesh;
+    world               =   new Mesh::TriangulatedMesh;
     beachballBuilder    =   new Mesh;
+    beachball           =   new Mesh::TriangulatedMesh;
     transformer         =   new Transform;
     shader              =   new Shader;
 
     windowBuilder->Initialise();
-    //  TODO: create window config functions which take optional params
-    //      : call them here
-    
+
     win = glfwGetCurrentContext();
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
     glewInit();                                                                                                         //  Initialise GLEW graphics library
@@ -58,25 +58,25 @@ int main()
         };
 
         
-        if( world.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            world = worldBuilder->initialiseMesh(world);
-            worldBuilder->loadMesh(world);
-            worldBuilder->drawMesh(world);
+            world = worldBuilder->initialiseMesh(*world);
+            worldBuilder->loadMesh(*world);
+            worldBuilder->drawMesh(*world);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        if( beachball.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = transformer->applyRotation(beachball, eventManager->xangle, eventManager->yangle);
-            beachball = transformer->applyTranslation(beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
+            beachball = transformer->applyRotation(*beachball, eventManager->xangle, eventManager->yangle);
+            beachball = transformer->applyTranslation(*beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
 
-            beachball = beachballBuilder->initialiseMesh(beachball);
-            beachballBuilder->loadMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
+            beachball = beachballBuilder->initialiseMesh(*beachball);
+            beachballBuilder->loadMesh(*beachball);
+            beachballBuilder->drawMesh(*beachball);
         }
         else
         {
@@ -100,7 +100,9 @@ int main()
     delete lightBuilder;
     delete cameraBuilder;
     delete worldBuilder;
+    delete world;
     delete beachballBuilder;
+    delete beachball;
     delete transformer;
     delete shader;
     delete windowBuilder;

@@ -37,7 +37,7 @@ Transform *transformer;
 
 Light::AmbientLight light;
 Camera::StaticCamera camera;
-Mesh::TriangulatedMesh world;
-Mesh::TriangulatedMesh beachball;
+Mesh::TriangulatedMesh *world;
+Mesh::TriangulatedMesh *beachball;
 
 #endif
