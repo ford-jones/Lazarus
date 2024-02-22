@@ -6,6 +6,7 @@ int main()
     eventManager        =   new EventManager;
     lightBuilder        =   new Light;
     cameraBuilder       =   new Camera;
+    worldBuilder        =   new Mesh;
     beachballBuilder    =   new Mesh;
     transformer         =   new Transform;
     shader              =   new Shader;
@@ -35,7 +36,7 @@ int main()
 
     light   = lightBuilder->createAmbientLight(shaderProgram, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0);
     camera  = cameraBuilder->createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
+    world   = worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj");
     beachball   = beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj");
 
     while(!glfwWindowShouldClose(win))
@@ -56,17 +57,32 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
+        
+        if( world.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            world = worldBuilder->initialiseMesh(world);
+            worldBuilder->loadMesh(world);
+            worldBuilder->drawMesh(world);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
+
         if( beachball.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = transformer->applyRotation(beachball, eventManager->xangle, eventManager->yangle);
             beachball = transformer->applyTranslation(beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
-            beachballBuilder->instantiateMesh(beachball);
+
+            beachball = beachballBuilder->initialiseMesh(beachball);
+            beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
+
 
         /*Check errors*/
         errorCode = glfwGetError(errorMessage); 
@@ -80,9 +96,10 @@ int main()
         /*Swap Buffers*/
         glfwSwapBuffers(win);
     };
-    
+
     delete lightBuilder;
     delete cameraBuilder;
+    delete worldBuilder;
     delete beachballBuilder;
     delete transformer;
     delete shader;

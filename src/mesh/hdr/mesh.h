@@ -50,6 +50,8 @@ class Mesh
             const char* filepath;
 
             vector<vec3> vertices;                                                              //  Buffer to store vertex data
+            vector<vec3> normals;                                                               //  Buffer to store normals data
+            vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
         };
@@ -58,11 +60,15 @@ class Mesh
         TriangulatedMesh createTriangulatedMesh(GLuint shader, string filepath);
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
-        void instantiateMesh(TriangulatedMesh meshData);
+        TriangulatedMesh initialiseMesh(TriangulatedMesh meshData);
+        void loadMesh(TriangulatedMesh meshData);
         void drawMesh(TriangulatedMesh meshData);
         virtual ~Mesh();
 
     private:
+        void checkErrors(char invocator[]);
+        void releaseMesh();
+
         int errorCode;
         vector<vec3> vertices;                                                              //  Buffer to store vertex data
         vector<vec2> uvs;                                                                   //  Buffer to uv data

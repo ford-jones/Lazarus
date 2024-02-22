@@ -31,11 +31,13 @@ EventManager  *eventManager;
 Shader *shader;
 Light *lightBuilder;
 Camera *cameraBuilder;
+Mesh *worldBuilder;
 Mesh *beachballBuilder;
 Transform *transformer;
 
 Light::AmbientLight light;
 Camera::StaticCamera camera;
+Mesh::TriangulatedMesh world;
 Mesh::TriangulatedMesh beachball;
 
 #endif
