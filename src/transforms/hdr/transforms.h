@@ -18,6 +18,7 @@
 /*  LAZARUS ENGINE */
 
 #include "../../mesh/hdr/mesh.h"
+#include <memory>
 
 #ifndef LAZARUS_TRANSFORMS_H
 #define LAZARUS_TRANSFORMS_H
@@ -25,8 +26,8 @@
 class Transform
 {
     public:
-        Mesh::TriangulatedMesh *applyRotation(Mesh::TriangulatedMesh &mesh, float x, float y);
-        Mesh::TriangulatedMesh *applyTranslation(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
+        std::shared_ptr<Mesh::TriangulatedMesh> applyTranslation(std::shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y, float z);
+        std::shared_ptr<Mesh::TriangulatedMesh> applyRotation(std::shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y);
 };
 
 #endif

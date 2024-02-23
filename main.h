@@ -3,6 +3,7 @@
 #endif
 
 #include <iostream>
+#include <memory>
 
 #include "./src/window/hdr/WindowManager.h"
 #include "./src/window/hdr/eventManager.h"
@@ -37,7 +38,9 @@ Transform *transformer;
 
 Light::AmbientLight light;
 Camera::StaticCamera camera;
-Mesh::TriangulatedMesh *world;
-Mesh::TriangulatedMesh *beachball;
+// Mesh::TriangulatedMesh *world;
+// Mesh::TriangulatedMesh *beachball;
+std::shared_ptr<Mesh::TriangulatedMesh> beachball;
+std::shared_ptr<Mesh::TriangulatedMesh> world;
 
 #endif

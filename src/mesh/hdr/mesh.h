@@ -22,6 +22,7 @@
 #include <string>
 #include <time.h>
 #include <stdlib.h>
+#include <memory>
 
 #include "../hdr/meshLoader.h"
 
@@ -57,10 +58,10 @@ class Mesh
         };
 
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
-        TriangulatedMesh *createTriangulatedMesh(GLuint shader, string filepath);
+        std::shared_ptr<TriangulatedMesh> createTriangulatedMesh(GLuint shader, string filepath);
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
-        TriangulatedMesh *initialiseMesh(TriangulatedMesh &meshData);
+        std::shared_ptr<TriangulatedMesh> initialiseMesh(std::shared_ptr<TriangulatedMesh> meshData);
         void loadMesh(TriangulatedMesh &meshData);
         void drawMesh(TriangulatedMesh &meshData);
         virtual ~Mesh();
@@ -80,7 +81,7 @@ class Mesh
 
         MeshLoader *finder;
         MeshLoader *loader;
-        TriangulatedMesh triangulatedMesh;
+        std::shared_ptr<TriangulatedMesh> triangulatedMesh;
 
 };
 

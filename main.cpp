@@ -7,9 +7,10 @@ int main()
     lightBuilder        =   new Light;
     cameraBuilder       =   new Camera;
     worldBuilder        =   new Mesh;
-    world               =   new Mesh::TriangulatedMesh;
+    // world               =   new Mesh::TriangulatedMesh;
     beachballBuilder    =   new Mesh;
-    beachball           =   new Mesh::TriangulatedMesh;
+    // beachball           =   new Mesh::TriangulatedMesh;
+    // beachball               =   std::make_shared<Mesh::TriangulatedMesh>();
     transformer         =   new Transform;
     shader              =   new Shader;
 
@@ -36,8 +37,8 @@ int main()
 
     light   = lightBuilder->createAmbientLight(shaderProgram, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0);
     camera  = cameraBuilder->createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    world   = worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj");
-    beachball   = beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj");
+    world   = std::move(worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj"));
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj"));
 
     while(!glfwWindowShouldClose(win))
     {
@@ -60,7 +61,7 @@ int main()
         
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            world = worldBuilder->initialiseMesh(*world);
+            world = worldBuilder->initialiseMesh(world);
             worldBuilder->loadMesh(*world);
             worldBuilder->drawMesh(*world);
         }
@@ -71,10 +72,10 @@ int main()
 
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = transformer->applyRotation(*beachball, eventManager->xangle, eventManager->yangle);
-            beachball = transformer->applyTranslation(*beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
+            beachball = transformer->applyRotation(beachball, eventManager->xangle, eventManager->yangle);
+            beachball = transformer->applyTranslation(beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
 
-            beachball = beachballBuilder->initialiseMesh(*beachball);
+            beachball = beachballBuilder->initialiseMesh(beachball);
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
         }
@@ -100,9 +101,9 @@ int main()
     delete lightBuilder;
     delete cameraBuilder;
     delete worldBuilder;
-    delete world;
+    // delete world;
     delete beachballBuilder;
-    delete beachball;
+    // delete beachball;
     delete transformer;
     delete shader;
     delete windowBuilder;
