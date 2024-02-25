@@ -25,8 +25,8 @@
 
 GLuint Shader::initialiseShader()
 {
-    vertReader      =   new FileReader;
-    fragReader      =   new FileReader;
+    vertReader = std::make_unique<FileReader>();
+    fragReader = std::make_unique<FileReader>();
 
     vertShaderProgram   =   vertReader->readShader("shader.vert");                                                      //  Retrieve the vertex shader file contents through stringstream
     fragShaderProgram   =   fragReader->readShader("shader.frag");                                                      //  Retrieve the fragment shader file contents through stringstream
@@ -73,9 +73,6 @@ GLuint Shader::initialiseShader()
 
 Shader::~Shader()
 {
-    delete fragReader;
-    delete vertReader;
-
     glDeleteShader          (vertShader);
     glDeleteShader          (fragShader);
 };

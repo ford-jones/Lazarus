@@ -18,11 +18,14 @@
 /*  LAZARUS ENGINE */
 
 #include <iostream>
+#include <memory>
 #include "../../../utils/hdr/fileReader.h"
 
 #define GREEN_TEXT "\x1b[32m"
 #define RESET_TEXT "\x1b[37m"
 #define RED_TEXT  "\x1b[31m"
+
+using std::unique_ptr;
 
 #ifndef LAZARUS_SHADER_H
 #define LAZARUS_SHADER_H
@@ -34,8 +37,8 @@ class Shader
         virtual ~Shader();
 
     private: 
-        FileReader *vertReader;                                                             //  Vertex GLSL file reader 
-        FileReader *fragReader;                                                             //  Fragment GLSL file reader
+        unique_ptr<FileReader> vertReader;                                                             //  Vertex GLSL file reader 
+        unique_ptr<FileReader> fragReader;                                                             //  Fragment GLSL file reader
 
         const char *vertShaderProgram;                                                      //  GLSL Vertex shader program read from stringstream
         const char *fragShaderProgram;                                                      //  GLSL Fragment shader program read from stringstream
