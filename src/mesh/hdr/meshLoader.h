@@ -1,5 +1,5 @@
-//              .,                                                                                                          .(*      ,*,                
 //                ((.     (.    ,                                                                          */*  ,%##%%%%%%%%%%%%%%%#(*           .      
+//              .,                                                                                                          .(*      ,*,                
 //         .//**/#%%%%%%%%%%%%%%#*   .,                                                             ,**   .(%%%%%%#(******,***,/#%%%%%%%%###(/,         
 //             #%%%#*.#%/***,,..,*(%(.    ,,                                                     *     /#%##/*****,,,,,,,,,.,...,,#%,  .#%#.            
 //    .,     *%&#/   %#**,,*..,....,.*#,     ..                                               *     ,%#%#/*,,*,*,,,,,.,.,,.,...,...((     /#(//*/**.    
@@ -17,15 +17,27 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#include <iostream>
 #include <vector>
 #include <string>
-#include "glm/glm.hpp"
+#include <memory>
+#include <filesystem>
+#include <cstring>
+#include <stdarg.h>
+
 #include "../../materials/hdr/materialLoader.h"
 
+#define GREEN_TEXT "\x1b[32m"
+#define RESET_TEXT "\x1b[37m"
+#define RED_TEXT  "\x1b[31m"
+
+using std::unique_ptr;
 using std::vector;
 using std::string;
 using glm::vec3;
 using glm::vec2;
+
+namespace fs = std::filesystem;
 
 #ifndef MESH_LOADER_H
 #define MESH_LOADER_H
@@ -54,13 +66,22 @@ class MeshLoader
         );
 
     private:
+        // void parseWavefrontObj();
+        // void prepareBufferData(vector<unsigned int> indexVec, vector<vec3> outVec, vector<vec3> tempVec);
+
+        string filenameString;  
+        int materialIdentifierIndex;
+        int triangleCount;
+        int res;
+        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
+        int matches;
         vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
         vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector
         vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
-        char *matFn;
 
-        MaterialLoader *matFinder;
-        MaterialLoader *matLoader;
+        char* matFn;
+		MaterialLoader *matFinder;
+		MaterialLoader *matLoader;
 };
 
 #endif

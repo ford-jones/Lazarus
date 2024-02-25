@@ -2,18 +2,9 @@
 
 int main()
 {
-    windowBuilder       =   new WindowManager(800, 600, "Lazarus::Experimental", NULL, NULL);
-    eventManager        =   new EventManager;
-    lightBuilder        =   new Light;
-    cameraBuilder       =   new Camera;
-    beachballBuilder    =   new Mesh;
-    transformer         =   new Transform;
-    shader              =   new Shader;
+    windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
+    windowBuilder->initialise();
 
-    windowBuilder->Initialise();
-    //  TODO: create window config functions which take optional params
-    //      : call them here
-    
     win = glfwGetCurrentContext();
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
     glewInit();                                                                                                         //  Initialise GLEW graphics library
@@ -23,7 +14,7 @@ int main()
     std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
     printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
 
-    shaderProgram = shader->initialiseShader();
+    shaderProgram = shader.initialiseShader();
 
     glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
     glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
@@ -33,61 +24,80 @@ int main()
 
     glUseProgram        (shaderProgram);                                                                                //  Use the newly created shader program
 
-    light   = lightBuilder->createAmbientLight(shaderProgram, 1.0, 0.0, 1.0, 1.0, 1.0, 1.0);
-    camera  = cameraBuilder->createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    light       = lightBuilder.createAmbientLight(shaderProgram, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+    camera      = cameraBuilder.createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-    beachball   = beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj");
+    worldBuilder = std::make_unique<Mesh>();
+    world       = std::move(worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj"));
+
+    beachballBuilder = std::make_unique<Mesh>();
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj"));
+
+    cubeBuilder = std::make_unique<Mesh>();
+    cube   = std::move(cubeBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/cube.obj"));
 
     while(!glfwWindowShouldClose(win))
     {
         /*Setup*/
-        eventManager->monitorEvents();
+        eventManager.monitorEvents();
 
         glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
 
         /*Render*/
         if( camera.projectionLocation >= 0 )
         {
-            lightBuilder->initialiseLight(light); //  Pass the values for each uniform into the shader program
-            cameraBuilder->initialiseCamera(camera);
+            lightBuilder.initialiseLight(light); //  Pass the values for each uniform into the shader program
+            cameraBuilder.initialiseCamera(camera);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        if( beachball.modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        /*World*/
+        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = transformer->applyRotation(beachball, eventManager->xangle, eventManager->yangle);
-            beachball = transformer->applyTranslation(beachball, (eventManager->xangle / 50), 0.0, (eventManager->yangle / 50));
-            beachballBuilder->instantiateMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
+            world = worldBuilder->initialiseMesh(world);
+            worldBuilder->loadMesh(*world);
+            worldBuilder->drawMesh(*world);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
+        /*Cube*/
+        if( cube->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            cube = cubeBuilder->initialiseMesh(cube);
+            cubeBuilder->loadMesh(*cube);
+            cubeBuilder->drawMesh(*cube);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
+        /*Beachball*/
+        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            beachball = transformer.applyRotation(beachball, eventManager.xangle, eventManager.yangle);
+            beachball = transformer.applyTranslation(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+
+            beachball = beachballBuilder->initialiseMesh(beachball);
+            beachballBuilder->loadMesh(*beachball);
+            beachballBuilder->drawMesh(*beachball);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*Check errors*/
-        errorCode = glfwGetError(errorMessage); 
-        if(errorCode != GLFW_NO_ERROR)
-        {
-            std::cout << "ERROR::GLFW::WINDOW" << std::endl;
-            std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
 
-            return errorCode;
-        };
+        /*Check errors*/
+        windowBuilder->checkErrors();
+
         /*Swap Buffers*/
         glfwSwapBuffers(win);
     };
-    
-    delete lightBuilder;
-    delete cameraBuilder;
-    delete beachballBuilder;
-    delete transformer;
-    delete shader;
-    delete windowBuilder;
-    delete eventManager;
     
     return 0;
 };

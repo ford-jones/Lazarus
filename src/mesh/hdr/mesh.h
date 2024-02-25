@@ -22,6 +22,7 @@
 #include <string>
 #include <time.h>
 #include <stdlib.h>
+#include <memory>
 
 #include "../hdr/meshLoader.h"
 
@@ -29,6 +30,8 @@
 #define RESET_TEXT "\x1b[37m"
 #define RED_TEXT  "\x1b[31m"
 
+using std::unique_ptr;
+using std::shared_ptr;
 using std::string;
 using std::vector;
 using glm::mat4;
@@ -50,19 +53,25 @@ class Mesh
             const char* filepath;
 
             vector<vec3> vertices;                                                              //  Buffer to store vertex data
+            vector<vec3> normals;                                                               //  Buffer to store normals data
+            vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
         };
 
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
-        TriangulatedMesh createTriangulatedMesh(GLuint shader, string filepath);
+        shared_ptr<TriangulatedMesh> createTriangulatedMesh(GLuint shader, string filepath);
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
-        void instantiateMesh(TriangulatedMesh meshData);
-        void drawMesh(TriangulatedMesh meshData);
+        shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
+        void loadMesh(TriangulatedMesh &meshData);
+        void drawMesh(TriangulatedMesh &meshData);
         virtual ~Mesh();
 
     private:
+        void checkErrors(char invocator[]);
+        void releaseMesh();
+
         int errorCode;
         vector<vec3> vertices;                                                              //  Buffer to store vertex data
         vector<vec2> uvs;                                                                   //  Buffer to uv data
@@ -72,9 +81,10 @@ class Mesh
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO[3];                                                                      //  The OpenGL Vertex Buffer Object
 
-        MeshLoader *finder;
-        MeshLoader *loader;
-        TriangulatedMesh triangulatedMesh;
+        unique_ptr<MeshLoader> finder;
+        unique_ptr<MeshLoader> loader;
+        
+        shared_ptr<TriangulatedMesh> triangulatedMesh;
 
 };
 
