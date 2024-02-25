@@ -19,7 +19,9 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <memory>
 
+using std::shared_ptr;
 using glm::vec3;
 using glm::mat4;
 
@@ -29,7 +31,8 @@ using glm::mat4;
 class Camera
 {
     public:
-        struct StaticCamera                                                                     //  Static Camera values represented in key-value pairs
+        Camera(GLuint shader);
+        struct FixedCamera                                                                     //  Static Camera values represented in key-value pairs
         {
             int id;
             vec3 cameraPosition;                                                                //  The (x,y,z) location of the camera                                                                  
@@ -45,11 +48,12 @@ class Camera
             mat4 projectionMatrix;                                                              //  A projection matrix matrice passed into the shader program as a uniform
         };
 
-        StaticCamera createStaticCamera(GLuint shader, int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
-        void initialiseCamera(StaticCamera cameraData);
+        shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
+        shared_ptr<FixedCamera> loadCamera(shared_ptr<FixedCamera> cameraData);
 
     private:
-        StaticCamera staticCamera;
+        GLuint shader;
+        shared_ptr<FixedCamera> fixedCamera;
 };
 
 #endif
