@@ -25,7 +25,9 @@ int main()
     glUseProgram        (shaderProgram);                                                                                //  Use the newly created shader program
 
     light       = lightBuilder.createAmbientLight(shaderProgram, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-    camera      = cameraBuilder.createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    
+    cameraBuilder = std::make_unique<Camera>(shaderProgram);
+    camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     worldBuilder = std::make_unique<Mesh>();
     world       = std::move(worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj"));
@@ -41,13 +43,12 @@ int main()
         /*Setup*/
         eventManager.monitorEvents();
 
-        glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
 
         /*Render*/
-        if( camera.projectionLocation >= 0 )
+        if( camera->projectionLocation >= 0 )
         {
             lightBuilder.initialiseLight(light); //  Pass the values for each uniform into the shader program
-            cameraBuilder.initialiseCamera(camera);
+            camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
         {
@@ -91,12 +92,13 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-
+		windowBuilder->handleBuffers();
         /*Check errors*/
-        windowBuilder->checkErrors();
+        // windowBuilder->checkErrors();
 
         /*Swap Buffers*/
-        glfwSwapBuffers(win);
+        // glfwSwapBuffers(win);
+        // glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
     };
     
     return 0;
