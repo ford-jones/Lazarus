@@ -17,6 +17,9 @@
 #define RESET_TEXT "\x1b[37m"
 #define RED_TEXT  "\x1b[31m"
 
+using std::unique_ptr;
+using std::shared_ptr;
+
 #ifndef MAIN_H
 #define MAIN_H
 
@@ -26,21 +29,22 @@ GLFWwindow *win;
 int errorCode;
 const char** errorMessage;
 
-WindowManager *windowBuilder;
-EventManager  *eventManager;
-
-Shader *shader;
-Light *lightBuilder;
-Camera *cameraBuilder;
-Mesh *worldBuilder;
-Mesh *beachballBuilder;
-Transform *transformer;
+EventManager eventManager;
+Shader shader;
+Transform transformer;
+Light lightBuilder;
+Camera cameraBuilder;
 
 Light::AmbientLight light;
 Camera::StaticCamera camera;
-// Mesh::TriangulatedMesh *world;
-// Mesh::TriangulatedMesh *beachball;
-std::shared_ptr<Mesh::TriangulatedMesh> beachball;
-std::shared_ptr<Mesh::TriangulatedMesh> world;
+
+unique_ptr<WindowManager> windowBuilder;
+unique_ptr<Mesh> worldBuilder;
+unique_ptr<Mesh> beachballBuilder;
+unique_ptr<Mesh> cubeBuilder;
+
+shared_ptr<Mesh::TriangulatedMesh> beachball;
+shared_ptr<Mesh::TriangulatedMesh> world;
+shared_ptr<Mesh::TriangulatedMesh> cube;
 
 #endif

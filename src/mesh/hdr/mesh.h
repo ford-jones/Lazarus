@@ -30,6 +30,8 @@
 #define RESET_TEXT "\x1b[37m"
 #define RED_TEXT  "\x1b[31m"
 
+using std::unique_ptr;
+using std::shared_ptr;
 using std::string;
 using std::vector;
 using glm::mat4;
@@ -58,10 +60,10 @@ class Mesh
         };
 
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
-        std::shared_ptr<TriangulatedMesh> createTriangulatedMesh(GLuint shader, string filepath);
+        shared_ptr<TriangulatedMesh> createTriangulatedMesh(GLuint shader, string filepath);
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
-        std::shared_ptr<TriangulatedMesh> initialiseMesh(std::shared_ptr<TriangulatedMesh> meshData);
+        shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
         void loadMesh(TriangulatedMesh &meshData);
         void drawMesh(TriangulatedMesh &meshData);
         virtual ~Mesh();
@@ -79,9 +81,10 @@ class Mesh
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO[3];                                                                      //  The OpenGL Vertex Buffer Object
 
-        MeshLoader *finder;
-        MeshLoader *loader;
-        std::shared_ptr<TriangulatedMesh> triangulatedMesh;
+        unique_ptr<MeshLoader> finder;
+        unique_ptr<MeshLoader> loader;
+        
+        shared_ptr<TriangulatedMesh> triangulatedMesh;
 
 };
 

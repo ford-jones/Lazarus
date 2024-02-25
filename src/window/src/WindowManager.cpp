@@ -23,7 +23,7 @@
 
 #include "../hdr/WindowManager.h"
 
-int WindowManager::Initialise()
+int WindowManager::initialise()
 {
     if(!glfwInit())
     {
@@ -44,6 +44,8 @@ int WindowManager::Initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
+    this->checkErrors();
+    
     return GLFW_NO_ERROR;
 };
 
@@ -55,6 +57,18 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.title = t;
     this->frame.monitor = m;
     this->frame.fullscreen = win;
+};
+
+int WindowManager::checkErrors()
+{
+    errorCode = glfwGetError(errorMessage); 
+    if(errorCode != GLFW_NO_ERROR)
+    {
+        std::cout << "ERROR::GLFW::WINDOW" << std::endl;
+        std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
+
+        return errorCode;
+    };
 };
 
 WindowManager::~WindowManager() 
