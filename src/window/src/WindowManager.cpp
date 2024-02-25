@@ -23,6 +23,15 @@
 
 #include "../hdr/WindowManager.h"
 
+WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
+{
+    this->frame.height = h;
+    this->frame.width = w;
+    this->frame.title = t;
+    this->frame.monitor = m;
+    this->frame.fullscreen = win;
+};
+
 int WindowManager::initialise()
 {
     if(!glfwInit())
@@ -49,14 +58,14 @@ int WindowManager::initialise()
     return GLFW_NO_ERROR;
 };
 
-
-WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
+int WindowManager::handleBuffers()
 {
-    this->frame.height = h;
-    this->frame.width = w;
-    this->frame.title = t;
-    this->frame.monitor = m;
-    this->frame.fullscreen = win;
+	glfwSwapBuffers(this->window);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
+        
+    this->checkErrors();
+
+	return GLFW_NO_ERROR;
 };
 
 int WindowManager::checkErrors()
@@ -70,6 +79,7 @@ int WindowManager::checkErrors()
         return errorCode;
     };
 };
+
 
 WindowManager::~WindowManager() 
 {
