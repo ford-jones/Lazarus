@@ -10,12 +10,11 @@
 //                    *... .............  /    ,                                             *,      ,*,,............  ,....     ...                    
 //                     *.   ..... .... ..*                                                  .*        *...................   .  ...                     
 //               *       ... ......... ,.                                                   ,          ... ..........  ...     ..       ,               
-//                ((        .,.,.. ...                                                                   .  . .. .  .  ... .  ..      //                
+//                ((        LAZARUS...                                                                   .  . .. .  .  ... .  ..      //                
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
-/*  LAZARUS ENGINE */
 
 #ifndef __GLEW_H__
     #include "../../utils/hdr/gl_includes.h"
@@ -49,6 +48,10 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 
 shared_ptr<Camera::FixedCamera> Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> camera, float x, float y, float z)
 {
+	camera->projectionMatrix = glm::rotate(camera->projectionMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+	camera->projectionMatrix = glm::rotate(camera->projectionMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+	camera->projectionMatrix = glm::rotate(camera->projectionMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+	
 	return camera;
 };
 
