@@ -41,7 +41,7 @@ class WindowManager
 
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
-		int config(GLuint shader);
+		int loadConfig(GLuint shader = 0, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
         int initialise();
         int handleBuffers();
         int checkErrors();
