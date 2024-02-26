@@ -32,6 +32,17 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.fullscreen = win;
 };
 
+int WindowManager::config(GLuint shader = 0)
+{
+	glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
+    glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
+    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
+
+    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
+    
+	glUseProgram(shader);
+};
+
 int WindowManager::initialise()
 {
     if(!glfwInit())
@@ -53,6 +64,8 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
+	this->initialiseGLEW();
+	
     this->checkErrors();
     
     return GLFW_NO_ERROR;
@@ -80,6 +93,13 @@ int WindowManager::checkErrors()
     };
 };
 
+int WindowManager::initialiseGLEW()
+{
+    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
+    glewInit();                                                                                                         //  Initialise GLEW graphics library
+    
+    return GLEW_NO_ERROR;
+};
 
 WindowManager::~WindowManager() 
 {

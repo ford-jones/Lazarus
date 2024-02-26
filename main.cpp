@@ -6,8 +6,6 @@ int main()
     windowBuilder->initialise();
 
     win = glfwGetCurrentContext();
-    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    glewInit();                                                                                                         //  Initialise GLEW graphics library
 
     printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
     printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -16,13 +14,7 @@ int main()
 
     shaderProgram = shader.initialiseShader();
 
-    glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
-    glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
-    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
-
-    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
-
-    glUseProgram        (shaderProgram);                                                                                //  Use the newly created shader program
+    windowBuilder->config(shaderProgram);																				//  Use the newly created shader program
 
     light       = lightBuilder.createAmbientLight(shaderProgram, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
     

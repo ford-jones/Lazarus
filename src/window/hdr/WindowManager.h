@@ -41,11 +41,15 @@ class WindowManager
 
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
+		int config(GLuint shader);
         int initialise();
         int handleBuffers();
         int checkErrors();
 
         virtual ~WindowManager();
+        
+	private:
+		int initialiseGLEW();
 };
 
 #endif
