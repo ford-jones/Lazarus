@@ -40,14 +40,14 @@ int main()
 
     while(!glfwWindowShouldClose(win))
     {
-        /*Setup*/
         eventManager.monitorEvents();
 
 
-        /*Render*/
+		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
             lightBuilder.initialiseLight(light); //  Pass the values for each uniform into the shader program
+            camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -66,22 +66,12 @@ int main()
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
-        /*Cube*/
-        if( cube->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        {
-            cube = cubeBuilder->initialiseMesh(cube);
-            cubeBuilder->loadMesh(*cube);
-            cubeBuilder->drawMesh(*cube);
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+
         /*Beachball*/
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = transformer.applyRotation(beachball, eventManager.xangle, eventManager.yangle);
-            beachball = transformer.applyTranslation(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+           	//beachball = transformer.translateMeshAsset(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            //beachball = transformer.rotateMeshAsset(beachball, eventManager.xangle, eventManager.yangle, 0.0);
 
             beachball = beachballBuilder->initialiseMesh(beachball);
             beachballBuilder->loadMesh(*beachball);
@@ -93,12 +83,7 @@ int main()
         };
 
 		windowBuilder->handleBuffers();
-        /*Check errors*/
-        // windowBuilder->checkErrors();
 
-        /*Swap Buffers*/
-        // glfwSwapBuffers(win);
-        // glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
     };
     
     return 0;
