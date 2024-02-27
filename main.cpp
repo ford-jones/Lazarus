@@ -37,7 +37,7 @@ int main()
         if( camera->projectionLocation >= 0 )
         {
             light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
-            //camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -61,21 +61,16 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
-            beachball = transformer.translateMeshAsset(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            //beachball = transformer.translateMeshAsset(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
-            
-            std::cout << "beachball location x: " << beachball->locationX << std::endl;
-			std::cout << "beachball location y: " << beachball->locationY << std::endl;
-            std::cout << "beachball location z: " << beachball->locationZ << std::endl;
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
-
+        
 		windowBuilder->handleBuffers();
-
     };
     
     return 0;

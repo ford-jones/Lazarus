@@ -35,6 +35,10 @@ class Camera
         struct FixedCamera                                                                     //  Static Camera values represented in key-value pairs
         {
             int id;
+			float locationX;
+			float locationY;
+			float locationZ;
+			
             vec3 cameraPosition;                                                                //  The (x,y,z) location of the camera                                                                  
             vec3 targetPosition;                                                                //  The (x,y,z) location of the cameras target, where the camera is looking                             
             vec3 upVector;                                                                      //  The tilt / rotation of the camera                                                                  

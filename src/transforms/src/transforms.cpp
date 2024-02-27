@@ -45,6 +45,9 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 {
 	camera->projectionMatrix = glm::translate(camera->projectionMatrix, glm::vec3(x, y, z));
 	camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
+	camera->locationX += x;
+	camera->locationY += y;
+	camera->locationZ += z;
 	
 	return camera;
 };
