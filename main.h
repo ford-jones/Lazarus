@@ -32,19 +32,17 @@ const char** errorMessage;
 EventManager eventManager;
 Shader shader;
 Transform transformer;
-Light lightBuilder;
 
-Light::AmbientLight light;
 
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
+unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> worldBuilder;
 unique_ptr<Mesh> beachballBuilder;
-unique_ptr<Mesh> cubeBuilder;
 
 shared_ptr<Camera::FixedCamera> camera;
+shared_ptr<Light::AmbientLight> light;
 shared_ptr<Mesh::TriangulatedMesh> beachball;
 shared_ptr<Mesh::TriangulatedMesh> world;
-shared_ptr<Mesh::TriangulatedMesh> cube;
 
 #endif

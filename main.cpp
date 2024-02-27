@@ -16,19 +16,17 @@ int main()
 
     windowBuilder->loadConfig(shaderProgram);																				//  Use the newly created shader program
 
-    light       = lightBuilder.createAmbientLight(shaderProgram, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
+	lightBuilder = std::make_unique<Light>(shaderProgram);
+    light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
     cameraBuilder = std::make_unique<Camera>(shaderProgram);
-    camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
+    camera      = std::move(cameraBuilder->createFixedCamera(windowBuilder->frame.height, windowBuilder->frame.width, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder = std::make_unique<Mesh>();
-    world       = std::move(worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj"));
+    worldBuilder = std::make_unique<Mesh>(shaderProgram);
+    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj"));
 
-    beachballBuilder = std::make_unique<Mesh>();
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj"));
-
-    cubeBuilder = std::make_unique<Mesh>();
-    cube   = std::move(cubeBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/cube.obj"));
+    beachballBuilder = std::make_unique<Mesh>(shaderProgram);
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj"));
 
     while(!glfwWindowShouldClose(win))
     {
@@ -38,9 +36,8 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-            lightBuilder.initialiseLight(light); //  Pass the values for each uniform into the shader program
+            light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
             camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
-            //camera = transformer.rotateCameraAsset(camera, eventManager.xangle, eventManager.yangle, 0.0);
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -63,9 +60,6 @@ int main()
         /*Beachball*/
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-           	//beachball = transformer.translateMeshAsset(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
-            //beachball = transformer.rotateMeshAsset(beachball, eventManager.xangle, eventManager.yangle, 0.0);
-
             beachball = beachballBuilder->initialiseMesh(beachball);
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);

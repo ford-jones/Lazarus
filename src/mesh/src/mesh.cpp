@@ -23,7 +23,12 @@
 
 #include "../hdr/mesh.h"
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(GLuint shader, string filepath)
+Mesh::Mesh(GLuint shader)
+{
+	this->shaderProgram = shader;
+};
+
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string filepath)
 {
     this->finder = std::make_unique<MeshLoader>();
     this->loader = std::make_unique<MeshLoader>();
@@ -43,7 +48,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(GLuint shad
     triangulatedMesh->normals = normals;
     triangulatedMesh->diffuse = diffuse;
     triangulatedMesh->modelviewMatrix = mat4(1.0f);                                                                                          //  Define the model-view matrix to default 4x4
-    triangulatedMesh->modelviewUniformLocation = glGetUniformLocation(shader, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
+    triangulatedMesh->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
 
     return triangulatedMesh;
 };
