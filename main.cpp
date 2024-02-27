@@ -36,8 +36,9 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
+        	light = transformer.translateLightAsset(light, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
-            camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            //camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
