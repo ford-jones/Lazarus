@@ -33,6 +33,10 @@ class Light
         struct AmbientLight
         {
             int id;
+            
+            float locationX;
+            float locationY;
+            float locationZ;
 
             vec3 lightPosition;                     //  The (x,y,z) location of the light source
             vec3 lightColor;                        //  The (r,g,b) color of the light

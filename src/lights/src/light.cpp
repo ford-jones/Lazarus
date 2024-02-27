@@ -35,8 +35,12 @@ shared_ptr<Light::AmbientLight> Light::createAmbientLight(double x, double y, do
     srand(time((0)));                                                                                                             // Seed a random number based on current time
 
     ambientLight->id             =   1 + (rand() % 2147483647);
+    
+    ambientLight->locationX = x;
+    ambientLight->locationY = y;
+    ambientLight->locationZ = z;
 
-    ambientLight->lightPosition  =   vec3(x, y, z);
+    ambientLight->lightPosition  =   vec3(ambientLight->locationX, ambientLight->locationY, ambientLight->locationZ);
     ambientLight->lightColor     =   vec3(r, g, b);
     
     ambientLight->lightPositionUniformLocation   =   glGetUniformLocation(shaderProgram, "lightPosition");
