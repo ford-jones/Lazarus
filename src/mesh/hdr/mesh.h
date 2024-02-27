@@ -51,6 +51,10 @@ class Mesh
             int numOfFaces;
             //  add material count
             const char* filepath;
+            
+            float locationX;
+            float locationY;
+            float locationZ;
 
             vector<vec3> vertices;                                                              //  Buffer to store vertex data
             vector<vec3> normals;                                                               //  Buffer to store normals data

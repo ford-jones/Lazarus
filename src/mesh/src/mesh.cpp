@@ -40,6 +40,10 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string file
     finder->findMesh(filepath);
     triangulatedMesh->filepath = finder->fileVec[0].c_str();
     loader->loadMesh(triangulatedMesh->filepath, vertices, uvs, normals, diffuse);
+    
+    triangulatedMesh->locationX = 0;
+    triangulatedMesh->locationY = 0;
+    triangulatedMesh->locationZ = 0;
 
     triangulatedMesh->numOfVertices = vertices.size();
     triangulatedMesh->numOfFaces = (vertices.size()) / 3;

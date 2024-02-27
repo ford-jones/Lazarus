@@ -25,6 +25,9 @@
 shared_ptr<Mesh::TriangulatedMesh> Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 {
     mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, glm::vec3(x, y, z));
+    mesh->locationX += x;
+    mesh->locationY += y;
+    mesh->locationZ += z;
 
     return mesh;
 };
