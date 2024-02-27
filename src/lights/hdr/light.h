@@ -19,7 +19,9 @@
 
 #include <iostream>
 #include <stdlib.h>
+#include <memory>
 
+using std::shared_ptr;
 using glm::vec3;
 
 #ifndef LAZARUS_LIGHT_H
@@ -38,12 +40,15 @@ class Light
             GLuint lightPositionUniformLocation;    //  The location / index of the light position uniform inside the frag shader
             GLuint lightColorUniformLocation;       //  The location / index of the light color uniform inside the frag shader
         };
+        
+        Light(GLuint shader);
 
-        AmbientLight createAmbientLight(GLuint shader, double x, double y, double z, double r, double g, double b);
-        void initialiseLight(AmbientLight lightData);
+        shared_ptr<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b);
+        shared_ptr<AmbientLight> initialiseLight(shared_ptr<AmbientLight> lightData);
 
     private:
-        AmbientLight ambientLight;
+    	GLuint shaderProgram;
+        shared_ptr<AmbientLight> ambientLight;
         
 };
 

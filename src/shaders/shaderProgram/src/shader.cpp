@@ -75,4 +75,5 @@ Shader::~Shader()
 {
     glDeleteShader          (vertShader);
     glDeleteShader          (fragShader);
+    glDeleteProgram(shaderProgram);
 };

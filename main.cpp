@@ -6,8 +6,6 @@ int main()
     windowBuilder->initialise();
 
     win = glfwGetCurrentContext();
-    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    glewInit();                                                                                                         //  Initialise GLEW graphics library
 
     printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
     printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
@@ -16,38 +14,31 @@ int main()
 
     shaderProgram = shader.initialiseShader();
 
-    glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
-    glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
-    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
+    windowBuilder->loadConfig(shaderProgram);																				//  Use the newly created shader program
 
-    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
+	lightBuilder = std::make_unique<Light>(shaderProgram);
+    light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
+    
+    cameraBuilder = std::make_unique<Camera>(shaderProgram);
+    camera      = std::move(cameraBuilder->createFixedCamera(windowBuilder->frame.height, windowBuilder->frame.width, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    glUseProgram        (shaderProgram);                                                                                //  Use the newly created shader program
+    worldBuilder = std::make_unique<Mesh>(shaderProgram);
+    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj"));
 
-    light       = lightBuilder.createAmbientLight(shaderProgram, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0);
-    camera      = cameraBuilder.createStaticCamera(shaderProgram, 800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-    worldBuilder = std::make_unique<Mesh>();
-    world       = std::move(worldBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/world.obj"));
-
-    beachballBuilder = std::make_unique<Mesh>();
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/beachball.obj"));
-
-    cubeBuilder = std::make_unique<Mesh>();
-    cube   = std::move(cubeBuilder->createTriangulatedMesh(shaderProgram, "assets/mesh/cube.obj"));
+    beachballBuilder = std::make_unique<Mesh>(shaderProgram);
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj"));
 
     while(!glfwWindowShouldClose(win))
     {
-        /*Setup*/
         eventManager.monitorEvents();
 
-        glClear             (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
 
-        /*Render*/
-        if( camera.projectionLocation >= 0 )
+		/*Camera*/
+        if( camera->projectionLocation >= 0 )
         {
-            lightBuilder.initialiseLight(light); //  Pass the values for each uniform into the shader program
-            cameraBuilder.initialiseCamera(camera);
+            light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
+            camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
         {
@@ -65,23 +56,10 @@ int main()
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
-        /*Cube*/
-        if( cube->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        {
-            cube = cubeBuilder->initialiseMesh(cube);
-            cubeBuilder->loadMesh(*cube);
-            cubeBuilder->drawMesh(*cube);
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+
         /*Beachball*/
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = transformer.applyRotation(beachball, eventManager.xangle, eventManager.yangle);
-            beachball = transformer.applyTranslation(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
-
             beachball = beachballBuilder->initialiseMesh(beachball);
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
@@ -91,13 +69,10 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
+		windowBuilder->handleBuffers();
 
-        /*Check errors*/
-        windowBuilder->checkErrors();
-
-        /*Swap Buffers*/
-        glfwSwapBuffers(win);
     };
     
     return 0;
 };
+

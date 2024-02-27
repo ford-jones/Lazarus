@@ -23,23 +23,33 @@
 
 #include "../hdr/light.h"
 
-Light::AmbientLight Light::createAmbientLight(GLuint shader, double x, double y, double z, double r, double g, double b)
+Light::Light(GLuint shader)
 {
+	this->shaderProgram = shader;
+}
+
+shared_ptr<Light::AmbientLight> Light::createAmbientLight(double x, double y, double z, double r, double g, double b)
+{
+	ambientLight = std::make_shared<Light::AmbientLight>();
+	
     srand(time((0)));                                                                                                             // Seed a random number based on current time
 
-    ambientLight.id             =   1 + (rand() % 2147483647);
+    ambientLight->id             =   1 + (rand() % 2147483647);
 
-    ambientLight.lightPosition  =   vec3(x, y, z);
-    ambientLight.lightColor     =   vec3(r, g, b);
+    ambientLight->lightPosition  =   vec3(x, y, z);
+    ambientLight->lightColor     =   vec3(r, g, b);
     
-    ambientLight.lightPositionUniformLocation   =   glGetUniformLocation(shader, "lightPosition");
-    ambientLight.lightColorUniformLocation      =   glGetUniformLocation(shader, "lightColor");
+    ambientLight->lightPositionUniformLocation   =   glGetUniformLocation(shaderProgram, "lightPosition");
+    ambientLight->lightColorUniformLocation      =   glGetUniformLocation(shaderProgram, "lightColor");
 
     return ambientLight;
 };
 
-void Light::initialiseLight(AmbientLight lightData)
+shared_ptr<Light::AmbientLight> Light::initialiseLight(shared_ptr<Light::AmbientLight> lightData)
 {
-    glUniform3fv        (lightData.lightPositionUniformLocation, 1, &lightData.lightPosition[0]);
-    glUniform3fv        (lightData.lightColorUniformLocation, 1, &lightData.lightColor[0]);
+	this->ambientLight = std::move(lightData);
+    glUniform3fv        (ambientLight->lightPositionUniformLocation, 1, &ambientLight->lightPosition[0]);
+    glUniform3fv        (ambientLight->lightColorUniformLocation, 1, &ambientLight->lightColor[0]);
+    
+    return ambientLight;
 };
