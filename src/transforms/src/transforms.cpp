@@ -25,6 +25,9 @@
 shared_ptr<Mesh::TriangulatedMesh> Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 {
     mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, glm::vec3(x, y, z));
+    mesh->locationX += x;
+    mesh->locationY += y;
+    mesh->locationZ += z;
 
     return mesh;
 };
@@ -42,6 +45,9 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 {
 	camera->projectionMatrix = glm::translate(camera->projectionMatrix, glm::vec3(x, y, z));
 	camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
+	camera->locationX += x;
+	camera->locationY += y;
+	camera->locationZ += z;
 	
 	return camera;
 };
@@ -55,3 +61,12 @@ shared_ptr<Camera::FixedCamera> Transform::rotateCameraAsset(shared_ptr<Camera::
 	return camera;
 };
 
+shared_ptr<Light::AmbientLight> Transform::translateLightAsset(shared_ptr<Light::AmbientLight> light, float x, float y, float z)
+{
+	light->lightPosition += vec3(x, y, z);
+	light->locationX += x;
+	light->locationY += y;
+	light->locationZ += z;
+	
+	return light;
+};
