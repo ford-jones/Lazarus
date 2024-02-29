@@ -12,6 +12,7 @@
 #include "./src/shaders/shaderProgram/hdr/shader.h"
 #include "./src/lights/hdr/light.h"
 #include "./src/cameras/hdr/camera.h"
+#include "./src/utils/hdr/fpsCounter.h"
 
 #define GREEN_TEXT "\x1b[32m"
 #define RESET_TEXT "\x1b[37m"
@@ -32,7 +33,7 @@ const char** errorMessage;
 EventManager eventManager;
 Shader shader;
 Transform transformer;
-
+FpsCounter fpsCounter;
 
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;

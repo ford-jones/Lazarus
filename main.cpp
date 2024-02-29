@@ -30,8 +30,11 @@ int main()
 
     while(!glfwWindowShouldClose(win))
     {
+    	fpsCounter.calculateFramesPerSec();
         eventManager.monitorEvents();
 
+    	std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
+    	//std::cout << "Render Time: " << fpsCounter.durationTillRendered << std::endl;
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
