@@ -81,3 +81,4 @@ Once thats' done, restart your terminal for the change to take effect.
 1. 3D Mesh assets must be exported to `wavefront` (.obj) file format before being loaded into a scene.
 2. 3D mesh assets have to be **triangulated**, this can be done prior to or on export. *Faces made up of 5 vertices (polygons) are not supported.*
 3. Materials that appear in `wavefront` (.mtl) material files **must** appear in order they were created. A safe way to ensure this is to number any *named* materials during the modeling process. This is because named materials are often exported in alphabetical order by modeling software which can lead to undesired behaviour.
+4. Upon initialising the render loop and loading of assets, there is an observable "hump" in performance. A full scene with lights, camera, meshes etc causes a decrease in the framerate by about 12.5% (60 frames becomes 50).

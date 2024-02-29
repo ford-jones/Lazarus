@@ -24,11 +24,7 @@
 #include "../hdr/fpsCounter.h"
 
 void FpsCounter::calculateFramesPerSec()
-{	
-	// 	TODO:
-	//	loading of assets(?) currently increments the ms value of durationTillRendered from 16 to 18 (decreases fps from 60-50) (%12.5). 
-	//	This observable "hump" on init should be documented under known caveats. 
-	
+{
 	this->numberOfFrames++;	
 	this->currentMs = glfwGetTime();
 	
