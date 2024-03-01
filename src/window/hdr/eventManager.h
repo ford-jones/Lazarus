@@ -25,9 +25,11 @@
 class EventManager
 {
     public:
+    	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods); 
         int monitorEvents();
         char *keyState;
         float xangle, yangle;
+        int keyCode;
 
     private:
         void updateKeyState();

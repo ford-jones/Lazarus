@@ -28,7 +28,8 @@ int EventManager::monitorEvents()
 {
     glfwPollEvents();
     win = glfwGetCurrentContext();
-
+	
+	glfwSetKeyCallback(win, keydownCallback);
     this->updateKeyState();
 };
 
@@ -73,4 +74,12 @@ void EventManager::updateKeyState()
 
     xangle = 0.0;
     yangle = 0.0;
+};
+
+void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
+{
+	if(action == GLFW_PRESS)
+	{
+		std::cout << "Key: " << key << std::endl;
+	};	
 };
