@@ -31,7 +31,7 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-
+        std::cout << "Key: " << eventManager.keyCode << std::endl;
     	//fpsCounter.calculateFramesPerSec();
     	//std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
     	//std::cout << "Render Time: " << fpsCounter.durationTillRendered << std::endl;
@@ -39,7 +39,7 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-        	light = transformer.translateLightAsset(light, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+        	//light = transformer.translateLightAsset(light, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
             //camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             camera = std::move(cameraBuilder->loadCamera(camera));
