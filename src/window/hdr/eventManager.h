@@ -29,14 +29,14 @@ class EventManager
 {
     public:
         void monitorEvents();
-        const char *keyState;
-        float xangle, yangle;
+
         int keyCode;
+        const char *keyCharacter;
 
     private:
     	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods); 
-        void updateKeyState();
-        int up, down, left, right;
+        int updateKeyState();
+
         GLFWwindow *win;
 };
 

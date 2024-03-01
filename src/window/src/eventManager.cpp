@@ -33,18 +33,35 @@ void EventManager::monitorEvents()
     this->updateKeyState();
 };
 
-void EventManager::updateKeyState()
+int EventManager::updateKeyState()
 {
 	//	TODO: 
 	//	Discern which key is being pressed using glfwGetKeyName()
 	this->keyCode = LAZARUS_LISTENER_KEY;
+	
+	return this->keyCode;
 };
 
 void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
 {
-	if(action == GLFW_PRESS)
+	//if(action == GLFW_PRESS)
+	//{
+		//LAZARUS_LISTENER_KEY = key;
+		//LAZARUS_LISTENER_SCANCODE = scancode;
+	//}
+	//else if(action == GLFW)
+	
+	switch(action)
 	{
-		LAZARUS_LISTENER_KEY = key;
-		LAZARUS_LISTENER_SCANCODE = scancode;
-	};	
+		case GLFW_PRESS:
+			LAZARUS_LISTENER_KEY = key;
+			LAZARUS_LISTENER_SCANCODE = scancode;
+			break;
+		case GLFW_RELEASE:
+			LAZARUS_LISTENER_KEY = 0;
+			LAZARUS_LISTENER_SCANCODE = 0;
+			break;
+		default:
+			break;
+	}
 };
