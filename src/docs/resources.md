@@ -18,6 +18,8 @@ https://docs.gl/es2/glBufferData
 Official Documentation: https://www.glfw.org/documentation.html \
 Downloads: https://www.glfw.org/download.html 
 
+4. GLM resources: \
+Official Documentation: https://glm.g-truc.net/0.9.9/api/index.html
 
 4. Valgrind resources: \
 Official Documentation: https://valgrind.org/docs/ \
