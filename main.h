@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include "./src/window/hdr/WindowManager.h"
 #include "./src/window/hdr/eventManager.h"
@@ -18,6 +19,7 @@
 #define RESET_TEXT "\x1b[37m"
 #define RED_TEXT  "\x1b[31m"
 
+using std::string;
 using std::unique_ptr;
 using std::shared_ptr;
 
@@ -29,6 +31,12 @@ GLFWwindow *win;
 
 int errorCode;
 const char** errorMessage;
+
+float moveX, moveZ;
+float turnX, turnY;
+string currentKey;
+
+void moveCamera(string key);
 
 EventManager eventManager;
 Shader shader;
