@@ -40,10 +40,10 @@ void EventManager::monitorEvents()
 void EventManager::updateKeyState()
 {
 	//	TODO: 
-	//	This current code works for keys which have assigned glyphs
-	//	Create cases and unique strings for no-glyph keys
-	//	Space, enter, ctrl, alt, delete, caps, tab, fn, arrows, shift 
+	//	Create cases and unique strings for remaining weird keys; capslock, pgup/down, screenshot etc 
+	
 	this->keyCode = 0;
+	this->osCode = 0;
 	this->keyString = "";
 	
 	this->keyCode = LAZARUS_LISTENER_KEYCODE;
@@ -51,7 +51,6 @@ void EventManager::updateKeyState()
 	
 	if(keyCode > 0)
 	{
-		//std::cout << glfwGetKeyName(keyCode, osCode) << std::endl
 		switch(keyCode)
 		{
 			case GLFW_KEY_UP :
