@@ -18,11 +18,14 @@
 /*  LAZARUS ENGINE */
 
 #include <iostream>
+#include <string>
+
+using std::string;
 
 #ifndef LAZARUS_EVENT_MANAGER_H
 #define LAZARUS_EVENT_MANAGER_H
 
-static int LAZARUS_LISTENER_KEY;
+static int LAZARUS_LISTENER_KEYCODE;
 static int LAZARUS_LISTENER_SCANCODE;
 
 class EventManager
@@ -30,12 +33,13 @@ class EventManager
     public:
         void monitorEvents();
 
+        string keyString;        
         int keyCode;
-        const char *keyCharacter;
+		int osCode;
 
     private:
     	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods); 
-        int updateKeyState();
+        void updateKeyState();
 
         GLFWwindow *win;
 };

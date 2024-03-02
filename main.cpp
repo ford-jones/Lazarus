@@ -31,7 +31,9 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        std::cout << "Key: " << eventManager.keyCode << std::endl;
+        std::cout << "keyCode: " << eventManager.keyCode << std::endl;
+        std::cout << "keyString: " << eventManager.keyString << std::endl;
+        
     	//fpsCounter.calculateFramesPerSec();
     	//std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
     	//std::cout << "Render Time: " << fpsCounter.durationTillRendered << std::endl;
