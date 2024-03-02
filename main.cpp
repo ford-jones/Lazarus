@@ -7,11 +7,6 @@ int main()
 
     win = glfwGetCurrentContext();
 
-    printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-    printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-    std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
-    printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
-
     shaderProgram = shader.initialiseShader();
 
     windowBuilder->loadConfig(shaderProgram);																				//  Use the newly created shader program
@@ -28,22 +23,30 @@ int main()
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
     beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj"));
 
+	printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
+	printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
+	printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
+	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        std::cout << "keyCode: " << eventManager.keyCode << std::endl;
-        std::cout << "keyString: " << eventManager.keyString << std::endl;
+        currentKey = eventManager.keyString;
+        //std::cout << "Current Key: " << currentKey << std::endl;
         
     	//fpsCounter.calculateFramesPerSec();
-    	//std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
-    	//std::cout << "Render Time: " << fpsCounter.durationTillRendered << std::endl;
+        //std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
+        //std::cout << "MSPF: " << fpsCounter.durationTillRendered << std::endl;
+
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
         	//light = transformer.translateLightAsset(light, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
-            light = std::move(lightBuilder->initialiseLight(light)); //  Pass the values for each uniform into the shader program
-            //camera = transformer.translateCameraAsset(camera, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
+            light = std::move(lightBuilder->initialiseLight(light));
+            moveCamera(currentKey);
+            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
+            camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -67,7 +70,6 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
-            //beachball = transformer.translateMeshAsset(beachball, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
         }
@@ -78,7 +80,49 @@ int main()
         
 		windowBuilder->handleBuffers();
     };
-    
+   
     return 0;
 };
 
+void moveCamera(string key)
+{
+		if(key == "up")
+		{
+			moveZ += 0.5;
+		}
+		else if(key == "down")
+		{
+			moveZ += -0.5;
+		}
+		else if(key == "left")
+		{
+			moveX += 0.5;
+		}
+		else if(key == "right")
+		{
+			moveX += -0.5;
+		}
+		else if(key == "w")
+		{
+			turnX += -0.5;
+		}
+		else if(key == "s")
+		{
+			turnX += 0.5;
+		}
+		else if(key == "a")
+		{
+			turnY += -0.5;
+		}
+		else if(key == "d")
+		{
+			turnY += 0.5;
+		}
+		else 
+		{
+			moveX = 0.0;
+			moveZ = 0.0;
+			turnX = 0.0;
+			turnY = 0.0;
+		};
+};
