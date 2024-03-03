@@ -36,10 +36,11 @@ void EventManager::monitorEvents()
 	glfwSetKeyCallback(win, keydownCallback);
 	glfwSetCursorPosCallback(win, mouseMoveCallback);
 	
-    this->updateKeyState();
+    this->updateKeyboardState();
+    this->updateMouseState();
 };
 
-void EventManager::updateKeyState()
+void EventManager::updateKeyboardState()
 {
 	//	TODO: 
 	//	Create cases and unique strings for remaining weird keys; capslock, pgup/down, screenshot etc 
@@ -107,6 +108,12 @@ void EventManager::updateKeyState()
 	};
 };
 
+void EventManager::updateMouseState()
+{
+	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
+	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);
+};
+
 void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
 {
 	switch(action)
@@ -126,6 +133,6 @@ void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int a
 
 void EventManager::mouseMoveCallback(GLFWwindow *win, double xpos, double ypos)
 {
-	std::cout << "Cursor X: " << xpos << std::endl;
-	std::cout << "Cursor Y: " << ypos << std::endl;
+	LAZARUS_LISTENER_MOUSEX = xpos;
+	LAZARUS_LISTENER_MOUSEY = ypos;
 };

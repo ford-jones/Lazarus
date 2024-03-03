@@ -31,6 +31,10 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
+        
+        std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
+        std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
+        
         currentKey = eventManager.keyString;
         //std::cout << "Current Key: " << currentKey << std::endl;
         

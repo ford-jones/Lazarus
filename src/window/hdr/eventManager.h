@@ -27,20 +27,26 @@ using std::string;
 
 static int LAZARUS_LISTENER_KEYCODE;
 static int LAZARUS_LISTENER_SCANCODE;
+static double LAZARUS_LISTENER_MOUSEX;
+static double LAZARUS_LISTENER_MOUSEY;
 
 class EventManager
 {
     public:
         void monitorEvents();
 
-        string keyString;        
+        string keyString;
         int keyCode;
 		int osCode;
 
+		int mouseX;
+		int mouseY;
+		
     private:
     	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods);
     	static void mouseMoveCallback(GLFWwindow *win, double xpos, double ypos);
-        void updateKeyState();
+        void updateKeyboardState();
+        void updateMouseState();
 
         GLFWwindow *win;
 };
