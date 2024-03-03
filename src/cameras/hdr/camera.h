@@ -52,6 +52,10 @@ class Camera
             mat4 projectionMatrix;                                                              //  A projection matrix matrice passed into the shader program as a uniform
         };
 
+		//	TODO:
+		//	Make creation function for an orthodontic camera (projection matrix constructed with glm::ortho rather than glm::perspective)
+		//	Rename the existing creation function to createPerspectiveCamera()
+		
         shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
         shared_ptr<FixedCamera> loadCamera(shared_ptr<FixedCamera> cameraData);
 

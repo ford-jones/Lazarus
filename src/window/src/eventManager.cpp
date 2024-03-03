@@ -34,6 +34,8 @@ void EventManager::monitorEvents()
     win = glfwGetCurrentContext();
 	
 	glfwSetKeyCallback(win, keydownCallback);
+	glfwSetCursorPosCallback(win, mouseMoveCallback);
+	
     this->updateKeyState();
 };
 
@@ -120,4 +122,10 @@ void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int a
 		default:
 			break;
 	};
+};
+
+void EventManager::mouseMoveCallback(GLFWwindow *win, double xpos, double ypos)
+{
+	std::cout << "Cursor X: " << xpos << std::endl;
+	std::cout << "Cursor Y: " << ypos << std::endl;
 };

@@ -38,7 +38,8 @@ class EventManager
 		int osCode;
 
     private:
-    	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods); 
+    	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods);
+    	static void mouseMoveCallback(GLFWwindow *win, double xpos, double ypos);
         void updateKeyState();
 
         GLFWwindow *win;

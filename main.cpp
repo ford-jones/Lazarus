@@ -70,6 +70,8 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
+            //beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
+            //beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
         }

@@ -27,6 +27,12 @@ using glm::vec3;
 #ifndef LAZARUS_LIGHT_H
 #define LAZARUS_LIGHT_H
 
+//	TODO:
+//	Create a directional light
+
+//	TODO:
+//	Create a funciton which allows users to functionally change the light color
+
 class Light
 {
     public:
