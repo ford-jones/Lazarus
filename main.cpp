@@ -34,6 +34,7 @@ int main()
         
         std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
         std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
+        std::cout << "Click State: " << eventManager.mouseCode << std::endl;
         
         currentKey = eventManager.keyString;
         //std::cout << "Current Key: " << currentKey << std::endl;

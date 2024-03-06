@@ -8,4 +8,6 @@
 - [API Reference](./src/docs/api-reference.md)
 - [Resources](./src/docs/resources.md)
 
-![OpenGL Logo](./src/docs/images/OpenGL_170px_June16.png)
+![OpenGL Logo](./src/docs/images/OpenGL_170px_June16.png) \
+![GLM Logo](./src/docs/images/GLM_logo.png) \
+![GLFW Logo](./src/docs/images/glfw-logo.png)

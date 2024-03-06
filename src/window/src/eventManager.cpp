@@ -29,12 +29,14 @@
 //	Move globals to some sort of globals file
 
 void EventManager::monitorEvents()
-{
+{	
+
     glfwPollEvents();
     win = glfwGetCurrentContext();
 	
 	glfwSetKeyCallback(win, keydownCallback);
 	glfwSetCursorPosCallback(win, mouseMoveCallback);
+	glfwSetMouseButtonCallback(win, mouseDownCallback);
 	
     this->updateKeyboardState();
     this->updateMouseState();
@@ -45,9 +47,9 @@ void EventManager::updateKeyboardState()
 	//	TODO: 
 	//	Create cases and unique strings for remaining weird keys; capslock, pgup/down, screenshot etc 
 	
+	this->keyString = "";
 	this->keyCode = 0;
 	this->osCode = 0;
-	this->keyString = "";
 	
 	this->keyCode = LAZARUS_LISTENER_KEYCODE;
 	this->osCode = LAZARUS_LISTENER_SCANCODE;
@@ -110,8 +112,13 @@ void EventManager::updateKeyboardState()
 
 void EventManager::updateMouseState()
 {
+	this->mouseCode = LAZARUS_MOUSE_NOCLICK;
+	this->mouseX = 0.0;
+	this->mouseY = 0.0;
+	
+	this->mouseCode = LAZARUS_LISTENER_MOUSECODE;
 	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
-	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);
+	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);		
 };
 
 void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
@@ -127,6 +134,21 @@ void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int a
 			LAZARUS_LISTENER_SCANCODE = 0;
 			break;
 		default:
+			break;
+	};
+};
+
+void EventManager::mouseDownCallback(GLFWwindow *win, int button, int action, int mods)
+{
+	switch(action)
+	{
+		case GLFW_PRESS :
+			LAZARUS_LISTENER_MOUSECODE = button;
+			break;
+		case GLFW_RELEASE :
+			LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
+			break;
+		default :
 			break;
 	};
 };

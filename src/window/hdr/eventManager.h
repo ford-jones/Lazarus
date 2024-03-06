@@ -27,8 +27,12 @@ using std::string;
 
 static int LAZARUS_LISTENER_KEYCODE;
 static int LAZARUS_LISTENER_SCANCODE;
+
+static int LAZARUS_LISTENER_MOUSECODE;
 static double LAZARUS_LISTENER_MOUSEX;
 static double LAZARUS_LISTENER_MOUSEY;
+
+static const int LAZARUS_MOUSE_NOCLICK = 999;
 
 class EventManager
 {
@@ -39,11 +43,13 @@ class EventManager
         int keyCode;
 		int osCode;
 
+		int mouseCode;
 		int mouseX;
 		int mouseY;
 		
     private:
     	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods);
+    	static void mouseDownCallback(GLFWwindow *win, int button, int action, int mods);
     	static void mouseMoveCallback(GLFWwindow *win, double xpos, double ypos);
         void updateKeyboardState();
         void updateMouseState();
