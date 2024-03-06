@@ -25,6 +25,9 @@
 
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
+	this->errorCode = GLFW_NO_ERROR;
+	this->errorMessage = NULL;
+	
     this->frame.height = h;
     this->frame.width = w;
     this->frame.title = t;
