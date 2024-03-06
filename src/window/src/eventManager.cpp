@@ -23,9 +23,6 @@
 
 #include "../hdr/eventManager.h"
 //	TODO:
-//	Create event callbacks and reporters for scroll, mousemove and click
-
-//	TODO:
 //	Move globals to some sort of globals file
 
 void EventManager::monitorEvents()
@@ -37,6 +34,7 @@ void EventManager::monitorEvents()
 	glfwSetKeyCallback(win, keydownCallback);
 	glfwSetCursorPosCallback(win, mouseMoveCallback);
 	glfwSetMouseButtonCallback(win, mouseDownCallback);
+	glfwSetScrollCallback(win, scrollCallback);
 	
     this->updateKeyboardState();
     this->updateMouseState();
@@ -119,6 +117,12 @@ void EventManager::updateMouseState()
 	this->mouseCode = LAZARUS_LISTENER_MOUSECODE;
 	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
 	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);		
+	
+	//	TODO: 
+	//	This is utter nonsense, scroll right now can only be either 1 (up) || -1 (down)
+	//	It will do for now, but should probably be changed to some sort of incrementing / decrementing number
+	//	At the very least, it should be reset to 0 when the scrollwheel is not in motion
+	this->scrollCode = static_cast<int>(LAZARUS_LISTENER_SCROLLCODE);
 };
 
 void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
@@ -157,4 +161,9 @@ void EventManager::mouseMoveCallback(GLFWwindow *win, double xpos, double ypos)
 {
 	LAZARUS_LISTENER_MOUSEX = xpos;
 	LAZARUS_LISTENER_MOUSEY = ypos;
+};
+
+void EventManager::scrollCallback(GLFWwindow *win, double xoffset, double yoffset)
+{
+	LAZARUS_LISTENER_SCROLLCODE = yoffset;
 };

@@ -31,13 +31,11 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        
-        std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
-        std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
-        std::cout << "Click State: " << eventManager.mouseCode << std::endl;
-        
-        currentKey = eventManager.keyString;
-        //std::cout << "Current Key: " << currentKey << std::endl;
+        std::cout << "Key: " << eventManager.keyString << std::endl;
+        //std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
+        //std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
+        //std::cout << "Click State: " << eventManager.mouseCode << std::endl;
+        //std::cout << "Scroll state: " << eventManager.scrollCode << std::endl;
         
     	//fpsCounter.calculateFramesPerSec();
         //std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
@@ -47,11 +45,9 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-        	//light = transformer.translateLightAsset(light, (eventManager.xangle / 50), 0.0, (eventManager.yangle / 50));
             light = std::move(lightBuilder->initialiseLight(light));
-            moveCamera(currentKey);
-            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
-            camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
+            
+            moveCamera(eventManager.keyString);
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -75,8 +71,8 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
-            //beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            //beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
+            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
             beachballBuilder->loadMesh(*beachball);
             beachballBuilder->drawMesh(*beachball);
         }

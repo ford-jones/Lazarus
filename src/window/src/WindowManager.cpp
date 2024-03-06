@@ -38,6 +38,7 @@ int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, boo
 	//	TODO:
 	//	Create options for event input modes
 	//	e.g. true / false GLFW_CURSOR_DISABLED
+	//	see https://www.glfw.org/docs/3.3/input_guide.html#cursor_mode
 	
 	if(cullFaces == true)
 	{
