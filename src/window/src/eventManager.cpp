@@ -89,6 +89,11 @@ void EventManager::updateKeyboardState()
 			case GLFW_KEY_RIGHT_CONTROL :
 				this->keyString = "ctrl-r";
 				break;
+			
+			//	TODO: 
+			//	alt and super keys seem buggy?
+			//	investigate
+			
 			case GLFW_KEY_LEFT_ALT :
 				this->keyString = "alt-l";
 				break;
