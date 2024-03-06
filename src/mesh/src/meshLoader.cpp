@@ -150,26 +150,5 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
 
-    // this->prepareBufferData(this->vertexIndices, out_vertices, this->temp_vertices);
-    // this->prepareBufferData(this->uvIndices, out_uvs, this->temp_uvs);
-    // this->prepareBufferData(this->normalIndices, out_normals, this->temp_normals);
-
     fclose(this->file);                                                                           //  Close the file
 };
-
-	
-// void MeshLoader::parseWavefrontObj()
-// {
-	
-// };
-
-// void MeshLoader::prepareBufferData(vector<unsigned int> indexVec, vector<vec3> outVec, vector<vec3> tempVec)
-// {
-// 	for( unsigned int i = 0; i < indexVec.size(); i++ )
-// 	{
-// 		unsigned int index = indexVec[i];
-// 		vec3 vertexData = tempVec[index - 1];
-		
-// 		outVec.push_back(vertexData);
-// 	};
-// };

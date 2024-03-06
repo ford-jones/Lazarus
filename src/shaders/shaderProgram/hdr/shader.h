@@ -19,11 +19,9 @@
 
 #include <iostream>
 #include <memory>
-#include "../../../utils/hdr/fileReader.h"
 
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
+#include "../../../utils/hdr/fileReader.h"
+#include "../../../utils/hdr/constants.h"
 
 using std::unique_ptr;
 

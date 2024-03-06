@@ -19,22 +19,12 @@
 
 #include <iostream>
 #include <string>
+#include "../../utils/hdr/constants.h"
 
 using std::string;
 
 #ifndef LAZARUS_EVENT_MANAGER_H
 #define LAZARUS_EVENT_MANAGER_H
-
-static int LAZARUS_LISTENER_KEYCODE;
-static int LAZARUS_LISTENER_SCANCODE;
-
-static int LAZARUS_LISTENER_MOUSECODE;
-static double LAZARUS_LISTENER_MOUSEX;
-static double LAZARUS_LISTENER_MOUSEY;
-
-static double LAZARUS_LISTENER_SCROLLCODE;
-
-static const int LAZARUS_MOUSE_NOCLICK = 999;
 
 class EventManager
 {

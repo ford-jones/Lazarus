@@ -17,9 +17,11 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
-#include "glm/glm.hpp"
+#include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
+#include <filesystem>
 
 using std::vector;
 using std::string;
@@ -28,6 +30,8 @@ using glm::vec2;
 
 #ifndef MATERIAL_LOADER_H
 #define MATERIAL_LOADER_H
+
+namespace fs = std::filesystem;
 
 class MaterialLoader
 {

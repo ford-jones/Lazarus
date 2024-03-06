@@ -27,10 +27,6 @@
 
 #include "../../materials/hdr/materialLoader.h"
 
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
 using std::unique_ptr;
 using std::vector;
 using std::string;
@@ -66,9 +62,6 @@ class MeshLoader
         );
 
     private:
-        // void parseWavefrontObj();
-        // void prepareBufferData(vector<unsigned int> indexVec, vector<vec3> outVec, vector<vec3> tempVec);
-
         string filenameString;  
         int materialIdentifierIndex;
         int triangleCount;
