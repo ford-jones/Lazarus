@@ -18,16 +18,6 @@
 /*  LAZARUS ENGINE */
 
 #include "../hdr/fileReader.h"
-#include <string>
-#include <fstream>
-#include <iostream>
-
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
-using std::ifstream;
-using std::string;
 
 const char *FileReader::readShader(string filename)
 {

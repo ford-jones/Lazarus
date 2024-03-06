@@ -17,28 +17,11 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
-#include <cstdlib>
-#include <vector>
-#include <cstring>
-#include <string>
-#include <stdio.h>
-#include <iostream>
-#include <filesystem>
-#include "glm/glm.hpp"
+#ifndef __GLEW_H__
+    #include "../../utils/hdr/gl_includes.h"
+#endif
 
 #include "../hdr/materialLoader.h"
-
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
-using std::vector;
-using std::string;
-using glm::vec3;
-using glm::vec2;
-
-namespace fs = std::filesystem;
-
 
 string MaterialLoader::findMaterial(char *filename)
 {

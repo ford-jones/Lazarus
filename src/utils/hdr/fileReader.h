@@ -17,13 +17,17 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#include <iostream>
 #include <sstream>
 #include <fstream>
 #include <filesystem>
 #include <string>
 
+#include "./constants.h"
+
 namespace fs = std::filesystem;
 
+using std::ifstream;
 using std::string;
 
 #ifndef PATHFINDER_H
