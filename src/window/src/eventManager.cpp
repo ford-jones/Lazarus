@@ -23,28 +23,31 @@
 
 #include "../hdr/eventManager.h"
 //	TODO:
-//	Create event callbacks and reporters for scroll, mousemove and click
-
-//	TODO:
 //	Move globals to some sort of globals file
 
 void EventManager::monitorEvents()
-{
+{	
+
     glfwPollEvents();
     win = glfwGetCurrentContext();
 	
 	glfwSetKeyCallback(win, keydownCallback);
-    this->updateKeyState();
+	glfwSetCursorPosCallback(win, mouseMoveCallback);
+	glfwSetMouseButtonCallback(win, mouseDownCallback);
+	glfwSetScrollCallback(win, scrollCallback);
+	
+    this->updateKeyboardState();
+    this->updateMouseState();
 };
 
-void EventManager::updateKeyState()
+void EventManager::updateKeyboardState()
 {
 	//	TODO: 
 	//	Create cases and unique strings for remaining weird keys; capslock, pgup/down, screenshot etc 
 	
+	this->keyString = "";
 	this->keyCode = 0;
 	this->osCode = 0;
-	this->keyString = "";
 	
 	this->keyCode = LAZARUS_LISTENER_KEYCODE;
 	this->osCode = LAZARUS_LISTENER_SCANCODE;
@@ -86,6 +89,11 @@ void EventManager::updateKeyState()
 			case GLFW_KEY_RIGHT_CONTROL :
 				this->keyString = "ctrl-r";
 				break;
+			
+			//	TODO: 
+			//	alt and super keys seem buggy?
+			//	investigate
+			
 			case GLFW_KEY_LEFT_ALT :
 				this->keyString = "alt-l";
 				break;
@@ -105,6 +113,23 @@ void EventManager::updateKeyState()
 	};
 };
 
+void EventManager::updateMouseState()
+{
+	this->mouseCode = LAZARUS_MOUSE_NOCLICK;
+	this->mouseX = 0.0;
+	this->mouseY = 0.0;
+	
+	this->mouseCode = LAZARUS_LISTENER_MOUSECODE;
+	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
+	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);		
+	
+	//	TODO: 
+	//	This is utter nonsense, scroll right now can only be either 1 (up) || -1 (down)
+	//	It will do for now, but should probably be changed to some sort of incrementing / decrementing number
+	//	At the very least, it should be reset to 0 when the scrollwheel is not in motion
+	this->scrollCode = static_cast<int>(LAZARUS_LISTENER_SCROLLCODE);
+};
+
 void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
 {
 	switch(action)
@@ -120,4 +145,30 @@ void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int a
 		default:
 			break;
 	};
+};
+
+void EventManager::mouseDownCallback(GLFWwindow *win, int button, int action, int mods)
+{
+	switch(action)
+	{
+		case GLFW_PRESS :
+			LAZARUS_LISTENER_MOUSECODE = button;
+			break;
+		case GLFW_RELEASE :
+			LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
+			break;
+		default :
+			break;
+	};
+};
+
+void EventManager::mouseMoveCallback(GLFWwindow *win, double xpos, double ypos)
+{
+	LAZARUS_LISTENER_MOUSEX = xpos;
+	LAZARUS_LISTENER_MOUSEY = ypos;
+};
+
+void EventManager::scrollCallback(GLFWwindow *win, double xoffset, double yoffset)
+{
+	LAZARUS_LISTENER_SCROLLCODE = yoffset;
 };

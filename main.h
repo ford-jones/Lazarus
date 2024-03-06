@@ -34,7 +34,6 @@ const char** errorMessage;
 
 float moveX, moveZ;
 float turnX, turnY;
-string currentKey;
 
 void moveCamera(string key);
 

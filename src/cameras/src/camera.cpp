@@ -41,7 +41,7 @@ shared_ptr<Camera::FixedCamera> Camera::createFixedCamera(int arX, int arY, doub
     fixedCamera->locationZ            =   pZ;
 
     fixedCamera->cameraPosition       =   vec3(fixedCamera->locationX, fixedCamera->locationY, fixedCamera->locationZ);                                                                                          //  Define the camera's position
-    fixedCamera->targetPosition       =   vec3(tX, tY, tZ);                                                                                          //  Define the camera's target location
+    fixedCamera->targetPosition		  =	  vec3(tX, tY, tZ);
     fixedCamera->upVector             =   vec3(uX, uY, uZ);                                                                                          //  Define the tilt / rotation of the camera
 
     

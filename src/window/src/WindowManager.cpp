@@ -32,8 +32,14 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.fullscreen = win;
 };
 
+
 int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, bool texTwoDimensions)
 {
+	//	TODO:
+	//	Create options for event input modes
+	//	e.g. true / false GLFW_CURSOR_DISABLED
+	//	see https://www.glfw.org/docs/3.3/input_guide.html#cursor_mode
+	
 	if(cullFaces == true)
 	{
 		glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
