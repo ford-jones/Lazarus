@@ -25,8 +25,6 @@
 #endif
 
 #include "../hdr/eventManager.h"
-//	TODO:
-//	Move globals to some sort of globals file
 
 void EventManager::monitorEvents()
 {	

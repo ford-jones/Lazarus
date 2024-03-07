@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef LAZARUS_CONSTANTS_H
 #define LAZARUS_CONSTANTS_H
 

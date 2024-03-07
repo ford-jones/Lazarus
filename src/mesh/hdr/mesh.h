@@ -49,7 +49,9 @@ class Mesh
             int id;
             int numOfVertices;
             int numOfFaces;
+            //	TODO:
             //  add material count
+            
             const char* filepath;
             
             float locationX;
