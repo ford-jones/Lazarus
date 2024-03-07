@@ -17,6 +17,10 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../hdr/constants.h"
+#endif
+
 #include "../hdr/fileReader.h"
 
 const char *FileReader::readShader(string filename)
@@ -34,10 +38,16 @@ const char *FileReader::readShader(string filename)
 
             contents = stringstream.str();
             return contents.c_str();
-        } else {
+        } 
+        else 
+        {
             std::cout << RED_TEXT << "fileStream is not open" << RESET_TEXT << std::endl;
-        }
-    } else {
-        std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
+            return LAZARUS_FILESTREAM_CLOSED;
+        };
     }
-}
+    else 
+    {
+        std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
+        return LAZARUS_FILE_NOT_FOUND;
+    };
+};

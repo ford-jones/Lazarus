@@ -61,6 +61,10 @@ int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, boo
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
     
 	glUseProgram(shader);
+	
+	this->checkErrors();
+	
+	return GLFW_NO_ERROR;
 };
 
 int WindowManager::initialise()
@@ -110,7 +114,11 @@ int WindowManager::checkErrors()
         std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
 
         return errorCode;
-    };
+    }
+    else 
+    {
+    	return GLFW_NO_ERROR;
+    }
 };
 
 int WindowManager::initialiseGLEW()

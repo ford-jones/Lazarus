@@ -67,4 +67,5 @@ bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, int numOfTri, 
         }
     }
     fclose(file);                                                                                                   //  Close the file
-}
+    return true;
+};

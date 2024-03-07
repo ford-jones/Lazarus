@@ -16,6 +16,9 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
+#endif
 
 #ifndef __GLEW_H__
     #include "../../utils/hdr/gl_includes.h"

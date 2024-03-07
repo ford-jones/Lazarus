@@ -44,6 +44,10 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
 
     while( 1 )
     {                                                                                           //  Start loader loop
+        //	TODO:
+    	//	I'm just about certain that this is causing the random SIGSEGV
+    	//	Valgrind winges about something to do with the "new" operator below
+    	//	The way memory is being allocated and free'd here is pretty wreckless
         this->matFinder   =   new MaterialLoader;
         this->matLoader   =   new MaterialLoader;
         this->res = fscanf(file, "%s", identifier);                                               //  initialise the file scanner
@@ -151,4 +155,5 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
     }
 
     fclose(this->file);                                                                           //  Close the file
+    return true;
 };

@@ -81,7 +81,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
 
-    this->checkErrors("initialiseMesh");
+    this->checkErrors();
 
     return meshData;
 };
@@ -90,26 +90,25 @@ void Mesh::loadMesh(TriangulatedMesh &meshData)
 {
     glUniformMatrix4fv(meshData.modelviewUniformLocation, 1, GL_FALSE, &meshData.modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
 
-    this->checkErrors("loadMesh");
+    this->checkErrors();
 };
 
 void Mesh::drawMesh(TriangulatedMesh &meshData)
 {
     glDrawArrays(GL_TRIANGLES, 0, meshData.vertices.size());                                                                                //  Draw the contents of the enabled VAO's stored in this context
 
-    this->checkErrors("drawMesh");
+    this->checkErrors();
 
     this->releaseMesh();
 };
 
-void Mesh::checkErrors(char invocator[])
+void Mesh::checkErrors()
 {
     this->errorCode = glGetError();                                                                                       //  Check for errors
     
     if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
     {
         std::cout << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
-        std::cout << "From: " << invocator << std::endl;
     };
 };
 
@@ -120,7 +119,7 @@ void Mesh::releaseMesh()
     glDeleteBuffers         (1, &this->VBO[1]);
     glDeleteBuffers         (1, &this->VBO[2]);
 
-    this->checkErrors("releaseMesh");
+    this->checkErrors();
 };
 
 Mesh::~Mesh()
