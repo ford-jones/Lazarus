@@ -26,7 +26,12 @@
 Mesh::Mesh(GLuint shader)
 {
 	this->shaderProgram = shader;
-	triangulatedMesh = nullptr;
+	
+	this->finder = nullptr;
+	this->loader = nullptr;
+	this->triangulatedMesh = nullptr;
+	
+	this->errorCode = GL_NO_ERROR;
 };
 
 std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string filepath)
@@ -147,6 +152,6 @@ void Mesh::releaseMesh()
 Mesh::~Mesh()
 {
     this->releaseMesh();
-
+	
     std::cout << "Destroying mesh memory" << std::endl;
 };

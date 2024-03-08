@@ -30,6 +30,7 @@ using std::unique_ptr;
 class Shader 
 {
     public:
+    	Shader();
         GLuint initialiseShader();
         virtual ~Shader();
 

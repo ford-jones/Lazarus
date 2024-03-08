@@ -22,6 +22,18 @@
 
 #include "../hdr/meshLoader.h"
 
+MeshLoader::MeshLoader()
+{
+	this->materialIdentifierIndex	=	0;
+	this->triangleCount				=	0;
+	this->res 						=	0;
+	this->matches 					=	0;
+	
+	this->file 						=	NULL;
+	this->matFinder 				=	NULL;
+	this->matLoader 				=	NULL;
+};
+
 string MeshLoader::findMesh(string filepath) 
 {
     this->filenameString      =   fs::absolute(filepath).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string

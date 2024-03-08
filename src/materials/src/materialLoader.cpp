@@ -23,6 +23,12 @@
 
 #include "../hdr/materialLoader.h"
 
+MaterialLoader::MaterialLoader()
+{
+	diffuseTexCount = 0;
+	file = NULL;
+};
+
 string MaterialLoader::findMaterial(char *filename)
 {
     fs::path fn     =   "assets/material/" + string(filename);                                                      //  Create a target path, comprised of the target file's name prefixed by it's directory

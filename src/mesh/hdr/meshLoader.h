@@ -51,7 +51,9 @@ class MeshLoader
         vector<string> fileVec;                                                                                 //  A vector containing files who's name matches the function input at the absolute path
 
         string foundMaterial;
-        
+    	
+    	MeshLoader();	
+    	    
         string findMesh(string filename);
         bool loadMesh(
             const char *path,                                                                                       //  The absolute path to the file readers target
