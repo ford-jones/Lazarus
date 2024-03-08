@@ -59,8 +59,13 @@ int main()
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             world = worldBuilder->initialiseMesh(world);
-            worldBuilder->loadMesh(*world);
-            worldBuilder->drawMesh(*world);
+            //	TODO:
+            //	Instead of passing a mem handler, pass the entire shared pointer
+            //	Move ownership to the loader then return it
+            //	Do the same for the draw function
+            
+            worldBuilder->loadMesh(world);
+            worldBuilder->drawMesh(world);
         }
         else
         {
@@ -73,8 +78,8 @@ int main()
             beachball = beachballBuilder->initialiseMesh(beachball);
             beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
             beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
-            beachballBuilder->loadMesh(*beachball);
-            beachballBuilder->drawMesh(*beachball);
+            beachballBuilder->loadMesh(beachball);
+            beachballBuilder->drawMesh(beachball);
         }
         else
         {

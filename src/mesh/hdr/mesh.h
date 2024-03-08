@@ -71,8 +71,8 @@ class Mesh
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
-        void loadMesh(TriangulatedMesh &meshData);
-        void drawMesh(TriangulatedMesh &meshData);
+        void loadMesh(shared_ptr<TriangulatedMesh> meshData);
+        void drawMesh(shared_ptr<TriangulatedMesh> meshData);
         virtual ~Mesh();
 
     private:
