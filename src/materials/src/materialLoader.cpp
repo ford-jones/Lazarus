@@ -29,14 +29,6 @@ MaterialLoader::MaterialLoader()
 	file = NULL;
 };
 
-string MaterialLoader::findMaterial(char *filename)
-{
-    fs::path fn     =   "assets/material/" + string(filename);                                                      //  Create a target path, comprised of the target file's name prefixed by it's directory
-    string fns      =   fs::absolute(fn).string();                                                                  //  Find the absolute path from root (/) to the mesh asset and convert to std::string
-
-    return fns;                                                                                                     //  Return the absolute path, exit the thread
-};
-
 bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, int numOfTri, int materialIdentificationIndex) 
 {
     diffuseTexCount = 0;

@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <memory>
 
+#include "../../utils/hdr/fileReader.h"
 #include "../hdr/meshLoader.h"
 
 #define GREEN_TEXT "\x1b[32m"
@@ -89,7 +90,7 @@ class Mesh
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO[3];                                                                      //  The OpenGL Vertex Buffer Object
 
-        unique_ptr<MeshLoader> finder;
+        unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> loader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;

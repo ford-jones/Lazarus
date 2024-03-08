@@ -24,7 +24,9 @@
 #include <filesystem>
 #include <cstring>
 #include <stdarg.h>
+#include <string.h>
 
+#include "../../utils/hdr/fileReader.h"
 #include "../../materials/hdr/materialLoader.h"
 
 using std::unique_ptr;
@@ -48,13 +50,11 @@ class MeshLoader
         vector<vec2> temp_uvs;                                                                                  //  Temporary buffer for storing each set of 3 corresponding uv indexes
         vector<vec3> temp_normals;                                                                              //  Temporary buffer for storing each set of 3 corresponding normal indexes
         vector<vec3> temp_diffuse;
-        vector<string> fileVec;                                                                                 //  A vector containing files who's name matches the function input at the absolute path
 
         string foundMaterial;
     	
     	MeshLoader();	
     	    
-        string findMesh(string filename);
         bool loadMesh(
             const char *path,                                                                                       //  The absolute path to the file readers target
             vector<vec3> &out_vertices,                                                                             //  Location of the loaders vertices vector output
@@ -64,7 +64,7 @@ class MeshLoader
         );
 
     private:
-        string filenameString;  
+        //string filenameString;  
         int materialIdentifierIndex;
         int triangleCount;
         int res;
@@ -75,7 +75,8 @@ class MeshLoader
         vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
 
         char* matFn;
-		MaterialLoader *matFinder;
+		//MaterialLoader *matFinder;
+		unique_ptr<FileReader> matFinder;
 		MaterialLoader *matLoader;
 };
 

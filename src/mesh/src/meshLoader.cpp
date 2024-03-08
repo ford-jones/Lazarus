@@ -30,22 +30,17 @@ MeshLoader::MeshLoader()
 	this->matches 					=	0;
 	
 	this->file 						=	NULL;
-	this->matFinder 				=	NULL;
+	this->matFinder 				= nullptr;
 	this->matLoader 				=	NULL;
-};
-
-string MeshLoader::findMesh(string filepath) 
-{
-    this->filenameString      =   fs::absolute(filepath).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
-
-    this->fileVec.push_back(this->filenameString);                                                                     //  Push the absolute path into a temporary storage buffer
-    return this->filenameString;                                         //  Return the absolute path to the asset, exit the thread
 };
 
 bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
 {
+	this->matFinder = std::make_unique<FileReader>();
+	
     this->materialIdentifierIndex = 0;
     this->triangleCount = 0;
+    
     this->file = fopen(path, "r");                                                                    //  Open the file located at `path` with read permissions
     char identifier[128];                                                                       //  Store for the first string of each line from the loaded file
 
@@ -60,7 +55,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
     	//	I'm just about certain that this is causing the random SIGSEGV
     	//	Valgrind winges about something to do with the "new" operator below
     	//	The way memory is being allocated and free'd here is pretty wreckless
-        this->matFinder   =   new MaterialLoader;
+
         this->matLoader   =   new MaterialLoader;
         this->res = fscanf(file, "%s", identifier);                                               //  initialise the file scanner
 
@@ -68,7 +63,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         {
             matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);      //  Call the material loader once more to pass in the final face / mtl count
             delete[] matFn;                                                                     //  Free allocated memory
-            delete matFinder;
+            matFinder.reset();
             delete matLoader;
             break;                                                                              //  Break out of the loop.
         }
@@ -78,7 +73,12 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
             this->matFn       =   new char[20];                                                       //  Create an identifier to store a char[]
             fscanf(this->file, "%s\n", this->matFn);                                                        //  Continue reading the line, the next store the string containing the name of the file
             
-            this->foundMaterial = matFinder->findMaterial(this->matFn);                                     //  Find the file using the file finder
+            //	TODO:
+            //	This is hardcoding and needs reperation
+            
+            string filename = string(this->matFn);
+            string path = "assets/material/";
+            this->foundMaterial = matFinder->findFile(path + filename);                                     //  Find the file using the file finder
         }
 
         else if ( strcmp( identifier, "v" ) == 0 )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates

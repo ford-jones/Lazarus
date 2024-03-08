@@ -36,14 +36,14 @@ Mesh::Mesh(GLuint shader)
 
 std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string filepath)
 {
-    this->finder = std::make_unique<MeshLoader>();
+    this->finder = std::make_unique<FileReader>();
     this->loader = std::make_unique<MeshLoader>();
     this->triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
 
     srand(time((0)));
     triangulatedMesh->id = 1 + (rand() % 2147483647);
 
-    finder->findMesh(filepath);
+    finder->findFile(filepath);
     triangulatedMesh->filepath = finder->fileVec[0].c_str();
     loader->loadMesh(triangulatedMesh->filepath, vertices, uvs, normals, diffuse);
     

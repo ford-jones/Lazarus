@@ -40,7 +40,6 @@ class MaterialLoader
         int diffuseTexCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
         
         MaterialLoader();
-        string findMaterial(char *filename);
         bool loadMaterial(string path, vector<vec3> &out, int fCount, int mtlCount);
 
     private:
