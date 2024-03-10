@@ -178,11 +178,11 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
 
 	matLoader->loadMaterial(foundMaterial, out_diffuse, materialBuffer);
 
-    fclose(this->file);                                                                           //  Close the file    
     return true;
 };
 
 MeshLoader::~MeshLoader()
 {
+    fclose(this->file);                                                                           //  Close the file    
 	std::cout << GREEN_TEXT << "Destroying 'MeshLoader' class." << RESET_TEXT << std::endl;
 };

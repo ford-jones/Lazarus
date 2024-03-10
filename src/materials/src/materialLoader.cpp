@@ -73,11 +73,11 @@ bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<
             };
         }
     }
-    fclose(file);                                                                                                   //  Close the file
     return true;
 };
 
 MaterialLoader::~MaterialLoader()
 {
+    fclose(file);                                                                                                   //  Close the file
     std::cout << GREEN_TEXT << "Destroying 'MaterialLoader' class." << RESET_TEXT << std::endl;
 };
