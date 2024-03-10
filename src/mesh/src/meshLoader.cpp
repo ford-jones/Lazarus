@@ -36,13 +36,13 @@ MeshLoader::MeshLoader()
 	
 	this->file 						=	NULL;
 	this->matFinder 				= 	nullptr;
-	this->matLoader 				=	NULL;
+	this->matLoader 				=	nullptr;
 };
 
 bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
 {
 	this->matFinder = std::make_unique<FileReader>();
-	//this->matLoader = std::make_shared<MaterialLoader>();
+	this->matLoader = std::make_unique<MaterialLoader>();
 	
     this->materialIdentifierIndex = 0;
     this->triangleCount = 0;
@@ -62,7 +62,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
     	//	Valgrind winges about something to do with the "new" operator below
     	//	The way memory is being allocated and free'd here is pretty wreckless
 
-		this->matLoader   =   new MaterialLoader;
+		//this->matLoader   =   new MaterialLoader;
         this->res = fscanf(file, "%s", identifier);                                               //  initialise the file scanner
 
         if (this->res == EOF)                                                                         //  If, the scanner has reached the end of the file
@@ -70,10 +70,9 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
             //matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);      //  Call the material loader once more to pass in the final face / mtl count
             this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);
-            
-			
+            		
             delete[] matFn;                                                                     //  Free allocated memory
-            delete matLoader;
+            //delete matLoader;
             matFinder.reset();
             break;                                                                              //  Break out of the loop.
         }

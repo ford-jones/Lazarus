@@ -85,22 +85,22 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 	glGenBuffers                (3, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
 	
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[0]);                                                                                  //  Bind the first VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(triangulatedMesh->vertices), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
+    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(vec3), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
 	glVertexAttribPointer       (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
 	glEnableVertexAttribArray   (0);                                                                                                        //  enable the first VBO in this context
 
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[1]);                                                                                  //  Bind the second VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->normals.size() * sizeof(triangulatedMesh->normals), &triangulatedMesh->normals[0], GL_STATIC_DRAW);                           //  Pass normals (vertex-direction) data recieved from the loader function to the VBO                                  
+    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->normals.size() * sizeof(vec3), &triangulatedMesh->normals[0], GL_STATIC_DRAW);                           //  Pass normals (vertex-direction) data recieved from the loader function to the VBO                                  
     glVertexAttribPointer       (1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (1);                                                                                                        //  enable the second VBO in this context
     
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[2]);                                                                                  //  Bind the third VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(triangulatedMesh->diffuse), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
+    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
     glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
 
     this->checkErrors();
-
+	
     return triangulatedMesh;
 };
 

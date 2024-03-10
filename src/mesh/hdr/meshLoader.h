@@ -82,8 +82,8 @@ class MeshLoader
         char* matFn;
 		//MaterialLoader *matFinder;
 		unique_ptr<FileReader> matFinder;
-		//shared_ptr<MaterialLoader> matLoader;
-		MaterialLoader *matLoader;
+		unique_ptr<MaterialLoader> matLoader;
+		//MaterialLoader *matLoader;
 };
 
 #endif
