@@ -53,7 +53,7 @@ class Camera
         };
 
 		//	TODO:
-		//	Make creation function for an orthodontic camera (projection matrix constructed with glm::ortho rather than glm::perspective)
+		//	Make creation function for an orthographic camera (projection matrix constructed with glm::ortho rather than glm::perspective)
 		//	Rename the existing creation function to createPerspectiveCamera()
 		
         shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);

@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <memory>
 
+#include "../../utils/hdr/fileReader.h"
 #include "../hdr/meshLoader.h"
 
 #define GREEN_TEXT "\x1b[32m"
@@ -49,7 +50,9 @@ class Mesh
             int id;
             int numOfVertices;
             int numOfFaces;
+            //	TODO:
             //  add material count
+            
             const char* filepath;
             
             float locationX;
@@ -69,12 +72,12 @@ class Mesh
 
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
-        void loadMesh(TriangulatedMesh &meshData);
-        void drawMesh(TriangulatedMesh &meshData);
+        void loadMesh(shared_ptr<TriangulatedMesh> meshData);
+        void drawMesh(shared_ptr<TriangulatedMesh> meshData);
         virtual ~Mesh();
 
     private:
-        void checkErrors(char invocator[]);
+        void checkErrors();
         void releaseMesh();
 
         int errorCode;
@@ -87,7 +90,7 @@ class Mesh
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO[3];                                                                      //  The OpenGL Vertex Buffer Object
 
-        unique_ptr<MeshLoader> finder;
+        unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> loader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;

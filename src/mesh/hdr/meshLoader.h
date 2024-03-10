@@ -24,7 +24,9 @@
 #include <filesystem>
 #include <cstring>
 #include <stdarg.h>
+#include <string.h>
 
+#include "../../utils/hdr/fileReader.h"
 #include "../../materials/hdr/materialLoader.h"
 
 using std::unique_ptr;
@@ -48,11 +50,11 @@ class MeshLoader
         vector<vec2> temp_uvs;                                                                                  //  Temporary buffer for storing each set of 3 corresponding uv indexes
         vector<vec3> temp_normals;                                                                              //  Temporary buffer for storing each set of 3 corresponding normal indexes
         vector<vec3> temp_diffuse;
-        vector<string> fileVec;                                                                                 //  A vector containing files who's name matches the function input at the absolute path
 
         string foundMaterial;
-        
-        string findMesh(string filename);
+    	
+    	MeshLoader();	
+    	    
         bool loadMesh(
             const char *path,                                                                                       //  The absolute path to the file readers target
             vector<vec3> &out_vertices,                                                                             //  Location of the loaders vertices vector output
@@ -60,21 +62,26 @@ class MeshLoader
             vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
             vector<vec3> &out_diffuse
         );
+        
+        virtual ~MeshLoader();
 
     private:
-        string filenameString;  
+        vector<vector<int>> materialBuffer;
+        vector<int> materialData;
         int materialIdentifierIndex;
         int triangleCount;
+        
         int res;
-        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
         int matches;
+        char* matFn;
+        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
+        
         vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
         vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector
         vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
 
-        char* matFn;
-		MaterialLoader *matFinder;
-		MaterialLoader *matLoader;
+		unique_ptr<FileReader> matFinder;
+		unique_ptr<MaterialLoader> matLoader;
 };
 
 #endif

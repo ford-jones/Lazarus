@@ -17,7 +17,19 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../hdr/constants.h"
+#endif
+
 #include "../hdr/fileReader.h"
+
+string FileReader::findFile(string filepath) 
+{
+    this->filenameString      =   fs::absolute(filepath).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
+
+    this->fileVec.push_back(this->filenameString);                                                                     //  Push the absolute path into a temporary storage buffer
+    return this->filenameString;                                         //  Return the absolute path to the asset, exit the thread
+};
 
 const char *FileReader::readShader(string filename)
 {
@@ -34,10 +46,16 @@ const char *FileReader::readShader(string filename)
 
             contents = stringstream.str();
             return contents.c_str();
-        } else {
+        } 
+        else 
+        {
             std::cout << RED_TEXT << "fileStream is not open" << RESET_TEXT << std::endl;
-        }
-    } else {
-        std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
+            return LAZARUS_FILESTREAM_CLOSED;
+        };
     }
-}
+    else 
+    {
+        std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
+        return LAZARUS_FILE_NOT_FOUND;
+    };
+};

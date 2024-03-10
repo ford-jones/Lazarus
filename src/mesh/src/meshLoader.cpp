@@ -16,24 +16,37 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
+#endif
+    		
 #ifndef __GLEW_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
 #include "../hdr/meshLoader.h"
 
-string MeshLoader::findMesh(string filepath) 
+MeshLoader::MeshLoader()
 {
-    this->filenameString      =   fs::absolute(filepath).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
-
-    this->fileVec.push_back(this->filenameString);                                                                     //  Push the absolute path into a temporary storage buffer
-    return this->filenameString;                                         //  Return the absolute path to the asset, exit the thread
+	std::cout << GREEN_TEXT << "Constructing class 'MeshLoader'." << RESET_TEXT << std::endl;
+	this->materialIdentifierIndex	=	0;
+	this->triangleCount				=	0;
+	this->res 						=	0;
+	this->matches 					=	0;
+	
+	this->file 						=	NULL;
+	this->matFinder 				= 	nullptr;
+	this->matLoader 				=	nullptr;
 };
 
 bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
 {
+	this->matFinder = std::make_unique<FileReader>();
+	this->matLoader = std::make_unique<MaterialLoader>();
+	
     this->materialIdentifierIndex = 0;
     this->triangleCount = 0;
+    
     this->file = fopen(path, "r");                                                                    //  Open the file located at `path` with read permissions
     char identifier[128];                                                                       //  Store for the first string of each line from the loaded file
 
@@ -44,16 +57,15 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
 
     while( 1 )
     {                                                                                           //  Start loader loop
-        this->matFinder   =   new MaterialLoader;
-        this->matLoader   =   new MaterialLoader;
         this->res = fscanf(file, "%s", identifier);                                               //  initialise the file scanner
 
         if (this->res == EOF)                                                                         //  If, the scanner has reached the end of the file
         {
-            matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);      //  Call the material loader once more to pass in the final face / mtl count
+            this->materialData = {materialIdentifierIndex, triangleCount};
+			this->materialBuffer.push_back(this->materialData);
+            		
             delete[] matFn;                                                                     //  Free allocated memory
-            delete matFinder;
-            delete matLoader;
+            matFinder.reset();
             break;                                                                              //  Break out of the loop.
         }
 
@@ -62,7 +74,12 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
             this->matFn       =   new char[20];                                                       //  Create an identifier to store a char[]
             fscanf(this->file, "%s\n", this->matFn);                                                        //  Continue reading the line, the next store the string containing the name of the file
             
-            this->foundMaterial = matFinder->findMaterial(this->matFn);                                     //  Find the file using the file finder
+            //	TODO:
+            //	This is hardcoding and needs reperation
+            
+            string filename = string(this->matFn);
+            string path = "assets/material/";
+            this->foundMaterial = matFinder->findFile(path + filename);                                     //  Find the file using the file finder
         }
 
         else if ( strcmp( identifier, "v" ) == 0 )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
@@ -83,7 +100,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
             this->temp_normals.push_back(this->normal);                                                     //  Push the aforementioned object into the temporary normal vector
         }
 
-        else if ( strcmp( identifier, "f" ) == 0 )                                              //  If the first string of the current line is "f", the data describes which 3 vertexes build a face
+        else if ( strcmp(identifier, "f" ) == 0 )                                              //  If the first string of the current line is "f", the data describes which 3 vertexes build a face
         {                                                                                       //  (Each face is triangulated on export and so is comprised of 3 vertexes)
             this->triangleCount += 1;
             this->matches = fscanf
@@ -120,8 +137,9 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         }
         else if( strcmp( identifier, "usemtl" ) == 0 )                                                          //  If the first string of the current line is "usemtl", the following string identifies the use of a new material for following faces
         {
-            matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);        //  Call the material loader function
-
+			this->materialData = {materialIdentifierIndex, triangleCount};
+			this->materialBuffer.push_back(this->materialData);
+			
             this->materialIdentifierIndex += 1;                                                                       //  Increase the material identification number by 1
             this->triangleCount = 0;                                                                                  //  Reset the triangle count to 0 for the next read
         }
@@ -150,5 +168,21 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
 
-    fclose(this->file);                                                                           //  Close the file
+    std::cout << "File: " << path << std::endl;
+    for(auto i: materialBuffer)
+    {
+		std::cout << "Material Index: " << i[0] << std::endl;
+		std::cout << "Face Count: " << i[1] << std::endl;
+		std::cout << "--" << std::endl;
+    };
+
+	matLoader->loadMaterial(foundMaterial, out_diffuse, materialBuffer);
+
+    fclose(this->file);                                                                           //  Close the file    
+    return true;
+};
+
+MeshLoader::~MeshLoader()
+{
+	std::cout << GREEN_TEXT << "Destroying 'MeshLoader' class." << RESET_TEXT << std::endl;
 };

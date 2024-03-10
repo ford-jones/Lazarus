@@ -16,14 +16,15 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
+#endif
 
 #ifndef __GLEW_H__
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
 #include "../hdr/eventManager.h"
-//	TODO:
-//	Move globals to some sort of globals file
 
 void EventManager::monitorEvents()
 {	

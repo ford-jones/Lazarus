@@ -16,6 +16,9 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
+#endif
 
 #ifndef __GLEW_H__
     #include "../../utils/hdr/gl_includes.h"
@@ -23,15 +26,14 @@
 
 #include "../hdr/materialLoader.h"
 
-string MaterialLoader::findMaterial(char *filename)
+MaterialLoader::MaterialLoader()
 {
-    fs::path fn     =   "assets/material/" + string(filename);                                                      //  Create a target path, comprised of the target file's name prefixed by it's directory
-    string fns      =   fs::absolute(fn).string();                                                                  //  Find the absolute path from root (/) to the mesh asset and convert to std::string
-
-    return fns;                                                                                                     //  Return the absolute path, exit the thread
+	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
+	diffuseTexCount = 0;
+	file = NULL;
 };
 
-bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, int numOfTri, int materialIdentificationIndex) 
+bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<int>> data) 
 {
     diffuseTexCount = 0;
 
@@ -55,16 +57,27 @@ bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, int numOfTri, 
         if( strcmp( identifier, "Kd") == 0 )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
         {
             diffuseTexCount += 1;
-            
-            if(diffuseTexCount == materialIdentificationIndex) {
-                fscanf(file, "%f %f %f\n", &diffuse.r, &diffuse.g, &diffuse.b);                                      //  Continue reading the line, the next 3 strings are mapped to a diffuse object in order of r,g,b
+            for(auto i: data)
+            {
+            	int index = i[0];
+            	int faceCount = i[1];
+            	
+	            if(diffuseTexCount == index) {
+    	            fscanf(file, "%f %f %f\n", &diffuse.r, &diffuse.g, &diffuse.b);                                      //  Continue reading the line, the next 3 strings are mapped to a diffuse object in order of r,g,b
 
-                for(unsigned int i = 0; i < numOfTri * 3; i++)                                                       //  Where n = the number of vertex's using the color (number of triangles * 3)
-                {
-                    out.push_back(diffuse);                                                                          //  Push the current diffuse object into the out array n times
-                }
-            }
+    	            for(int j = 0; j < faceCount * 3; j++)                                                       //  Where n = the number of vertex's using the color (number of triangles * 3)
+    	            {
+    	                out.push_back(diffuse);                                                                          //  Push the current diffuse object into the out array n times
+    	            };
+    	        };        
+            };
         }
     }
     fclose(file);                                                                                                   //  Close the file
-}
+    return true;
+};
+
+MaterialLoader::~MaterialLoader()
+{
+    std::cout << GREEN_TEXT << "Destroying 'MaterialLoader' class." << RESET_TEXT << std::endl;
+};

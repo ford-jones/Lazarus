@@ -21,7 +21,6 @@
 #include <memory>
 
 #include "../../../utils/hdr/fileReader.h"
-#include "../../../utils/hdr/constants.h"
 
 using std::unique_ptr;
 
@@ -31,6 +30,7 @@ using std::unique_ptr;
 class Shader 
 {
     public:
+    	Shader();
         GLuint initialiseShader();
         virtual ~Shader();
 

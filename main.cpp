@@ -9,9 +9,9 @@ int main()
 
     shaderProgram = shader.initialiseShader();
 
-    windowBuilder->loadConfig(shaderProgram);																				//  Use the newly created shader program
+    windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
-	lightBuilder = std::make_unique<Light>(shaderProgram);
+    lightBuilder = std::make_unique<Light>(shaderProgram);
     light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
     cameraBuilder = std::make_unique<Camera>(shaderProgram);
@@ -23,15 +23,15 @@ int main()
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
     beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj"));
 
-	printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-	printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
-	printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
+	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
+	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	//std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
+	//printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        std::cout << "Key: " << eventManager.keyString << std::endl;
+        //std::cout << "Key: " << eventManager.keyString << std::endl;
         //std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
         //std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
         //std::cout << "Click State: " << eventManager.mouseCode << std::endl;
@@ -47,6 +47,8 @@ int main()
         {
             light = std::move(lightBuilder->initialiseLight(light));
             
+            camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
+            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
             moveCamera(eventManager.keyString);
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
@@ -59,8 +61,13 @@ int main()
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             world = worldBuilder->initialiseMesh(world);
-            worldBuilder->loadMesh(*world);
-            worldBuilder->drawMesh(*world);
+            //	TODO:
+            //	Instead of passing a mem handler, pass the entire shared pointer
+            //	Move ownership to the loader then return it
+            //	Do the same for the draw function
+            
+            worldBuilder->loadMesh(world);
+            worldBuilder->drawMesh(world);
         }
         else
         {
@@ -71,10 +78,10 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
-            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
-            beachballBuilder->loadMesh(*beachball);
-            beachballBuilder->drawMesh(*beachball);
+            //beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
+            //beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+            beachballBuilder->loadMesh(beachball);
+            beachballBuilder->drawMesh(beachball);
         }
         else
         {
