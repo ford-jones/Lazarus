@@ -36,12 +36,17 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
 };
 
 
-int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, bool texTwoDimensions)
+int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
 {
 	//	TODO:
 	//	Create options for event input modes
 	//	e.g. true / false GLFW_CURSOR_DISABLED
 	//	see https://www.glfw.org/docs/3.3/input_guide.html#cursor_mode
+	
+	if(enableCursor == false)
+	{
+		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	};
 	
 	if(cullFaces == true)
 	{
