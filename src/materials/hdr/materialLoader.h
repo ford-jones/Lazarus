@@ -35,17 +35,15 @@ namespace fs = std::filesystem;
 
 class MaterialLoader
 {
-    public:
-        FILE *file;                                             //  The wavefront material file to be opened
-        int diffuseTexCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
-        
+    public:        
         MaterialLoader();
-        //bool loadMaterial(string path, vector<vec3> &out, int fCount, int mtlCount);
         bool loadMaterial(string path, vector<vec3> &out, vector<vector<int>> data);
         virtual ~MaterialLoader();
 
     private:
         vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
+        FILE *file;                                             //  The wavefront material file to be opened
+        int diffuseTexCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
 };
 
 #endif

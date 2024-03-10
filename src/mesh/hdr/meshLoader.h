@@ -30,7 +30,6 @@
 #include "../../materials/hdr/materialLoader.h"
 
 using std::unique_ptr;
-//using std::shared_ptr;
 using std::vector;
 using std::string;
 using glm::vec3;
@@ -67,23 +66,22 @@ class MeshLoader
         virtual ~MeshLoader();
 
     private:
-        //string filenameString;
         vector<vector<int>> materialBuffer;
         vector<int> materialData;
         int materialIdentifierIndex;
         int triangleCount;
+        
         int res;
-        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
         int matches;
+        char* matFn;
+        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
+        
         vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
         vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector
         vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
 
-        char* matFn;
-		//MaterialLoader *matFinder;
 		unique_ptr<FileReader> matFinder;
 		unique_ptr<MaterialLoader> matLoader;
-		//MaterialLoader *matLoader;
 };
 
 #endif

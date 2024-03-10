@@ -57,22 +57,14 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
 
     while( 1 )
     {                                                                                           //  Start loader loop
-        //	TODO:
-    	//	I'm just about certain that this is causing the random SIGSEGV
-    	//	Valgrind winges about something to do with the "new" operator below
-    	//	The way memory is being allocated and free'd here is pretty wreckless
-
-		//this->matLoader   =   new MaterialLoader;
         this->res = fscanf(file, "%s", identifier);                                               //  initialise the file scanner
 
         if (this->res == EOF)                                                                         //  If, the scanner has reached the end of the file
         {
-            //matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);      //  Call the material loader once more to pass in the final face / mtl count
             this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);
             		
             delete[] matFn;                                                                     //  Free allocated memory
-            //delete matLoader;
             matFinder.reset();
             break;                                                                              //  Break out of the loop.
         }
@@ -145,12 +137,6 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         }
         else if( strcmp( identifier, "usemtl" ) == 0 )                                                          //  If the first string of the current line is "usemtl", the following string identifies the use of a new material for following faces
         {
-            //matLoader->loadMaterial(foundMaterial, out_diffuse, triangleCount, materialIdentifierIndex);        //  Call the material loader function
-            
-			//	TODO:
-			//	Try storing this data in a vector
-			//	call loadMaterial() outside the scope of the loop
-			//	pass in the vector
 			this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);
 			
