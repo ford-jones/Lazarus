@@ -30,6 +30,7 @@
 #include "../../materials/hdr/materialLoader.h"
 
 using std::unique_ptr;
+//using std::shared_ptr;
 using std::vector;
 using std::string;
 using glm::vec3;
@@ -62,9 +63,13 @@ class MeshLoader
             vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
             vector<vec3> &out_diffuse
         );
+        
+        virtual ~MeshLoader();
 
     private:
-        //string filenameString;  
+        //string filenameString;
+        vector<vector<int>> materialBuffer;
+        vector<int> materialData;
         int materialIdentifierIndex;
         int triangleCount;
         int res;
@@ -77,6 +82,7 @@ class MeshLoader
         char* matFn;
 		//MaterialLoader *matFinder;
 		unique_ptr<FileReader> matFinder;
+		//shared_ptr<MaterialLoader> matLoader;
 		MaterialLoader *matLoader;
 };
 

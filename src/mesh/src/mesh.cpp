@@ -17,6 +17,10 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
+#endif
+
 #ifndef __GLEW_H__
     #include "../../utils/hdr/gl_includes.h"
 #endif
@@ -25,6 +29,7 @@
 
 Mesh::Mesh(GLuint shader)
 {
+	std::cout << GREEN_TEXT << "Constructing class 'Mesh'." << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
 	
 	this->finder = nullptr;
@@ -80,7 +85,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 	glGenBuffers                (3, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
 	
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[0]);                                                                                  //  Bind the first VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(meshData->vertices), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
+    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(triangulatedMesh->vertices), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
 	glVertexAttribPointer       (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
 	glEnableVertexAttribArray   (0);                                                                                                        //  enable the first VBO in this context
 
@@ -152,6 +157,6 @@ void Mesh::releaseMesh()
 Mesh::~Mesh()
 {
     this->releaseMesh();
-	
-    std::cout << "Destroying mesh memory" << std::endl;
+    //std::cout << "Destroying mesh memory" << std::endl;
+    std::cout << GREEN_TEXT << "Destroying 'Mesh' class." << RESET_TEXT << std::endl;
 };
