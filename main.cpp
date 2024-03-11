@@ -2,9 +2,13 @@
 
 int main()
 {
+	fileReader = std::make_unique<FileReader>();
+	fileReader->loadImage("assets/images/crosshair.png");
+	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
 	windowBuilder->createCursor(8, 8, 4, 4);
+	
 	
     win = glfwGetCurrentContext();
 
