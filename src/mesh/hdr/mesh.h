@@ -67,9 +67,9 @@ class Mesh
         };
 		
 		Mesh(GLuint shader);
+		
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
         shared_ptr<TriangulatedMesh> createTriangulatedMesh(string filepath);
-
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
         void loadMesh(shared_ptr<TriangulatedMesh> meshData);

@@ -9,7 +9,6 @@ int main()
     windowBuilder->initialise();
 	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
-	
     win = glfwGetCurrentContext();
 
     shaderProgram = shader.initialiseShader();
@@ -36,16 +35,6 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        //std::cout << "Key: " << eventManager.keyString << std::endl;
-        //std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
-        //std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
-        //std::cout << "Click State: " << eventManager.mouseCode << std::endl;
-        //std::cout << "Scroll state: " << eventManager.scrollCode << std::endl;
-        
-    	//fpsCounter.calculateFramesPerSec();
-        //std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
-        //std::cout << "MSPF: " << fpsCounter.durationTillRendered << std::endl;
-
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )

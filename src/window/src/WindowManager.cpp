@@ -67,18 +67,7 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 };
 
 int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
-{
-	//	TODO:
-	//	Create an image loader
-	//	The format of the image data specified in glfw documentation is:
-	//	filetype: png
-	//	size: 32x32
-	//	depth: 32-bit
-	//	color: RGBA
-	
-	unsigned char pixels[sizeX * sizeY * 4];
-	memset(pixels, 0xff, sizeof(pixels));
-	
+{		
 	this->image.width = sizeX;
 	this->image.height = sizeY;
 	this->image.pixels = cursorImage;
