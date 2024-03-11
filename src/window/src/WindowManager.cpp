@@ -66,7 +66,7 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	return GLFW_NO_ERROR;
 };
 
-int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY)
+int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
 {
 	//	TODO:
 	//	Create an image loader
@@ -81,7 +81,7 @@ int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY)
 	
 	this->image.width = sizeX;
 	this->image.height = sizeY;
-	this->image.pixels = pixels;
+	this->image.pixels = cursorImage;
 	
 	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
 	glfwSetCursor(this->window, this->cursor);

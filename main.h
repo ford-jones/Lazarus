@@ -35,6 +35,7 @@ const char** errorMessage;
 
 float moveX, moveZ;
 float turnX, turnY;
+unsigned char *cursorImage;
 
 void moveCamera(string key);
 
