@@ -4,7 +4,7 @@ int main()
 {
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-	windowBuilder->createCursor(16, 16, 0, 0);
+	windowBuilder->createCursor(8, 8, 4, 4);
 	
     win = glfwGetCurrentContext();
 

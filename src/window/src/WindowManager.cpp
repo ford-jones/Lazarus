@@ -36,12 +36,7 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
 };
 
 int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
-{
-	//	TODO:
-	//	Create options for event input modes
-	//	e.g. true / false GLFW_CURSOR_DISABLED
-	//	see https://www.glfw.org/docs/3.3/input_guide.html#cursor_mode
-	
+{	
 	if(enableCursor == false)
 	{
 		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -73,6 +68,14 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 
 int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY)
 {
+	//	TODO:
+	//	Create an image loader
+	//	The format of the image data specified in glfw documentation is:
+	//	filetype: png
+	//	size: 32x32
+	//	depth: 32-bit
+	//	color: RGBA
+	
 	unsigned char pixels[sizeX * sizeY * 4];
 	memset(pixels, 0xff, sizeof(pixels));
 	
