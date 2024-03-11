@@ -35,13 +35,12 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.fullscreen = win;
 };
 
-
-int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, bool texTwoDimensions)
-{
-	//	TODO:
-	//	Create options for event input modes
-	//	e.g. true / false GLFW_CURSOR_DISABLED
-	//	see https://www.glfw.org/docs/3.3/input_guide.html#cursor_mode
+int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
+{	
+	if(enableCursor == false)
+	{
+		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	};
 	
 	if(cullFaces == true)
 	{
@@ -61,6 +60,20 @@ int WindowManager::loadConfig(GLuint shader, bool cullFaces, bool testDepth, boo
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
     
 	glUseProgram(shader);
+	
+	this->checkErrors();
+	
+	return GLFW_NO_ERROR;
+};
+
+int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
+{		
+	this->image.width = sizeX;
+	this->image.height = sizeY;
+	this->image.pixels = cursorImage;
+	
+	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
+	glfwSetCursor(this->window, this->cursor);
 	
 	this->checkErrors();
 	
@@ -132,6 +145,7 @@ int WindowManager::initialiseGLEW()
 WindowManager::~WindowManager() 
 {
     glfwDestroyWindow(this->window);
+    glfwDestroyCursor(this->cursor);
     glfwTerminate();
 
     std::cout << "Destroying window memory" << std::endl;

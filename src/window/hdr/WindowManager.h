@@ -18,6 +18,7 @@
 /*  LAZARUS ENGINE */
 
 #include <iostream>
+#include <string.h>
 
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
@@ -34,19 +35,14 @@ class WindowManager
         };
 
         Window frame;
-        GLFWwindow *window;
 
         int errorCode;
         const char** errorMessage;
 
-		//	TODO:
-		//	Make a custom cursor creation function
-		//	See https://www.glfw.org/docs/3.3/input_guide.html#cursor_custom
-		//	also https://www.glfw.org/docs/3.3/group__input.html#ga556f604f73af156c0db0e97c081373c3
-		
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
-		int loadConfig(GLuint shader = 0, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
+		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
+		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
         int initialise();
         int handleBuffers();
 
@@ -55,6 +51,10 @@ class WindowManager
 	private:
 		int initialiseGLEW();
         int checkErrors();
+        
+        GLFWwindow *window;
+        GLFWcursor *cursor;
+        GLFWimage image;
 };
 
 #endif

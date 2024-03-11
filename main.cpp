@@ -2,13 +2,17 @@
 
 int main()
 {
+	fileReader = std::make_unique<FileReader>();
+	cursorImage = fileReader->loadImage("assets/images/crosshair.png");
+	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-
+	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
+	
     win = glfwGetCurrentContext();
 
     shaderProgram = shader.initialiseShader();
-
+	
     windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
     lightBuilder = std::make_unique<Light>(shaderProgram);
@@ -31,16 +35,6 @@ int main()
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        //std::cout << "Key: " << eventManager.keyString << std::endl;
-        //std::cout << "Cursor X: " << eventManager.mouseX << std::endl;
-        //std::cout << "Cursor Y: " << eventManager.mouseY << std::endl;
-        //std::cout << "Click State: " << eventManager.mouseCode << std::endl;
-        //std::cout << "Scroll state: " << eventManager.scrollCode << std::endl;
-        
-    	//fpsCounter.calculateFramesPerSec();
-        //std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
-        //std::cout << "MSPF: " << fpsCounter.durationTillRendered << std::endl;
-
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
