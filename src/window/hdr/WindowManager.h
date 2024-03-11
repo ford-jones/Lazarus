@@ -18,6 +18,9 @@
 /*  LAZARUS ENGINE */
 
 #include <iostream>
+#include <string.h>
+
+using std::string;
 
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
@@ -34,7 +37,6 @@ class WindowManager
         };
 
         Window frame;
-        GLFWwindow *window;
 
         int errorCode;
         const char** errorMessage;
@@ -47,6 +49,7 @@ class WindowManager
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
 		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
+		int createCursor(int sizeX, int sizeY, int hotX, int hotY);
         int initialise();
         int handleBuffers();
 
@@ -55,6 +58,10 @@ class WindowManager
 	private:
 		int initialiseGLEW();
         int checkErrors();
+        
+        GLFWwindow *window;
+        GLFWcursor *cursor;
+        GLFWimage image;
 };
 
 #endif

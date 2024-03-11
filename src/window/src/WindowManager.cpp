@@ -35,7 +35,6 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.fullscreen = win;
 };
 
-
 int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
 {
 	//	TODO:
@@ -66,6 +65,23 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
     
 	glUseProgram(shader);
+	
+	this->checkErrors();
+	
+	return GLFW_NO_ERROR;
+};
+
+int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY)
+{
+	unsigned char pixels[sizeX * sizeY * 4];
+	memset(pixels, 0xff, sizeof(pixels));
+	
+	this->image.width = sizeX;
+	this->image.height = sizeY;
+	this->image.pixels = pixels;
+	
+	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
+	glfwSetCursor(this->window, this->cursor);
 	
 	this->checkErrors();
 	
@@ -137,6 +153,7 @@ int WindowManager::initialiseGLEW()
 WindowManager::~WindowManager() 
 {
     glfwDestroyWindow(this->window);
+    glfwDestroyCursor(this->cursor);
     glfwTerminate();
 
     std::cout << "Destroying window memory" << std::endl;

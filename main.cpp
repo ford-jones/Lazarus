@@ -4,11 +4,12 @@ int main()
 {
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-
+	windowBuilder->createCursor(16, 16, 0, 0);
+	
     win = glfwGetCurrentContext();
 
     shaderProgram = shader.initialiseShader();
-
+	
     windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
     lightBuilder = std::make_unique<Light>(shaderProgram);
