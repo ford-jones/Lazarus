@@ -20,8 +20,6 @@
 #include <iostream>
 #include <string.h>
 
-using std::string;
-
 #ifndef WINDOW_MANAGER_H
 #define WINDOW_MANAGER_H
 
