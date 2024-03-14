@@ -39,6 +39,10 @@ using std::vector;
 class FileReader 
 {
     public: 
+    	//	TODO:
+    	//	Optimise all of this
+    	//	Write documentation
+    	
         std::stringstream stringstream;
         fs::path path;
         string contents;

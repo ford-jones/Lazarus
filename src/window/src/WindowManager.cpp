@@ -23,6 +23,11 @@
 
 #include "../hdr/WindowManager.h"
 
+//	TODO: 
+//	Make monitor and window optional
+//	Rename arguments
+//	Update docs
+
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
 	this->errorCode = GLFW_NO_ERROR;

@@ -68,8 +68,6 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string file
     return triangulatedMesh;
 };
 
-//  TODO: Investigate why an invocation from this function triggers a SIGTRAP SIGSEGV
-
 std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> meshData)
 {
 	if(triangulatedMesh != nullptr)
@@ -103,6 +101,11 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 	
     return triangulatedMesh;
 };
+
+//	TODO:
+//	Ownership is never release from the following two functions
+//	Either don't take ownership at all or return the pointer to the function's invocator
+//	Update docs
 
 void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 {
@@ -157,6 +160,5 @@ void Mesh::releaseMesh()
 Mesh::~Mesh()
 {
     this->releaseMesh();
-    //std::cout << "Destroying mesh memory" << std::endl;
     std::cout << GREEN_TEXT << "Destroying 'Mesh' class." << RESET_TEXT << std::endl;
 };

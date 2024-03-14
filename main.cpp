@@ -19,7 +19,7 @@ int main()
     light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
     cameraBuilder = std::make_unique<Camera>(shaderProgram);
-    camera      = std::move(cameraBuilder->createFixedCamera(windowBuilder->frame.height, windowBuilder->frame.width, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
+    camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     worldBuilder = std::make_unique<Mesh>(shaderProgram);
     world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj"));

@@ -26,19 +26,6 @@
 class WindowManager
 {
     public:
-        struct Window
-        {
-            int height, width;
-            const char *title;
-            GLFWmonitor *monitor;
-            GLFWwindow *fullscreen;
-        };
-
-        Window frame;
-
-        int errorCode;
-        const char** errorMessage;
-
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
 		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
@@ -49,12 +36,24 @@ class WindowManager
         virtual ~WindowManager();
         
 	private:
-		int initialiseGLEW();
-        int checkErrors();
+        struct Window
+        {
+            int height, width;
+            const char *title;
+            GLFWmonitor *monitor;
+            GLFWwindow *fullscreen;
+        };
+
+        Window frame;
+        
+        
+        int errorCode;
+        const char** errorMessage;
         
         GLFWwindow *window;
         GLFWcursor *cursor;
         GLFWimage image;
+		int initialiseGLEW();
+        int checkErrors();
 };
-
 #endif
