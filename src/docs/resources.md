@@ -30,5 +30,8 @@ Install instructions: https://stackoverflow.com/questions/24935217/how-to-instal
 Official Documentation: https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_toc.html \
 Download / installation: https://www.gdbtutorial.com/tutorial/how-install-gdb
 
-6. C++ resources: \
+6. stb_image: \
+Github source (RAW): https://raw.githubusercontent.com/nothings/stb/master/stb_image.h 
+
+7. C++ resources: \
 Core guidelines: https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-functions

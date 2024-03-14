@@ -28,6 +28,9 @@ using std::string;
 class EventManager
 {
     public:
+    	//	TODO:
+    	//	Create a constructor / destructor
+    	
         void monitorEvents();
 
         string keyString;

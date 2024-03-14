@@ -23,6 +23,10 @@
 
 #include "../hdr/camera.h"
 
+//	TODO: 
+//	Make this class's workflow similar to the of the Mesh class
+//	i.e. create an initialise function
+
 Camera::Camera(GLuint shader)
 {
     this->shader = shader;
