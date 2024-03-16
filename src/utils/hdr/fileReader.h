@@ -25,7 +25,7 @@
 #include <string>
 #include <vector>
 
-#include "./stb_image.h"
+#include <stb_image.h>
 
 namespace fs = std::filesystem;
 

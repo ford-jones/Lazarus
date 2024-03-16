@@ -29,7 +29,6 @@ fileReader.o := src/utils/hdr/fileReader.h
 WindowManager.o := src/window/hdr/WindowManager.h
 eventManager.o := src/window/hdr/eventManager.h
 fpsCounter.o := src/utils/hdr/fpsCounter.h
-stb_image.o := src/utils/hdr/stb_image.h
 
 clean : 
 		rm run $(OBJECTS)

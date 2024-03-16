@@ -9,6 +9,7 @@ Before jumping into the project, make sure the following libraries / tools are a
 - GLFW/glfw3.h
 - glm/glm.hpp
 - GL/glew.h
+- stb_image
 
 If any of these are unavailable to you, downloads can be found in the resources section.
 
@@ -77,8 +78,21 @@ exit
 ```
 Once thats' done, restart your terminal for the change to take effect.
 
+2. stb_image : \
+`stb_image` is a public domain single header library for parsing and loading image files. \
+
+Get the source from github. (*If you don't have `curl` visit the url and download it manually.*):
+```
+curl -o ./stb_image.h https://raw.githubusercontent.com/nothings/stb/master/stb_image.h
+```
+
+Move the file into your include folder:
+```
+sudo mv ./stb_image.h /usr/include/
+```
+
 ## Known caveats and limitations:
 1. 3D Mesh assets must be exported to `wavefront` (.obj) file format before being loaded into a scene.
-2. 3D mesh assets have to be **triangulated**, this can be done prior to or on export. *Faces made up of 5 vertices (polygons) are not supported.*
-3. Materials that appear in `wavefront` (.mtl) material files **must** appear in order they were created. A safe way to ensure this is to number any *named* materials during the modeling process. This is because named materials are often exported in alphabetical order by modeling software which can lead to undesired behaviour.
-4. Upon initialising the render loop and loading of assets, there is an observable "hump" in performance. A full scene with lights, camera, meshes etc causes a decrease in the framerate by about 12.5% (60 frames becomes 50).
+2. 3D mesh assets have to be **triangulated**, this can be done prior to or on export. *Faces made up of 5 vertex coordinates (polygons) are not supported.*
+3. Materials that appear in `wavefront` (.mtl) material files **must** appear in order they were created. A safe way to ensure this is to number any *named* materials during the modeling process (e.g. `myColor5.mtl`). This is because named materials are often exported in alphabetical order by modeling software which can lead to undesired behaviour.
+4. Upon initialising the render loop and loading of assets, there is an observable "hump" in performance for about 3-5 seconds. A full scene with lights, camera, meshes etc causes a decrease in the framerate by about 12.5% (60 frames becomes 50).
