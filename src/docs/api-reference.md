@@ -194,7 +194,7 @@ Params:
 
 ### Functions:
 #### shared_ptr\<TriangulatedMesh> createTriangulatedMesh(std::string meshPath, std::string materialPath)
-Finds and reads a wavefront (obj) file located at `filePath` by invoking `FileReader::readFromText()`. \
+Finds and reads a wavefront (obj) file located at `meshPath` by invoking `FileReader::readFromText()`. \
 Creates a new instance of a `TriangulatedMesh`, initialises the values of its properties and returns it. \
 Invokes the `MaterialLoader::loadMaterial()` function and passes on the `materialPath`.
 
