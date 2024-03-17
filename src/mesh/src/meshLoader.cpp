@@ -39,7 +39,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
+bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -47,7 +47,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
     this->materialIdentifierIndex = 0;
     this->triangleCount = 0;
     
-    this->file = fopen(path, "r");                                                                    //  Open the file located at `path` with read permissions
+    this->file = fopen(meshPath, "r");                                                                    //  Open the file located at `path` with read permissions
     char identifier[128];                                                                       //  Store for the first string of each line from the loaded file
 
     if( this->file == NULL )
@@ -77,9 +77,7 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
             //	TODO:
             //	This is hardcoding and needs reperation
             
-            string filename = string(this->matFn);
-            string path = "assets/material/";
-            this->foundMaterial = matFinder->findFile(path + filename);                                     //  Find the file using the file finder
+            this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);                                     //  Find the file using the file finder
         }
 
         else if ( strcmp( identifier, "v" ) == 0 )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
@@ -168,7 +166,6 @@ bool MeshLoader::loadMesh(const char* path, vector<vec3> &out_vertices, vector<v
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
 
-    std::cout << "File: " << path << std::endl;
     for(auto i: materialBuffer)
     {
 		std::cout << "Material Index: " << i[0] << std::endl;

@@ -3,7 +3,7 @@
 int main()
 {
 	fileReader = std::make_unique<FileReader>();
-	cursorImage = fileReader->loadImage("assets/images/crosshair.png");
+	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
@@ -22,10 +22,10 @@ int main()
     camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     worldBuilder = std::make_unique<Mesh>(shaderProgram);
-    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj"));
+    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj"));
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
 	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
 	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
