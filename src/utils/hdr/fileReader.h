@@ -38,10 +38,7 @@ using std::vector;
 
 class FileReader 
 {
-    public: 
-    	//	TODO:
-    	//	Write documentation
-    	
+    public:
 		FileReader();
         
 		string relativePathToAbsolute(string filepath);
