@@ -38,29 +38,27 @@ using std::vector;
 
 class FileReader 
 {
-    public: 
-    	//	TODO:
-    	//	Optimise all of this
-    	//	Write documentation
-    	
-        std::stringstream stringstream;
-        fs::path path;
-        string contents;
-        string absolutePath;
-        
-        string filenameString;  
-        vector<string> fileVec;                                                                                 //  A vector containing files who's name matches the function input at the absolute path
-		
+    public:
 		FileReader();
-		string findFile(string filename);
-		unsigned char *loadImage(string filename);
-        const char *readShader(string filename);
+        
+		string relativePathToAbsolute(string filepath);
+        unsigned char *readFromImage(string filepath);
+        const char *readFromText(string filepath);
         
         virtual ~FileReader();
         
 	private:
 		int x, y, n;
 		unsigned char *imageData;
+		const char *textData;
+		
+        std::stringstream stringstream;
+        fs::path path;
+        
+        string contents;
+        string absolutePath;
+        
+        string filenameString;  
 };
 
 #endif

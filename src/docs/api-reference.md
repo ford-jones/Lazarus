@@ -36,7 +36,7 @@ Params:
 > **sizeY:** *Cursor image height.* \
 > **hotX:** *The x-axis cursor hotspot.* \
 > **hotY:** *The y-axis cursor hotspot.* \
-> **cursorImage:** *The encoded image with the following properties: 32bit-depth, RGBA color, 32x32 resolution, png file format. Can be acquired from a call to `FileReader::loadImage()`.* 
+> **cursorImage:** *The encoded image with the following properties: 32bit-depth, RGBA color, 32x32 resolution, png file format. Can be acquired from a call to `FileReader::readFromImage()`.* 
 
 #### int initialise()
 Creates a new instance of a window, initialises OpenGL and creates a GL context.
@@ -95,6 +95,33 @@ Calculates the current frames per second, as well as the number of milliseconds 
 ### Members:
 > **framesPerSecond:** *Current number of frames being drawn per second. (type: `double`)* \
 > **durationTillRendered:** *The duration of time taken in milliseconds to draw a single frame. (type: `double`)* 
+
+## FileReader:
+A utility class for locating files and reading their contents.
+
+### Constructor:
+#### FileReader()
+Default-initialises this classes members.
+
+### Functions:
+#### std::string relativePathToAbsolute(std::string filepath)
+Finds the absolute path (from root) to the `filepath` and returns it as `std::string`.
+
+Params:
+> **filepath**: The relative path to the file you would like to find the absolute path of.
+
+#### const char *readFromText(std::string filepath)
+Reads a file who's contents are expressed in ascii. Stores the files contents in a variable and returns it.
+
+Params:
+> **filepath**: The relative path to the file you would like to read from.
+
+#### unsigned char *readFromImage(std::string filepath)
+Reads and parses the contents of an image file (.png, .jpg, .tga, .pic; view `stb_image` documentation for the full list). 
+Returns the image data in the form of an `unsigned char*`.
+
+Params:
+> **filepath**: The relative path to the file you would like to read from.
 
 ## Transform:
 A class built to handle transformations of different world assets such as mesh, cameras and lights.
@@ -166,14 +193,16 @@ Params:
 > **shader:** *The id of the shader program used to render this mesh. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions:
-#### shared_ptr\<TriangulatedMesh> createTriangulatedMesh(std::string filepath)
-Finds and reads a wavefront (obj) file located at `filepath` by invoking `FileReader::findFile()`. \
+#### shared_ptr\<TriangulatedMesh> createTriangulatedMesh(std::string meshPath, std::string materialPath)
+Finds and reads a wavefront (obj) file located at `meshPath` by invoking `FileReader::readFromText()`. \
 Creates a new instance of a `TriangulatedMesh`, initialises the values of its properties and returns it. \
+Invokes the `MaterialLoader::loadMaterial()` function and passes on the `materialPath`.
 
 Returns a shared pointer to the mesh object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
 
 Params:
-> **filepath:** *The relative path to the wavefront mesh asset you wish to render.* 
+> **meshPath:** *The relative path to the wavefront mesh asset you wish to render.* 
+> **materialPath:** *The relative path to the wavefront material asset you wish to render.*
 
 #### shared_ptr\<TriangulatedMesh> initialiseMesh(shared_ptr\<TriangulatedMesh> meshData)
 Generates a new vertex array object and binds it to the current OpenGL context. \
@@ -230,7 +259,8 @@ which, hold either vertex coordinates, vertex normals, vertex textures or diffus
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
 
 Params:
-> **path:** *The absolute path to this mesh's wavefront (.obj) file* \
+> **meshPath:** *The absolute path to this mesh's wavefront (.obj) file* \
+> **materialPath:** *The absolute path to this mesh's wavefront material (.mtl) file* \
 > **out_vertices:** *A vector to store parsed and ordered vertex coordinate data.* \
 > **out_uvs:** *A vector to store parsed and ordered vertex uv data.* \
 > **out_normals:**  *A vector to store parsed and ordered vertex normal data.* \
@@ -356,4 +386,3 @@ Params:
 >	- **lightColor:** *The r, g, b color values of the light. (type: glm::vec3)*
 >	- **lightPositionUniformLocation:** *The location / index of the vertex shader position uniform. (type: `GLuint`)*
 >	- **lightColorUniformLocation:** *The location / index of the fragment shader diffuse uniform. (type: `GLuint`)*
-
