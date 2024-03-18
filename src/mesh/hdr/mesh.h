@@ -61,6 +61,7 @@ class Mesh
             float locationZ;
 
             vector<vec3> vertices;                                                              //  Buffer to store vertex data
+            vector<vec2> uvCoords;																//  Buffer to store UV data
             vector<vec3> normals;                                                               //  Buffer to store normals data
             vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program

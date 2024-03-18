@@ -60,6 +60,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     triangulatedMesh->numOfFaces = (vertices.size()) / 3;
 
     triangulatedMesh->vertices = vertices;
+    triangulatedMesh->uvCoords = uvs;
     triangulatedMesh->normals = normals;
     triangulatedMesh->diffuse = diffuse;
     triangulatedMesh->modelviewMatrix = mat4(1.0f);                                                                                          //  Define the model-view matrix to default 4x4
