@@ -39,7 +39,7 @@ Mesh::Mesh(GLuint shader)
 	this->errorCode = GL_NO_ERROR;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath, string texturePath)
 {
     this->finder = std::make_unique<FileReader>();
     this->loader = std::make_unique<MeshLoader>();
@@ -50,7 +50,17 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
 
     triangulatedMesh->meshFilepath =  finder->relativePathToAbsolute(meshPath);
     triangulatedMesh->materialFilepath = finder->relativePathToAbsolute(materialPath);
-    loader->loadMesh(triangulatedMesh->meshFilepath.c_str(), triangulatedMesh->materialFilepath.c_str(), vertices, uvs, normals, diffuse);
+    
+    if(texturePath != "")
+    {
+	    triangulatedMesh->textureFilepath = finder->relativePathToAbsolute(texturePath);
+    }
+    else
+    {
+    	triangulatedMesh->textureFilepath = "NO TEX";
+    };
+    
+    loader->loadMesh(vertices, uvs, normals, diffuse, triangulatedMesh->meshFilepath.c_str(), triangulatedMesh->materialFilepath.c_str(), triangulatedMesh->textureFilepath.c_str());
     
     triangulatedMesh->locationX = 0;
     triangulatedMesh->locationY = 0;

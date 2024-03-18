@@ -27,19 +27,19 @@
 
 #include "../hdr/textureLoader.h"
 
-TextureLoader::TextureLoader(GLuint shader)
+TextureLoader::TextureLoader()
 {
-	this->shaderProgram = shader;
-	
+	std::cout << GREEN_TEXT << "Constructing class 'Texture'" << RESET_TEXT << std::endl;
 	this->TBO = 0;
-	this->texture = NULL;
 };
 
-int TextureLoader::initialiseTexture(unsigned char *tex)
+int TextureLoader::loadTexture(string texturePath)
 {
+	
+	std::cout << "Filepath: " << texturePath << std::endl;
+	 
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &this->TBO);
-	//glBufferData(GL_TEXTURE_BUFFER, strlen((char*) tex), tex[0], GL_STATIC_DRAW);
 	glBindTexture(GL_TEXTURE_2D, this->TBO);
 	
 	return GL_NO_ERROR;

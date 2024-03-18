@@ -18,7 +18,9 @@
 /*  LAZARUS ENGINE */
 
 #include <iostream>
-#include <string.h>
+#include <string>
+
+using std::string;
 
 #ifndef LAZARUS_TEXTURE_LOADER_H
 #define LAZARUS_TEXTURE_LOADER_H
@@ -26,15 +28,12 @@
 class TextureLoader
 {
 	public:
-		TextureLoader(GLuint shader);
-		int initialiseTexture(unsigned char *tex);
+		TextureLoader();
+		int loadTexture(string texturePath);
 		virtual ~TextureLoader();
 		
-	private:
-		GLuint shaderProgram;
-		
+	private:		
 		GLuint TBO;
-		unsigned char *texture;
 };
 
 #endif

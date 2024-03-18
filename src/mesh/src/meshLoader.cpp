@@ -39,7 +39,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
+bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -64,19 +64,12 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);
             		
-            delete[] matFn;                                                                     //  Free allocated memory
             matFinder.reset();
             break;                                                                              //  Break out of the loop.
         }
 
         if( strcmp( identifier, "mtllib" ) == 0 )                                               //  If the first string of the current line is "mtlib" the line holds the name of a valid wavefront material file
         {
-            this->matFn       =   new char[20];                                                       //  Create an identifier to store a char[]
-            fscanf(this->file, "%s\n", this->matFn);                                                        //  Continue reading the line, the next store the string containing the name of the file
-            
-            //	TODO:
-            //	This is hardcoding and needs reperation
-            
             this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);                                     //  Find the file using the file finder
         }
 
@@ -173,7 +166,7 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 		std::cout << "--" << std::endl;
     };
 
-	matLoader->loadMaterial(foundMaterial, out_diffuse, materialBuffer);
+	matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial, texturePath);
 
     return true;
 };

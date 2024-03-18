@@ -29,15 +29,18 @@
 MaterialLoader::MaterialLoader()
 {
 	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
+	
+	textureLoader = nullptr;
 	diffuseTexCount = 0;
 	file = NULL;
 };
 
-bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<int>> data) 
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
 {
     diffuseTexCount = 0;
+	this->textureLoader = std::make_unique<TextureLoader>();
 
-    file = fopen(path.c_str(), "r");                                                                                //  Open the file located at `path` with read permissions
+    file = fopen(materialPath.c_str(), "r");                                                                                //  Open the file located at `path` with read permissions
     char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
     
     if( file == NULL )
@@ -72,8 +75,14 @@ bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<
     	        };        
             };
         }
-    }
-    return true;
+	    else if( strcmp( identifier, "map_Kd" ) == 0 )
+    	{
+			textureLoader->loadTexture(texturePath);
+	    };
+        
+   };
+   
+   return true;
 };
 
 MaterialLoader::~MaterialLoader()
