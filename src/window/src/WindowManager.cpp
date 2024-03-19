@@ -40,7 +40,7 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.fullscreen = win;
 };
 
-int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
+int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth)
 {	
 	if(enableCursor == false)
 	{
@@ -55,11 +55,6 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	if(testDepth == true)
 	{
 	    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
-	};
-	
-	if(texTwoDimensions == true)
-	{
-	    glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
 	};
 
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black

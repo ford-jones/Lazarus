@@ -45,10 +45,10 @@ class FileReader
         unsigned char *readFromImage(string filepath);
         const char *readFromText(string filepath);
         
+		int x, y, n;
         virtual ~FileReader();
         
 	private:
-		int x, y, n;
 		unsigned char *imageData;
 		const char *textData;
 		

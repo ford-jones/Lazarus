@@ -25,7 +25,7 @@ int main()
     world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/lesmiserables.jpg"));
+    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/crosshair.png"));
 
 	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
 	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));

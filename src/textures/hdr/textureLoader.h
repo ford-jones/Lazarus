@@ -19,8 +19,12 @@
 
 #include <iostream>
 #include <string>
+#include <memory>
+
+#include "../../utils/hdr/fileReader.h"
 
 using std::string;
+using std::shared_ptr;
 
 #ifndef LAZARUS_TEXTURE_LOADER_H
 #define LAZARUS_TEXTURE_LOADER_H
@@ -29,11 +33,13 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		int loadTexture(string texturePath);
+		void loadTexture(string texturePath);
 		virtual ~TextureLoader();
 		
-	private:		
-		GLuint TBO;
+	private:
+		shared_ptr<FileReader> loader;
+		unsigned char *image;
+		GLuint texture;
 };
 
 #endif

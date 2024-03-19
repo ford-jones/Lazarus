@@ -38,10 +38,10 @@ MaterialLoader::MaterialLoader()
 bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
 {
     diffuseTexCount = 0;
-	this->textureLoader = std::make_unique<TextureLoader>();
 
     file = fopen(materialPath.c_str(), "r");                                                                                //  Open the file located at `path` with read permissions
     char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
+	this->textureLoader = std::make_unique<TextureLoader>();
     
     if( file == NULL )
     {                                                                                                               //  If, the file has a null value                                 
@@ -77,11 +77,12 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         }
 	    else if( strcmp( identifier, "map_Kd" ) == 0 )
     	{
-			textureLoader->loadTexture(texturePath);
+			string path = texturePath;
+			textureLoader->loadTexture(path);
 	    };
         
    };
-   
+   textureLoader.reset();
    return true;
 };
 

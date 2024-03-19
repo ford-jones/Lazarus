@@ -28,7 +28,7 @@ class WindowManager
     public:
         WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
 
-		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
+		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true);
 		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
         int initialise();
         int handleBuffers();
