@@ -88,7 +88,7 @@ curl -o ./stb_image.h https://raw.githubusercontent.com/nothings/stb/master/stb_
 
 Move the file into your include folder:
 ```
-sudo mv ./stb_image.h /usr/include/
+sudo mv ./stb_image.h /usr/local/include
 ```
 
 ## Known caveats and limitations:
