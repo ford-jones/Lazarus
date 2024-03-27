@@ -229,7 +229,7 @@ Be sure to bring the back buffer forward to see the draw result.
 > Params:
 > **meshData:** *A pointer to the mesh object you wish to draw.*
 
-## Members:
+### Members:
 > **TriangulatedMesh:** *A collection of properties which make up a mesh object. (type: `struct`)* 
 >	- **id:** *The unique id of the mesh object. (type: `int`)* 
 >	- **numOfFaces:** *The number of faces that make up the mesh. (type: `int`)* 
