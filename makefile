@@ -1,9 +1,9 @@
 LDFLAGS :=
 ifeq ($(shell uname),Linux)
-	OSFLAGS += -lGL -lGLEW -lglfw -lFMOD/x86_64/libfmod.so
+	LDFLAGS += -lGL -lGLEW -lglfw -lfmod
 endif
 
-CXXFLAGS := -I/usr/local/include/ -L/usr/local/lib/
+CXXFLAGS = -L/usr/local/lib/FMOD/x86_64
 
 OBJECTS = main.o src/shaders/shaderProgram/src/shader.o src/lights/src/light.o src/cameras/src/camera.o \
 					src/mesh/src/mesh.o src/transforms/src/transforms.o \

@@ -44,7 +44,7 @@ void SoundManager::load(string filepath)
 	//	This allows the sound to be positioned in worldspace
 	//	Somehow....
 	
-	this->result = system->createSound(this->path, FMOD_DEFAULT, NULL, &this->sound);
+	this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
 };
 
 void SoundManager::play()
@@ -53,7 +53,7 @@ void SoundManager::play()
 	//	Add in the optional args, the channel (Arg4) is important for controling the play-state
 	//	See: https://www.fmod.com/docs/2.03/api/core-api-channel.html
 	
-	system->playSound(this->sound);
+	system->playSound(this->sound, NULL, false, NULL);
 };
 
 SoundManager::~SoundManager()

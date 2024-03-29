@@ -21,6 +21,10 @@
 #endif
 
 #include <FMOD/fmod.h>
+#include <FMOD/fmod.hpp>
+#include <FMOD/fmod_common.h>
+#include <FMOD/fmod_codec.h>
+
 #include <string>
 #include <memory>
 
@@ -42,8 +46,8 @@ class SoundManager
 		
 	private:
 		unique_ptr<FileReader> reader;
-		FMOD::Studio::System *system;
-		FMOD::Studio::Sound *sound;
+		FMOD::System *system;
+		FMOD::Sound *sound;
 		FMOD_RESULT result;
 		string path;
 };
