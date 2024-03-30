@@ -21,7 +21,7 @@
 	#include "../../utils/hdr/constants.h"
 #endif
 
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
@@ -96,7 +96,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
     glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
-
+    
     this->checkErrors(__PRETTY_FUNCTION__);
 	
     return triangulatedMesh;

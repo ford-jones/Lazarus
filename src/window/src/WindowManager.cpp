@@ -17,12 +17,14 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
 #ifdef __GLEW_H__
-    #define LAZARUS_GLEW_IS_PRESENT true
+    #define LAZARUS_GLEW_IS_SUPPORTED true
+#else
+    #define LAZARUS_GLEW_IS_SUPPORTED false
 #endif
 
 #include "../hdr/WindowManager.h"
@@ -104,12 +106,11 @@ int WindowManager::initialise()
     //  Makes macOS happy
     //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
 
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    this->checkErrors();
 
     this->window = glfwCreateWindow
     (
@@ -124,12 +125,12 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-    if(LAZARUS_GLEW_IS_PRESENT)
+
+    if(LAZARUS_GLEW_IS_SUPPORTED == true)
     {
 	    this->initialiseGLEW();
     };
 
-    this->checkErrors();
     
     return GLFW_NO_ERROR;
 };
@@ -146,6 +147,7 @@ int WindowManager::handleBuffers()
 
 int WindowManager::checkErrors()
 {
+    errorCode = 0;
     errorCode = glfwGetError(errorMessage); 
     if(errorCode != GLFW_NO_ERROR)
     {
@@ -164,7 +166,7 @@ int WindowManager::initialiseGLEW()
 {
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
     glewInit();                                                                                                         //  Initialise GLEW graphics library
-    
+
     return GLEW_NO_ERROR;
 };
 

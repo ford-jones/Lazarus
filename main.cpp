@@ -7,9 +7,9 @@ int main()
 	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-	printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-	printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
+	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
+	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	//std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
 	// printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
 	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
