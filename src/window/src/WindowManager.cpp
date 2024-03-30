@@ -21,6 +21,10 @@
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
+#ifdef __GLEW_H__
+    #define LAZARUS_GLEW_IS_PRESENT true
+#endif
+
 #include "../hdr/WindowManager.h"
 
 //	TODO: 
@@ -94,12 +98,18 @@ int WindowManager::initialise()
         return -1;
     };
 
+    //  TODO:
+    //  Check this works on mac
+
     //  Makes macOS happy
-    //  allows usage of the GL core profile beyond 2.1 fixed-function pipeline (OSX default "-_-)
+    //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+
+    // glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    // glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     this->window = glfwCreateWindow
     (
@@ -114,8 +124,11 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-	  this->initialiseGLEW();
-	
+    if(LAZARUS_GLEW_IS_PRESENT)
+    {
+	    this->initialiseGLEW();
+    };
+
     this->checkErrors();
     
     return GLFW_NO_ERROR;
@@ -149,12 +162,10 @@ int WindowManager::checkErrors()
 
 int WindowManager::initialiseGLEW()
 {
-    //glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    //glewInit();                                                                                                         //  Initialise GLEW graphics library
+    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
+    glewInit();                                                                                                         //  Initialise GLEW graphics library
     
-    //return GLEW_NO_ERROR;
-    
-    return GLFW_NO_ERROR;
+    return GLEW_NO_ERROR;
 };
 
 WindowManager::~WindowManager() 

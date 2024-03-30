@@ -32,8 +32,8 @@
 #endif
 
 #ifdef __linux__
-#include <GL/gl.h>
 #include <GL/glew.h>
+#include <GL/gl.h>
 #endif
 
 #include <glm/glm.hpp>

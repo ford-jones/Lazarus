@@ -46,7 +46,6 @@ class WindowManager
 
         Window frame;
         
-        
         int errorCode;
         const char** errorMessage;
         
