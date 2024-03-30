@@ -36,6 +36,18 @@ using std::string;
 #ifndef LAZARUS_SOUND_MANAGER_H
 #define LAZARUS_SOUND_MANAGER_H
 
+//	TODO:
+//	1. Find and link the static library, this is close but no cigar
+//	2. Update docs
+//	3. Create a script for makefile which locates FMOD libs and passes the correct path to the linker
+
+//	So far:
+//	-	Create an account on FMOD
+//	-	Download the binaries
+//	-	Move lib stuff to your program files (look this up, os specific. Right now it's stored in /usr/local/lib/FMOD/. I think on windows it's \ Program Files \)
+//	-	Move header stuff to include files (currently /usr/local/include/FMOD/)
+//	-	Point the compiler's linker to the relevant static-object libraries (see makefile: CXX flags && -lfmod) (See: TODO(3))
+
 class SoundManager
 {
 	public:
