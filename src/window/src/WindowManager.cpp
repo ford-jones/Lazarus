@@ -94,6 +94,13 @@ int WindowManager::initialise()
         return -1;
     };
 
+    //  Makes macOS happy
+    //  allows usage of the GL core profile beyond 2.1 fixed-function pipeline (OSX default "-_-)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     this->window = glfwCreateWindow
     (
         this->frame.height, 
@@ -103,10 +110,11 @@ int WindowManager::initialise()
         this->frame.fullscreen
     );
 
+
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-	this->initialiseGLEW();
+	  this->initialiseGLEW();
 	
     this->checkErrors();
     
@@ -141,10 +149,12 @@ int WindowManager::checkErrors()
 
 int WindowManager::initialiseGLEW()
 {
-    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    glewInit();                                                                                                         //  Initialise GLEW graphics library
+    //glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
+    //glewInit();                                                                                                         //  Initialise GLEW graphics library
     
-    return GLEW_NO_ERROR;
+    //return GLEW_NO_ERROR;
+    
+    return GLFW_NO_ERROR;
 };
 
 WindowManager::~WindowManager() 
