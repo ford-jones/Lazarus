@@ -34,6 +34,7 @@
 
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
+	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
 	this->errorMessage = NULL;
 	
@@ -171,5 +172,5 @@ WindowManager::~WindowManager()
     glfwDestroyCursor(this->cursor);
     glfwTerminate();
 
-    std::cout << RED_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
 };

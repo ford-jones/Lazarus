@@ -74,9 +74,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             this->matFn       =   new char[20];                                                       //  Create an identifier to store a char[]
             fscanf(this->file, "%s\n", this->matFn);                                                        //  Continue reading the line, the next store the string containing the name of the file
             
-            //	TODO:
-            //	This is hardcoding and needs reperation
-            
             this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);                                     //  Find the file using the file finder
         }
 

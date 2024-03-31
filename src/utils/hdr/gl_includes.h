@@ -17,11 +17,6 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.
 /*  LAZARUS ENGINE */
 
-//  TODO:
-//  Update docs
-//    - glm / glfw / glew need to be installed with homebrew
-//    - OpenGL itself is available by default but is no longer supported by apple
-
 #ifndef LAZARUS_GL_INCLUDES_H
 #define LAZARUS_GL_INCLUDES_H
 
