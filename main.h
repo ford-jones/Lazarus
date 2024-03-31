@@ -1,4 +1,4 @@
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "./src/utils/hdr/gl_includes.h"
 #endif
 

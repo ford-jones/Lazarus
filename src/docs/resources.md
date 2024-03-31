@@ -21,17 +21,17 @@ Downloads: https://www.glfw.org/download.html
 4. GLM resources: \
 Official Documentation: https://glm.g-truc.net/0.9.9/api/index.html
 
-4. Valgrind resources: \
+5. Valgrind resources: \
 Official Documentation: https://valgrind.org/docs/ \
 Downloads: https://valgrind.org/downloads/ \
 Install instructions: https://stackoverflow.com/questions/24935217/how-to-install-valgrind-properly
 
-5. gdb resources: \
+6. gdb resources: \
 Official Documentation: https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_toc.html \
 Download / installation: https://www.gdbtutorial.com/tutorial/how-install-gdb
 
-6. stb_image: \
+7. stb_image: \
 Github source (RAW): https://raw.githubusercontent.com/nothings/stb/master/stb_image.h 
 
-7. C++ resources: \
+8. C++ resources: \
 Core guidelines: https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-functions

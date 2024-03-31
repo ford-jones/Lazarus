@@ -21,7 +21,7 @@
 	#include "../../utils/hdr/constants.h"
 #endif
 
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
@@ -96,8 +96,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
     glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
-
-    this->checkErrors();
+    
+    this->checkErrors(__PRETTY_FUNCTION__);
 	
     return triangulatedMesh;
 };
@@ -118,7 +118,7 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 	
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
 
-    this->checkErrors();
+    this->checkErrors(__PRETTY_FUNCTION__);
 };
 
 void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
@@ -132,18 +132,19 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 	
     glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->vertices.size());                                                                                //  Draw the contents of the enabled VAO's stored in this context
 
-    this->checkErrors();
+    this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();
 };
 
-void Mesh::checkErrors()
+void Mesh::checkErrors(const char *invoker)
 {
     this->errorCode = glGetError();                                                                                       //  Check for errors
     
     if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
     {
         std::cout << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
+        std::cout << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
     };
 };
 
@@ -154,7 +155,7 @@ void Mesh::releaseMesh()
     glDeleteBuffers         (1, &this->VBO[1]);
     glDeleteBuffers         (1, &this->VBO[2]);
 
-    this->checkErrors();
+    this->checkErrors(__PRETTY_FUNCTION__);
 };
 
 Mesh::~Mesh()
