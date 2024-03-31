@@ -1,8 +1,8 @@
-LDFLAGS :=
+LDFLAGS := -lGLEW -lglfw
 ifeq ($(shell uname),Linux)
-	LDFLAGS += -lGL -lGLEW -lglfw
+	LDFLAGS += -lGL 
 else ifeq ($(shell uname),Darwin)
-	LDFLAGS += -lglfw -framework OpenGL
+	LDFLAGS += -framework OpenGL
 endif
 
 
