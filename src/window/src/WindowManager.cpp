@@ -21,10 +21,8 @@
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
-#ifdef __APPLE__
-    #define LAZARUS_RUNNING_ON_DARWIN true
-#else
-    #define LAZARUS_RUNNING_ON_DARWIN false
+#ifndef LAZARUS_CONSTANTS_H
+    #include "../../utils/hdr/constants.h"
 #endif
 
 #include "../hdr/WindowManager.h"
@@ -173,5 +171,5 @@ WindowManager::~WindowManager()
     glfwDestroyCursor(this->cursor);
     glfwTerminate();
 
-    std::cout << "Destroying window memory" << std::endl;
+    std::cout << RED_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
 };
