@@ -17,6 +17,12 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
+#ifdef __APPLE__
+    #define LAZARUS_RUNNING_ON_DARWIN true
+#else
+    #define LAZARUS_RUNNING_ON_DARWIN false
+#endif
+
 #include <iostream>
 #include <string.h>
 
@@ -52,7 +58,6 @@ class WindowManager
         };
 
         Window frame;
-        
         
         int errorCode;
         const char** errorMessage;

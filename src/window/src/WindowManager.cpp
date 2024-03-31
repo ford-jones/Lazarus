@@ -17,8 +17,12 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
+#endif
+
+#ifndef LAZARUS_CONSTANTS_H
+    #include "../../utils/hdr/constants.h"
 #endif
 
 #include "../hdr/WindowManager.h"
@@ -30,6 +34,7 @@
 
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
+	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
 	this->errorMessage = NULL;
 	
@@ -94,6 +99,22 @@ int WindowManager::initialise()
         return -1;
     };
 
+    //  Makes macOS happy
+    //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+
+    if(LAZARUS_RUNNING_ON_DARWIN == true)
+    {
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    }
+    else 
+    {
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+    }
+
+    this->checkErrors();
+
     this->window = glfwCreateWindow
     (
         this->frame.height, 
@@ -106,9 +127,7 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-	this->initialiseGLEW();
-	
-    this->checkErrors();
+	  this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };
@@ -143,7 +162,7 @@ int WindowManager::initialiseGLEW()
 {
     glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
     glewInit();                                                                                                         //  Initialise GLEW graphics library
-    
+
     return GLEW_NO_ERROR;
 };
 
@@ -153,5 +172,5 @@ WindowManager::~WindowManager()
     glfwDestroyCursor(this->cursor);
     glfwTerminate();
 
-    std::cout << "Destroying window memory" << std::endl;
+    std::cout << GREEN_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
 };

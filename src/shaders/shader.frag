@@ -7,11 +7,13 @@
     uniform vec3 lightPosition;
     uniform vec3 lightColor;
 
+    out vec4 outFragColor;
+
     void main()
     {
        vec3 lightDirection = normalize(lightPosition - fragPosition);
        float diff = max(dot(normal, lightDirection), 0.0);
        vec3 diffuse = fragColor * lightColor * diff;
 
-       gl_FragColor = vec4(diffuse, 1.0);
+       outFragColor = vec4(diffuse, 1.0);
     }

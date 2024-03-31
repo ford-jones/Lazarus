@@ -78,7 +78,7 @@ class Mesh
         virtual ~Mesh();
 
     private:
-        void checkErrors();
+        void checkErrors(const char *invoker);
         void releaseMesh();
 
         int errorCode;
