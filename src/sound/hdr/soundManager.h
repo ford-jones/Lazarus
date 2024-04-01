@@ -20,10 +20,10 @@
 	#include "../../utils/hdr/constants.h"
 #endif
 
-#include <FMOD/fmod.h>
-#include <FMOD/fmod.hpp>
-#include <FMOD/fmod_common.h>
-#include <FMOD/fmod_codec.h>
+#include <fmod.h>
+#include <fmod.hpp>
+#include <fmod_common.h>
+#include <fmod_codec.h>
 
 #include <string>
 #include <memory>
