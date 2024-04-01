@@ -10,4 +10,5 @@
 
 ![OpenGL Logo](./src/docs/images/OpenGL_170px_June16.png) \
 ![GLM Logo](./src/docs/images/GLM_logo.png) \
-![GLFW Logo](./src/docs/images/glfw-logo.png)
+![GLFW Logo](./src/docs/images/glfw-logo.png) \
+![FMOD Logo](./src/docs/images/FMOD%20Logo%20Black%20-%20White%20Background.png)
