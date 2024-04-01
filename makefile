@@ -1,6 +1,6 @@
-LDFLAGS := -lGLEW -lglfw
+LDFLAGS := -lGLEW -lglfw -lfmod
 ifeq ($(shell uname),Linux)
-	LDFLAGS += -lGL -lfmod
+	LDFLAGS += -lGL
 else ifeq ($(shell uname),Darwin)
 	LDFLAGS += -framework OpenGL
 endif
@@ -18,10 +18,10 @@ endif
 
 run: $(OBJECTS)
 
-		$(CXX) -o run $(OBJECTS) $(CXXFLAGS) $(LDFLAGS)
+		$(CXX) -o run $(OBJECTS) $(LDFLAGS)
 
 debug: $(OBJECTS)
-		$(CXX) -g -o run $(OBJECTS) $(CXXFLAGS) $(LDFLAGS)
+		$(CXX) -g -o run $(OBJECTS) $(LDFLAGS)
 
 main.o := main.h
 shader.o := src/shaders/shaderProgram/hdr/shader.h

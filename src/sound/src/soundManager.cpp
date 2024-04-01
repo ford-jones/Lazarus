@@ -53,7 +53,15 @@ void SoundManager::play()
 	//	Add in the optional args, the channel (Arg4) is important for controling the play-state
 	//	See: https://www.fmod.com/docs/2.03/api/core-api-channel.html
 	
-	system->playSound(this->sound, NULL, false, NULL);
+	if(this->sound != NULL)
+	{
+		system->playSound(this->sound, NULL, false, NULL);
+	}
+	else
+	{
+		std::cout << RED_TEXT << "ERROR::SOUND_MANAGER" << RESET_TEXT << std::endl;	
+		std::cout << "No audio file loaded." << std::endl;	
+	}
 };
 
 SoundManager::~SoundManager()

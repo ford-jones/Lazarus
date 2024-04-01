@@ -15,6 +15,7 @@
 #include "./src/cameras/hdr/camera.h"
 #include "./src/utils/hdr/fpsCounter.h"
 #include "./src/utils/hdr/fileReader.h"
+#include "./src/sound/hdr/soundManager.h"
 
 #define GREEN_TEXT "\x1b[32m"
 #define RESET_TEXT "\x1b[37m"
@@ -43,8 +44,9 @@ EventManager eventManager;
 Shader shader;
 Transform transformer;
 FpsCounter fpsCounter;
-unique_ptr<FileReader> fileReader;
+SoundManager soundManager;
 
+unique_ptr<FileReader> fileReader;
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
