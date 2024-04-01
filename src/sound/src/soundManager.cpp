@@ -16,56 +16,56 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
+#include "../hdr/soundManager.h"
 
-#ifdef __APPLE__
-    #define LAZARUS_RUNNING_ON_DARWIN true
-#else
-    #define LAZARUS_RUNNING_ON_DARWIN false
-#endif
-
-#include <iostream>
-#include <string.h>
-
-#ifndef WINDOW_MANAGER_H
-#define WINDOW_MANAGER_H
-
-class WindowManager
+SoundManager::SoundManager() 
 {
-    public:
-        WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
-
-		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
-
-        //  TODO:
-        //  Create a class for the cursor
-        //	Locate what is being clicked
-        //	Call glReadPixels() to retrieve all of the rasterised pixels loaded onto the cpu
-		//	I imagine these can then be iterated through and checked for matches against mouseX & mouseY
-		
-		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
-        int initialise();
-        int handleBuffers();
-
-        virtual ~WindowManager();
-        
-	private:
-        struct Window
-        {
-            int height, width;
-            const char *title;
-            GLFWmonitor *monitor;
-            GLFWwindow *fullscreen;
-        };
-
-        Window frame;
-        
-        int errorCode;
-        const char** errorMessage;
-        
-        GLFWwindow *window;
-        GLFWcursor *cursor;
-        GLFWimage image;
-		int initialiseGLEW();
-        int checkErrors();
+    std::cout << GREEN_TEXT << "Constructing class 'SoundManager'." << RESET_TEXT << std::endl;
+	this->system = NULL;
+	this->sound = NULL;
 };
-#endif
+
+void SoundManager::load(string filepath)
+{
+	//	TODO: 
+	//	Add error checking
+	
+	this->reader = std::make_unique<FileReader>();
+	this->path = reader->relativePathToAbsolute(filepath);
+	
+	//	TODO:
+	//	Move these to an init function
+	
+	this->result = FMOD::System_Create(&this->system);
+	this->result = system->init(512, FMOD_INIT_NORMAL, 0);
+	
+	//	TODO:
+	//	Arg2 should be changed to FMOD_3D
+	//	This allows the sound to be positioned in worldspace
+	//	Somehow....
+	
+	this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
+};
+
+void SoundManager::play()
+{
+	//	TODO:
+	//	Add in the optional args, the channel (Arg4) is important for controling the play-state
+	//	See: https://www.fmod.com/docs/2.03/api/core-api-channel.html
+	
+	if(this->sound != NULL)
+	{
+		system->playSound(this->sound, NULL, false, NULL);
+	}
+	else
+	{
+		std::cout << RED_TEXT << "ERROR::SOUND_MANAGER" << RESET_TEXT << std::endl;	
+		std::cout << "No audio file loaded." << std::endl;	
+	}
+};
+
+SoundManager::~SoundManager()
+{
+    std::cout << GREEN_TEXT << "Destroying 'SoundManager' class." << RESET_TEXT << std::endl;
+	system->release();
+};

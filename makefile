@@ -1,16 +1,15 @@
-LDFLAGS := -lGLEW -lglfw
+LDFLAGS := -lGLEW -lglfw -lfmod
 ifeq ($(shell uname),Linux)
-	LDFLAGS += -lGL 
+	LDFLAGS += -lGL
 else ifeq ($(shell uname),Darwin)
 	LDFLAGS += -framework OpenGL
 endif
-
 
 OBJECTS = main.o src/shaders/shaderProgram/src/shader.o src/lights/src/light.o src/cameras/src/camera.o \
 					src/mesh/src/mesh.o src/transforms/src/transforms.o \
 					src/mesh/src/meshLoader.o src/materials/src/materialLoader.o \
 					src/window/src/WindowManager.o src/utils/src/fileReader.o src/window/src/eventManager.o \
-					src/utils/src/fpsCounter.o src/utils/src/stb_image.o
+					src/utils/src/fpsCounter.o src/utils/src/stb_image.o src/sound/src/soundManager.o 
 
 CXX = g++ -std=c++17
 ifeq ($(shell uname),Linux)
@@ -18,6 +17,7 @@ ifeq ($(shell uname),Linux)
 endif
 
 run: $(OBJECTS)
+
 		$(CXX) -o run $(OBJECTS) $(LDFLAGS)
 
 debug: $(OBJECTS)
@@ -35,6 +35,7 @@ fileReader.o := src/utils/hdr/fileReader.h
 WindowManager.o := src/window/hdr/WindowManager.h
 eventManager.o := src/window/hdr/eventManager.h
 fpsCounter.o := src/utils/hdr/fpsCounter.h
+soundManager.o := src/sound/hdr/soundManager.h
 
 clean : 
 		rm run $(OBJECTS)

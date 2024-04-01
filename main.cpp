@@ -31,6 +31,8 @@ int main()
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
     beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
+    soundManager.load("assets/sound/viewedFromFarHills.mp3");
+    soundManager.play();
 	
     while(!glfwWindowShouldClose(win))
     {

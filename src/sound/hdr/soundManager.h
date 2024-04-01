@@ -16,56 +16,51 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
-
-#ifdef __APPLE__
-    #define LAZARUS_RUNNING_ON_DARWIN true
-#else
-    #define LAZARUS_RUNNING_ON_DARWIN false
+#ifndef LAZARUS_CONSTANTS_H
+	#include "../../utils/hdr/constants.h"
 #endif
 
-#include <iostream>
-#include <string.h>
+#include <fmod.h>
+#include <fmod.hpp>
+#include <fmod_common.h>
+#include <fmod_codec.h>
 
-#ifndef WINDOW_MANAGER_H
-#define WINDOW_MANAGER_H
+#include <string>
+#include <memory>
 
-class WindowManager
+#include "../../utils/hdr/fileReader.h"
+
+using std::unique_ptr;
+using std::string;
+
+#ifndef LAZARUS_SOUND_MANAGER_H
+#define LAZARUS_SOUND_MANAGER_H
+
+//	TODO:
+//	1. Find and link the static library, this is close but no cigar
+//	2. Update docs
+
+//	So far:
+//	-	Create an account on FMOD
+//	-	Download the binaries
+//	-	Move lib stuff to your program files (look this up, os specific. Right now it's stored in /usr/local/lib/. I think on windows it's \ Program Files \)
+//	-	Move header stuff to include files (currently /usr/local/include/)
+//	-	Run ldconfig
+
+class SoundManager
 {
-    public:
-        WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
-
-		int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true, bool texTwoDimensions = true);
-
-        //  TODO:
-        //  Create a class for the cursor
-        //	Locate what is being clicked
-        //	Call glReadPixels() to retrieve all of the rasterised pixels loaded onto the cpu
-		//	I imagine these can then be iterated through and checked for matches against mouseX & mouseY
+	public:
+		SoundManager();
+		void load(string filepath);
+		void play();
+		virtual ~SoundManager();
 		
-		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
-        int initialise();
-        int handleBuffers();
-
-        virtual ~WindowManager();
-        
 	private:
-        struct Window
-        {
-            int height, width;
-            const char *title;
-            GLFWmonitor *monitor;
-            GLFWwindow *fullscreen;
-        };
-
-        Window frame;
-        
-        int errorCode;
-        const char** errorMessage;
-        
-        GLFWwindow *window;
-        GLFWcursor *cursor;
-        GLFWimage image;
-		int initialiseGLEW();
-        int checkErrors();
+		unique_ptr<FileReader> reader;
+		FMOD::System *system;
+		FMOD::Sound *sound;
+		FMOD_RESULT result;
+		string path;
 };
+
 #endif
