@@ -31,6 +31,7 @@ int main()
     beachballBuilder = std::make_unique<Mesh>(shaderProgram);
     beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
+    soundManager.init();
     soundManager.load("assets/sound/viewedFromFarHills.mp3");
     soundManager.play();
 	
@@ -57,10 +58,6 @@ int main()
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             world = worldBuilder->initialiseMesh(world);
-            //	TODO:
-            //	Instead of passing a mem handler, pass the entire shared pointer
-            //	Move ownership to the loader then return it
-            //	Do the same for the draw function
             
             worldBuilder->loadMesh(world);
             worldBuilder->drawMesh(world);
