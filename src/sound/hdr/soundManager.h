@@ -46,8 +46,6 @@ using std::string;
 //
 //	(2) Init:
 //	-	Configure the 3D environment using `System`
-//	-	Create a `ChannelGroup`
-//	-	Retrieve the `Channel` from `System::play_sound()`
 //	-	Create a system callback and check for errors
 //
 //	(3) Ambient sound:
@@ -63,7 +61,7 @@ class SoundManager
 	public:
 		SoundManager();
 		void init();
-		void load(string filepath);
+		void load(string filepath, bool is3D);
 		void play();
 		virtual ~SoundManager();
 		
