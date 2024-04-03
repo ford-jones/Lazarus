@@ -89,6 +89,36 @@ Move the file into your include folder:
 sudo mv ./stb_image.h /usr/local/include/
 ```
 
+3. FMOD core API: \
+`FMOD` is an audio engine built by Firelight Technologies Pty Ltd. The software operates under multiple distribution liscences dependant on the project's use-case, take a look at https://www.fmod.com/licensing/ to determine which liscence you need for your project.
+
+Before `FMOD` can be used, you need to register an account on their website here https://www.fmod.com/profile/register.
+
+Once that's done, navigate to https://www.fmod.com/download#fmodengine and download version `2.02.21` for your target OS.
+
+Once the download is complete, extract the packages from the `.zip`.
+
+`FMOD` libraries are available for a number of different architectures. Check which architecture your OS is running with:
+```
+lscpu
+```
+The first line should print the system's architecture, for me it's `x86_64`.
+
+Move the *contents* of the FMOD architecture sub-directory to your `lib` folder, e.g:
+```
+sudo mv ./fmodstudioapi2022<OS>/api/core/lib/<your_architecture>/* /usr/local/lib
+```
+
+Do the same for the `FMOD` headers:
+```
+sudo mv ./fmodstudioapi2022<OS>/api/core/inc/* /usr/local/include
+```
+
+Finally, update your loaders' scoped libraries with:
+```
+sudo ldconfig
+```
+
 ## Known caveats and limitations:
 1. 3D Mesh assets must be exported to `wavefront` (.obj) file format before being loaded into a scene.
 2. 3D mesh assets have to be **triangulated**, this can be done prior to or on export. *Faces made up of 5 vertex coordinates (polygons) are not supported.*
@@ -96,4 +126,3 @@ sudo mv ./stb_image.h /usr/local/include/
 4. Upon initialising the render loop and loading of assets, there is an observable "hump" in performance for about 3-5 seconds. A full scene with lights, camera, meshes etc causes a decrease in the framerate by about 12.5% (60 frames becomes 50).
 5. When running Lazarus on OSX the program recieves an OpenGL 1280 (Invalid enum) error, thrown by `Mesh::initialiseMesh`. Apple stopped maintenance for `OpenGL` long ago in favor of their `Metal` API. \
 The repurcussions of this are that we must now use the `GLFW_OPENGL_CORE_PROFILE` to be granted access the modern OpenGL (shader driven) API. The core profile has some gripes with `GLEW`, whatever the issue between them may be - they currently seem inconsequential to this project.
-

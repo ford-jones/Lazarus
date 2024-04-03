@@ -19,19 +19,20 @@ int main()
 	
     windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
-    lightBuilder = std::make_unique<Light>(shaderProgram);
-    light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
+    lightBuilder        = std::make_unique<Light>(shaderProgram);
+    light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
-    cameraBuilder = std::make_unique<Camera>(shaderProgram);
-    camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
+    cameraBuilder       = std::make_unique<Camera>(shaderProgram);
+    camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder = std::make_unique<Mesh>(shaderProgram);
-    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
-    beachballBuilder = std::make_unique<Mesh>(shaderProgram);
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
+    beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
+    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
-    soundManager.load("assets/sound/viewedFromFarHills.mp3");
+    soundManager.init();
+    soundManager.load("assets/sound/viewedFromFarHills.mp3", false);
     soundManager.play();
 	
     while(!glfwWindowShouldClose(win))
@@ -57,10 +58,6 @@ int main()
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             world = worldBuilder->initialiseMesh(world);
-            //	TODO:
-            //	Instead of passing a mem handler, pass the entire shared pointer
-            //	Move ownership to the loader then return it
-            //	Do the same for the draw function
             
             worldBuilder->loadMesh(world);
             worldBuilder->drawMesh(world);
