@@ -33,13 +33,12 @@ void SoundManager::init()
 	this->result = system->init(512, FMOD_INIT_NORMAL, 0);
 
 	this->result = system->createChannelGroup("lazarusGroup", &group);
+
+	this->checkErrors(this->result);
 };
 
 void SoundManager::load(string filepath, bool is3D)
-{
-	//	TODO: 
-	//	Add error checking
-	
+{	
 	this->reader = std::make_unique<FileReader>();
 	this->path = reader->relativePathToAbsolute(filepath);
 	
@@ -51,22 +50,36 @@ void SoundManager::load(string filepath, bool is3D)
 	{
 		this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
 	};
+	this->checkErrors(this->result);
 	
 	if(this->sound != NULL)
 	{
-		system->playSound(this->sound, group, false, &channel);
-		channel->setPaused(true);
+		this->result = system->playSound(this->sound, group, false, &channel);
+		this->result = channel->setPaused(true);
 	}
 	else
 	{
 		std::cout << RED_TEXT << "ERROR::SOUND_MANAGER" << RESET_TEXT << std::endl;	
 		std::cout << LAZARUS_FILE_NOT_FOUND << std::endl;	
 	}
+
+	this->checkErrors(this->result);
 };
 
 void SoundManager::play()
 {
-	channel->setPaused(false);
+	this->result = channel->setPaused(false);
+	this->checkErrors(this->result);
+};
+
+void SoundManager::checkErrors(FMOD_RESULT res) 
+{
+	if(res != FMOD_OK)
+	{
+		std::cout << RED_TEXT "ERROR::SOUND_MANAGER" << RESET_TEXT << std::endl;
+		std::cout << LAZARUS_AUDIO_ERROR << std::endl;
+		std::cout << res << std::endl;
+	};
 };
 
 SoundManager::~SoundManager()

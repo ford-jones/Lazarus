@@ -115,7 +115,8 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
             if ( this->matches != 9 )                                                                 //  If there arent 9 matches for each face, the mesh likely hasn't been triangulated
             {
-                printf("File can't be read. Try exporting with other options\n");
+                std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER" << RESET_TEXT << std::endl;
+                std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
                 return false;
             }
 
@@ -162,13 +163,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
-
-    for(auto i: materialBuffer)
-    {
-		std::cout << "Material Index: " << i[0] << std::endl;
-		std::cout << "Face Count: " << i[1] << std::endl;
-		std::cout << "--" << std::endl;
-    };
 
 	matLoader->loadMaterial(foundMaterial, out_diffuse, materialBuffer);
 
