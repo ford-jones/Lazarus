@@ -16,66 +16,60 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
-
-#ifndef __GLEW_H__
-    #include "../../utils/hdr/gl_includes.h"
-#endif
-
 #ifndef LAZARUS_CONSTANTS_H
 	#include "../../utils/hdr/constants.h"
 #endif
 
-#include "../hdr/textureLoader.h"
+#include <fmod.h>
+#include <fmod.hpp>
+#include <fmod_common.h>
+#include <fmod_codec.h>
 
-TextureLoader::TextureLoader()
+#include <string>
+#include <memory>
+
+#include "../../utils/hdr/fileReader.h"
+
+using std::unique_ptr;
+using std::string;
+
+#ifndef LAZARUS_SOUND_MANAGER_H
+#define LAZARUS_SOUND_MANAGER_H
+
+//	TODO:
+//	(1) Init:
+//	-	Configure the 3D environment using `System`
+//	-	Create a system callback and check for errors
+//
+//	(2) Ambient sound:
+//	-	Rename `play()` to `playAmbientSound()`, this function will be used to just play stuff as if it were itunes or something		
+//
+//	(3) Locative sound:
+//	-	Create a function called `playLocativeSound()`, this function will be used to play a sound from somewhere in worldspace and hear it through a listener
+//	-	Retrieve the `Channel` from the `ChannelGroup` and use it to modify the position of the sounds source and the position of the listener
+//	-	The function should accept the source pos (xyz), listener pos (xyz),  min & max distance as arguments
+
+class SoundManager
 {
-	std::cout << GREEN_TEXT << "Constructing class 'Texture'" << RESET_TEXT << std::endl;
-
-	this->loader = nullptr;	
-	this->image = NULL;
-	this->texture = 0;
-};
-
-void TextureLoader::loadTexture(string texturePath)
-{
-	std::cout << "Filepath: " << texturePath << std::endl;
-	
-	this->loader = std::make_shared<FileReader>();
-	this->image = loader->readFromImage(texturePath);
-
-	//float borderColor[] = {0.0f, 0.0f, 0.0f, 0.0f};
-
-	glEnable(GL_TEXTURE_2D);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	public:
+		SoundManager();
+		void init();
+		void load(string filepath, bool is3D);
+		void play();
+		virtual ~SoundManager();
 		
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor)	;
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glGenTextures(GL_TEXTURE_2D, &this->texture);
-	
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->texture);
-	
-	if(image)
-	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 32, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-	{
-		std::cout << "Failed to load tex" << std::endl;
-	};
+	private:
+		void checkErrors(FMOD_RESULT res);
+
+		unique_ptr<FileReader> reader;
+		string path;
+
+		FMOD_RESULT result;
+
+		FMOD::System *system;
+		FMOD::Sound *sound;
+		FMOD::Channel *channel;
+		FMOD::ChannelGroup *group;
 };
 
-TextureLoader::~TextureLoader()
-{
-	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
-	glDeleteTextures(1, &this->texture);
-};
+#endif

@@ -7,6 +7,10 @@ int main()
 	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
+	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
+	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
+	//std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
+	// printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
 	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
     win = glfwGetCurrentContext();
@@ -15,22 +19,21 @@ int main()
 	
     windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
-    lightBuilder = std::make_unique<Light>(shaderProgram);
-    light        = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
+    lightBuilder        = std::make_unique<Light>(shaderProgram);
+    light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
-    cameraBuilder = std::make_unique<Camera>(shaderProgram);
-    camera      = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
+    cameraBuilder       = std::make_unique<Camera>(shaderProgram);
+    camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder = std::make_unique<Mesh>(shaderProgram);
-    world       = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
-    beachballBuilder = std::make_unique<Mesh>(shaderProgram);
-    beachball   = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/crosshair.png"));
+    cubeBuilder = std::make_unique<Mesh>(shaderProgram);
+    cube   = std::move(cubeBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/crosshair.png"));
 
-	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	//std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
-	//printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
+    soundManager.init();
+    soundManager.load("assets/sound/viewedFromFarHills.mp3", false);
+    soundManager.play();
 	
     while(!glfwWindowShouldClose(win))
     {
@@ -55,10 +58,6 @@ int main()
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             world = worldBuilder->initialiseMesh(world);
-            //	TODO:
-            //	Instead of passing a mem handler, pass the entire shared pointer
-            //	Move ownership to the loader then return it
-            //	Do the same for the draw function
             
             worldBuilder->loadMesh(world);
             worldBuilder->drawMesh(world);
@@ -68,14 +67,14 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*Beachball*/
-        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        /*cube*/
+        if( cube->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = beachballBuilder->initialiseMesh(beachball);
-            //beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            //beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
-            beachballBuilder->loadMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
+            cube = cubeBuilder->initialiseMesh(cube);
+            //cube = transformer.translateMeshAsset(cube, (moveX / 50), 0.0, (moveZ / 50));
+            //cube = transformer.rotateMeshAsset(cube, turnX, turnY, 0.0);
+            cubeBuilder->loadMesh(cube);
+            cubeBuilder->drawMesh(cube);
         }
         else
         {

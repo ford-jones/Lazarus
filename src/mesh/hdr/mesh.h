@@ -67,6 +67,7 @@ class Mesh
             vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
+            GLint samplerUniformLocation;
         };
 		
 		Mesh(GLuint shader);
@@ -80,7 +81,7 @@ class Mesh
         virtual ~Mesh();
 
     private:
-        void checkErrors();
+        void checkErrors(const char *invoker);
         void releaseMesh();
 
         int errorCode;

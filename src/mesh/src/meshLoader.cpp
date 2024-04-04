@@ -20,7 +20,7 @@
 	#include "../../utils/hdr/constants.h"
 #endif
     		
-#ifndef __GLEW_H
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
@@ -70,7 +70,10 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 
         if( strcmp( identifier, "mtllib" ) == 0 )                                               //  If the first string of the current line is "mtlib" the line holds the name of a valid wavefront material file
         {
-            this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);                                     //  Find the file using the file finder
+            this->matFn       =   new char[20];                                                       //  Create an identifier to store a char[]
+            fscanf(this->file, "%s\n", this->matFn);                                                        //  Continue reading the line, the next store the string containing the name of the file
+
+            this->foundMaterial = materialPath;                                     //  Find the file using the file finder
         }
 
         else if ( strcmp( identifier, "v" ) == 0 )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
@@ -111,7 +114,8 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 
             if ( this->matches != 9 )                                                                 //  If there arent 9 matches for each face, the mesh likely hasn't been triangulated
             {
-                printf("File can't be read. Try exporting with other options\n");
+                std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER" << RESET_TEXT << std::endl;
+                std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
                 return false;
             }
 
@@ -158,13 +162,6 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
-
-    for(auto i: materialBuffer)
-    {
-		std::cout << "Material Index: " << i[0] << std::endl;
-		std::cout << "Face Count: " << i[1] << std::endl;
-		std::cout << "--" << std::endl;
-    };
 
 	matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial, texturePath);
 

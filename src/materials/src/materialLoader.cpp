@@ -20,7 +20,7 @@
 	#include "../../utils/hdr/constants.h"
 #endif
 
-#ifndef __GLEW_H__
+#ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
 #endif
 
