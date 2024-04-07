@@ -45,7 +45,6 @@ void TextureLoader::loadTexture(string texturePath)
 
 	//float borderColor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 
-
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		
@@ -67,7 +66,7 @@ void TextureLoader::loadTexture(string texturePath)
 	
 	if(image != NULL)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 32, 32, 0, GL_RGB, GL_UNSIGNED_BYTE, image);	
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
 	else

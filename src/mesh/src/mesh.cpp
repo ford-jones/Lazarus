@@ -134,6 +134,7 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 	triangulatedMesh = std::move(meshData);
 	
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
+    glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };
