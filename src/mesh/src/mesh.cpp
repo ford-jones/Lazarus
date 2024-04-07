@@ -111,7 +111,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[3]);
     glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->uvCoords.size() * sizeof(vec2), &triangulatedMesh->uvCoords[0], GL_STATIC_DRAW);
-    glVertexAttribPointer       (3, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer       (3, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray   (3);
 
     this->checkErrors(__PRETTY_FUNCTION__);
@@ -147,7 +147,8 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 	
 	triangulatedMesh = std::move(meshData);
 	
-    glDrawElements(GL_TRIANGLES, triangulatedMesh->vertices.size(), GL_UNSIGNED_INT, 0);
+    // glDrawElements(GL_TRIANGLES, triangulatedMesh->vertices.size(), GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->vertices.size());
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();

@@ -82,7 +82,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
 	    };
         
    };
-   textureLoader.reset();
+//    textureLoader.reset();
    return true;
 };
 
