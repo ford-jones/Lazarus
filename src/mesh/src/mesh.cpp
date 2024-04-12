@@ -92,7 +92,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glGenVertexArrays           (1, &this->VAO);                                                                                                  //  Generate a vertex array object to store the buffers
 	glBindVertexArray           (this->VAO);                                                                                                      //  Bind the VAO to this openGL context
 
-	glGenBuffers                (3, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
+	glGenBuffers                (4, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
 	
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[0]);                                                                                  //  Bind the first VBO to openGL's array buffer (which the VAO is bound to)
     glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(vec3), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
@@ -172,6 +172,7 @@ void Mesh::releaseMesh()
 	glDeleteBuffers         (1, &this->VBO[0]);
     glDeleteBuffers         (1, &this->VBO[1]);
     glDeleteBuffers         (1, &this->VBO[2]);
+    glDeleteBuffers         (1, &this->VBO[3]);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

@@ -29,7 +29,7 @@ int main()
     world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     cubeBuilder = std::make_unique<Mesh>(shaderProgram);
-    cube   = std::move(cubeBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/crosshair.png"));
+    cube   = std::move(cubeBuilder->createTriangulatedMesh("assets/mesh/brick.obj", "assets/material/brick.mtl", "assets/images/brick-texture-png-8.png"));
 
     soundManager.init();
     soundManager.load("assets/sound/viewedFromFarHills.mp3", false);
