@@ -25,8 +25,8 @@ int main()
     cameraBuilder       = std::make_unique<Camera>(shaderProgram);
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
-    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    // worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    // world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     cubeBuilder = std::make_unique<Mesh>(shaderProgram);
     cube   = std::move(cubeBuilder->createTriangulatedMesh("assets/mesh/brick.obj", "assets/material/brick.mtl", "assets/images/brick-texture-png-8.png"));
@@ -54,18 +54,18 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        /*World*/
-        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        {
-            world = worldBuilder->initialiseMesh(world);
+        // /*World*/
+        // if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        // {
+        //     world = worldBuilder->initialiseMesh(world);
             
-            worldBuilder->loadMesh(world);
-            worldBuilder->drawMesh(world);
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+        //     worldBuilder->loadMesh(world);
+        //     worldBuilder->drawMesh(world);
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
 
         /*cube*/
         if( cube->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1

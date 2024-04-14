@@ -45,7 +45,6 @@ void TextureLoader::loadTexture(string texturePath)
 
 	//float borderColor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	glEnable(GL_TEXTURE_2D);
-	glActiveTexture(GL_TEXTURE0);
 	glGenTextures(1, &this->texture);
 
 	glBindTexture(GL_TEXTURE_2D, this->texture);
@@ -57,7 +56,7 @@ void TextureLoader::loadTexture(string texturePath)
 	}
 	else
 	{
-		std::cout << "Failed to load tex" << std::endl;
+		std::cout << LAZARUS_FILE_NOT_FOUND << std::endl;
 	};
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -71,6 +70,7 @@ void TextureLoader::loadTexture(string texturePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
+	glActiveTexture(GL_TEXTURE0);
 	// glGenTextures(GL_TEXTURE_2D, &this->texture);
 };
 

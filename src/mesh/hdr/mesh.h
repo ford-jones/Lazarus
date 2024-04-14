@@ -92,7 +92,7 @@ class Mesh
 		
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
-        GLuint VBO[3];                                                                      //  The OpenGL Vertex Buffer Object
+        GLuint VBO[4];                                                                      //  The OpenGL Vertex Buffer Object
 
         unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> loader;

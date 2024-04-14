@@ -41,7 +41,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
 
     file = fopen(materialPath.c_str(), "r");                                                                                //  Open the file located at `path` with read permissions
     char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
-	this->textureLoader = std::make_unique<TextureLoader>();
     
     if( file == NULL )
     {                                                                                                               //  If, the file has a null value                                 
@@ -75,13 +74,18 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     	        };        
             };
         }
-	    else if( strcmp( identifier, "map_Kd" ) == 0 )
-    	{
-			string path = texturePath;
-			textureLoader->loadTexture(path);
-	    };
+	    // else if( strcmp( identifier, "map_Kd" ) == 0 )
+    	// {
+		// 	string path = texturePath;
+		// 	textureLoader->loadTexture(path);
+	    // };
         
    };
+   if(texturePath != LAZARUS_MESH_NOTEX)
+   {
+	    this->textureLoader = std::make_unique<TextureLoader>();
+		textureLoader->loadTexture(texturePath);
+   }
 //    textureLoader.reset();
    return true;
 };
