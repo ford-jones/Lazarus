@@ -32,20 +32,29 @@ int main()
     beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
     soundManager.init();
-    soundManager.load("assets/sound/viewedFromFarHills.mp3", false);
-    soundManager.play();
+    soundManager.load("assets/sound/viewedFromFarHills.mp3", true);
+    soundManager.positionSource(0.0f, 0.0f, 0.0f);
+    // soundManager.togglePaused();
+
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
+
+        soundManager.positionListener(moveX, 0.0f, moveZ);
+
+        if(soundManager.isPaused == true)
+        {
+            soundManager.togglePaused();
+        }
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
             light = std::move(lightBuilder->initialiseLight(light));
             
-            camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
-            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
+            // camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
+            // camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
             moveCamera(eventManager.keyString);
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
@@ -121,11 +130,11 @@ void moveCamera(string key)
 		{
 			turnY += 0.5;
 		}
-		else 
-		{
-			moveX = 0.0;
-			moveZ = 0.0;
-			turnX = 0.0;
-			turnY = 0.0;
-		};
+		// else 
+		// {
+		// 	moveX = 0.0;
+		// 	moveZ = 0.0;
+		// 	turnX = 0.0;
+		// 	turnY = 0.0;
+		// };
 };

@@ -21,10 +21,21 @@
 SoundManager::SoundManager() 
 {
     std::cout << GREEN_TEXT << "Constructing class 'SoundManager'." << RESET_TEXT << std::endl;
+	this->isPaused = false;
+	
 	this->system = NULL;
 	this->channel = NULL;
 	this->group = NULL;
 	this->sound = NULL;
+
+	this->prevSourcePosition = {0.0f, 0.0f, 0.0f};
+	this->prevListenerPosition = {0.0f, 0.0f, 0.0f};
+	this->sourceVelocity = {0.0f, 0.0f, 0.0f};
+
+	this->currentSourcePosition = {0.0f, 0.0f, 0.0f};
+	this->currentListenerPosition = {0.0f, 0.0f, 0.0f};
+	this->listenerVelocity = {0.0f, 0.0f, 0.0f};
+
 };
 
 void SoundManager::init()
@@ -55,7 +66,8 @@ void SoundManager::load(string filepath, bool is3D)
 	if(this->sound != NULL)
 	{
 		this->result = system->playSound(this->sound, group, false, &channel);
-		this->result = channel->setPaused(true);
+		// this->result = channel->set3DMinMaxDistance(1.0 , 10.0);
+		this->togglePaused();
 	}
 	else
 	{
@@ -66,9 +78,58 @@ void SoundManager::load(string filepath, bool is3D)
 	this->checkErrors(this->result);
 };
 
-void SoundManager::play()
+void SoundManager::togglePaused()
 {
-	this->result = channel->setPaused(false);
+	if(this->isPaused == true)
+	{
+		this->result = channel->setPaused(false);
+		this->isPaused = false;
+	}
+	else if(this->isPaused == false)
+	{
+		this->result = channel->setPaused(true);
+		this->isPaused = true;
+	}
+
+	this->checkErrors(this->result);
+};
+
+void SoundManager::positionSource(float x, float y, float z)
+{
+	this->currentSourcePosition = {x, y, z};
+	this->result = channel->set3DAttributes(&currentSourcePosition, &sourceVelocity);
+
+	// this->result = channel->get3DAttributes(&testPos, &testVel);
+	// std::cout << currentPos.z << std::endl;
+	this->checkErrors(this->result);
+};
+
+void SoundManager::positionListener(float x, float y, float z)
+{
+	this->currentListenerPosition = {x, y, z};
+
+	FMOD_VECTOR forward = {0.0f, 0.0f, 1.0f};
+	FMOD_VECTOR up = {0.0f, 1.0f, 0.0f};
+
+	this->listenerVelocity = {
+		((this->currentListenerPosition.x - this->prevListenerPosition.x) * (1000 / 60)),
+		((this->currentListenerPosition.y - this->prevListenerPosition.y) * (1000 / 60)),
+		((this->currentListenerPosition.z - this->prevListenerPosition.z) * (1000 / 60))
+	};
+
+	this->result = system->set3DListenerAttributes(
+		0, 
+		&currentListenerPosition, 
+		&listenerVelocity,
+		&forward,
+		&up
+	);
+	
+	this->checkErrors(this->result);
+
+	this->result = system->update();
+	this->prevListenerPosition = this->currentListenerPosition;
+
 	this->checkErrors(this->result);
 };
 
@@ -78,7 +139,7 @@ void SoundManager::checkErrors(FMOD_RESULT res)
 	{
 		std::cout << RED_TEXT "ERROR::SOUND_MANAGER" << RESET_TEXT << std::endl;
 		std::cout << LAZARUS_AUDIO_ERROR << std::endl;
-		std::cout << res << std::endl;
+		std::cout << "CODE: " << res << std::endl;
 	};
 };
 

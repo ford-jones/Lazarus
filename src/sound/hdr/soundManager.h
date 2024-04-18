@@ -20,6 +20,7 @@
 	#include "../../utils/hdr/constants.h"
 #endif
 
+#include <iostream>
 #include <fmod.h>
 #include <fmod.hpp>
 #include <fmod_common.h>
@@ -53,10 +54,17 @@ class SoundManager
 {
 	public:
 		SoundManager();
+
 		void init();
 		void load(string filepath, bool is3D);
-		void play();
+
+		void togglePaused();
+		void positionSource(float x, float y, float z);
+		void positionListener(float x, float y, float z);
+
 		virtual ~SoundManager();
+
+		bool isPaused;
 		
 	private:
 		void checkErrors(FMOD_RESULT res);
@@ -65,6 +73,17 @@ class SoundManager
 		string path;
 
 		FMOD_RESULT result;
+
+		FMOD_VECTOR prevSourcePosition;
+		FMOD_VECTOR currentSourcePosition;
+		FMOD_VECTOR sourceVelocity;
+
+		FMOD_VECTOR prevListenerPosition;
+		FMOD_VECTOR currentListenerPosition;
+		FMOD_VECTOR listenerVelocity;
+
+		FMOD_VECTOR testPos;
+		FMOD_VECTOR testVel;
 
 		FMOD::System *system;
 		FMOD::Sound *sound;
