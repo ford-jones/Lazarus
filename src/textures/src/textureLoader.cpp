@@ -43,35 +43,33 @@ void TextureLoader::loadTexture(string texturePath)
 	this->loader = std::make_shared<FileReader>();
 	this->image = loader->readFromImage(texturePath);
 
-	//float borderColor[] = {0.0f, 0.0f, 0.0f, 0.0f};
 	glEnable(GL_TEXTURE_2D);
 	glGenTextures(1, &this->texture);
 
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, this->texture);
 	
 	if(image != NULL)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 239, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glGenerateTextureMipmap(this->texture);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
+		// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		// glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	
+	
+		glBindTextureUnit(1, this->texture);
 	}
 	else
 	{
 		std::cout << LAZARUS_FILE_NOT_FOUND << std::endl;
 	};
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		
-	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor)	;
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	
-	glActiveTexture(GL_TEXTURE0);
-	// glGenTextures(GL_TEXTURE_2D, &this->texture);
 };
 
 TextureLoader::~TextureLoader()

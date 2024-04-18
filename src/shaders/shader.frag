@@ -19,16 +19,6 @@ void main()
 
     vec4 texColor = texture(texImg, texCoord);
 
-    //  TODO:
-    //  This check should be run for r, g, b & a
-    //  When r is specified, the bottom right corner of the cube is touched by the tex
-    //  Why would it be the alpha value alone anyway? 
-
-    //  Also; all meshes have a texCoord
-    //  So its plausible that in some cases, (texColor.x > 0.0) could return true for undesired fragments in other parts of the scene
-    //  Hence the fragmentation (bleeding into the other mesh)
-    //  The meshloader could possibly perform a check also - and then conditionally load the texcoords into the buffer(s)
-
     if(texColor.a > 0.0)
     {
         outFragColor = texColor;

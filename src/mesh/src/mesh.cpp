@@ -111,7 +111,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[2]);                                                                                  //  Bind the third VBO to openGL's array buffer (which the VAO is bound to)
     glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
-    glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
+    glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
     glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
 
     glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[3]);
@@ -137,7 +137,7 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 	};
 	
 	triangulatedMesh = std::move(meshData);
-	
+
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
     glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
 
