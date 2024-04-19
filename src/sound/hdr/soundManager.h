@@ -50,7 +50,7 @@ class SoundManager
 		SoundManager();
 
 		void init();
-		void load(string filepath, bool is3D);
+		void load(string filepath, bool is3D = false, int loopCount = 0);
 
 		void togglePaused();
 		void positionSource(float x, float y, float z);

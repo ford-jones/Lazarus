@@ -7,10 +7,7 @@ int main()
 	
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-	//printf("Version OpenGL: %s\n", glGetString(GL_VERSION));
-	//printf("Version GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
-	//std::cout << "Version GLFW: " << GLFW_VERSION_MAJOR << "." << GLFW_VERSION_MINOR << "." << GLFW_VERSION_REVISION << std::endl;
-	// printf("Version GLEW: %s\n", glewGetString(GLEW_VERSION));
+	
 	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
     win = glfwGetCurrentContext();
@@ -32,19 +29,15 @@ int main()
     beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
     soundManager.init();
-    soundManager.load("assets/sound/viewedFromFarHills.mp3", true);
-    soundManager.positionSource(0.0f, 0.0f, 0.0f);
+    soundManager.load("assets/sound/springWaltz.mp3", true, 0);
+    // soundManager.positionSource(0.0f, 0.0f, 0.0f);
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
 
-        soundManager.positionSource(moveX, 0.0f, moveZ);
-
-        if(soundManager.isPaused == true)
-        {
-            soundManager.togglePaused();
-        }
+        // fpsCounter.calculateFramesPerSec();
+        // std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
@@ -78,10 +71,17 @@ int main()
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);
-            //beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            //beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
+            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
+
+            soundManager.positionSource(beachball->locationX, beachball->locationY, beachball->locationZ);
+
+            if(soundManager.isPaused == true)
+            {
+                soundManager.togglePaused();
+            }
         }
         else
         {
@@ -128,11 +128,11 @@ void moveCamera(string key)
 		{
 			turnY += 0.5;
 		}
-		// else 
-		// {
-		// 	moveX = 0.0;
-		// 	moveZ = 0.0;
-		// 	turnX = 0.0;
-		// 	turnY = 0.0;
-		// };
+		else 
+		{
+			moveX = 0.0;
+			moveZ = 0.0;
+			turnX = 0.0;
+			turnY = 0.0;
+		};
 };

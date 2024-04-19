@@ -36,21 +36,21 @@ SoundManager::SoundManager()
 	this->currentListenerPosition = {0.0f, 0.0f, 0.0f};
 	this->listenerVelocity = {0.0f, 0.0f, 0.0f};
 
-	this->forward = {0.0f, 0.0f, 0.0f};
-	this->up = {0.0f, 0.0f, 0.0f};
+	this->forward = {0.0f, 0.0f, 1.0f};
+	this->up = {0.0f, 1.0f, 0.0f};
 };
 
 void SoundManager::init()
 {
 	this->result = FMOD::System_Create(&this->system);
-	this->result = system->init(512, FMOD_INIT_NORMAL, 0);
+	this->result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
 
 	this->result = system->createChannelGroup("lazarusGroup", &group);
 
 	this->checkErrors(this->result);
 };
 
-void SoundManager::load(string filepath, bool is3D)
+void SoundManager::load(string filepath, bool is3D, int loopCount)
 {	
 	this->reader = std::make_unique<FileReader>();
 	this->path = reader->relativePathToAbsolute(filepath);
@@ -59,15 +59,22 @@ void SoundManager::load(string filepath, bool is3D)
 	{
 		this->result = system->createSound(this->path.c_str(), FMOD_3D, NULL, &this->sound);
 	}
-	else if (is3D == false)
+	else 
 	{
 		this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
 	};
+
 	this->checkErrors(this->result);
 	
 	if(this->sound != NULL)
 	{
 		this->result = system->playSound(this->sound, group, false, &channel);
+		
+		if (loopCount != 0)
+		{
+			channel->setLoopCount(loopCount);
+		};
+		
 		this->togglePaused();
 	}
 	else
@@ -117,14 +124,15 @@ void SoundManager::positionSource(float x, float y, float z)
 void SoundManager::positionListener(float x, float y, float z)
 {
 	//	TODO:
-	//	Tidyup
 	//	Make dynamic
+	//	Tidyup
 	//	Write Docs
-	//	Repeat for source
+
 	this->currentListenerPosition = {x, y, z};
 
 	//	TODO:
 	//	Change (1000 / 60) to FpsCounter::durationTillRendered
+
 	this->listenerVelocity = {
 		((this->currentListenerPosition.x - this->prevListenerPosition.x) * (1000 / 60)),
 		((this->currentListenerPosition.y - this->prevListenerPosition.y) * (1000 / 60)),
@@ -160,6 +168,8 @@ void SoundManager::checkErrors(FMOD_RESULT res)
 SoundManager::~SoundManager()
 {
     std::cout << GREEN_TEXT << "Destroying 'SoundManager' class." << RESET_TEXT << std::endl;
-	system->release();
+	
 	sound->release();
+	group->release();
+	system->release();
 };
