@@ -36,6 +36,8 @@ SoundManager::SoundManager()
 	this->currentListenerPosition = {0.0f, 0.0f, 0.0f};
 	this->listenerVelocity = {0.0f, 0.0f, 0.0f};
 
+	this->forward = {0.0f, 0.0f, 0.0f};
+	this->up = {0.0f, 0.0f, 0.0f};
 };
 
 void SoundManager::init()
@@ -66,7 +68,6 @@ void SoundManager::load(string filepath, bool is3D)
 	if(this->sound != NULL)
 	{
 		this->result = system->playSound(this->sound, group, false, &channel);
-		// this->result = channel->set3DMinMaxDistance(1.0 , 10.0);
 		this->togglePaused();
 	}
 	else
@@ -97,20 +98,33 @@ void SoundManager::togglePaused()
 void SoundManager::positionSource(float x, float y, float z)
 {
 	this->currentSourcePosition = {x, y, z};
-	this->result = channel->set3DAttributes(&currentSourcePosition, &sourceVelocity);
 
-	// this->result = channel->get3DAttributes(&testPos, &testVel);
-	// std::cout << currentPos.z << std::endl;
+	this->sourceVelocity = {
+		((this->currentSourcePosition.x - this->prevSourcePosition.x) * (1000 / 60)),
+		((this->currentSourcePosition.y - this->prevSourcePosition.y) * (1000 / 60)),
+		((this->currentSourcePosition.z - this->prevSourcePosition.z) * (1000 / 60))
+	};	
+
+	this->result = channel->set3DAttributes(&currentSourcePosition, &sourceVelocity);
+	this->checkErrors(this->result);
+
+	this->result = system->update();
+	this->prevSourcePosition = this->currentSourcePosition;
+
 	this->checkErrors(this->result);
 };
 
 void SoundManager::positionListener(float x, float y, float z)
 {
+	//	TODO:
+	//	Tidyup
+	//	Make dynamic
+	//	Write Docs
+	//	Repeat for source
 	this->currentListenerPosition = {x, y, z};
 
-	FMOD_VECTOR forward = {0.0f, 0.0f, 1.0f};
-	FMOD_VECTOR up = {0.0f, 1.0f, 0.0f};
-
+	//	TODO:
+	//	Change (1000 / 60) to FpsCounter::durationTillRendered
 	this->listenerVelocity = {
 		((this->currentListenerPosition.x - this->prevListenerPosition.x) * (1000 / 60)),
 		((this->currentListenerPosition.y - this->prevListenerPosition.y) * (1000 / 60)),

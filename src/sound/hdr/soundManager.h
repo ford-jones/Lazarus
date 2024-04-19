@@ -38,17 +38,11 @@ using std::string;
 #define LAZARUS_SOUND_MANAGER_H
 
 //	TODO:
-//	(1) Init:
-//	-	Configure the 3D environment using `System`
-//	-	Create a system callback and check for errors
-//
-//	(2) Ambient sound:
+//	(1) Ambient sound:
 //	-	Rename `play()` to `playAmbientSound()`, this function will be used to just play stuff as if it were itunes or something		
 //
-//	(3) Locative sound:
-//	-	Create a function called `playLocativeSound()`, this function will be used to play a sound from somewhere in worldspace and hear it through a listener
-//	-	Retrieve the `Channel` from the `ChannelGroup` and use it to modify the position of the sounds source and the position of the listener
-//	-	The function should accept the source pos (xyz), listener pos (xyz),  min & max distance as arguments
+//	(2) Loop function:
+//	-	Create a function which can loop the current sound
 
 class SoundManager
 {
@@ -82,8 +76,8 @@ class SoundManager
 		FMOD_VECTOR currentListenerPosition;
 		FMOD_VECTOR listenerVelocity;
 
-		FMOD_VECTOR testPos;
-		FMOD_VECTOR testVel;
+		FMOD_VECTOR forward;
+		FMOD_VECTOR up;
 
 		FMOD::System *system;
 		FMOD::Sound *sound;

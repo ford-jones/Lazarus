@@ -34,14 +34,12 @@ int main()
     soundManager.init();
     soundManager.load("assets/sound/viewedFromFarHills.mp3", true);
     soundManager.positionSource(0.0f, 0.0f, 0.0f);
-    // soundManager.togglePaused();
-
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
 
-        soundManager.positionListener(moveX, 0.0f, moveZ);
+        soundManager.positionSource(moveX, 0.0f, moveZ);
 
         if(soundManager.isPaused == true)
         {
