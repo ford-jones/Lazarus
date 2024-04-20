@@ -38,7 +38,7 @@ float moveX, moveZ;
 float turnX, turnY;
 unsigned char *cursorImage;
 
-void moveCamera(string key);
+void keyCapture(string key);
 
 EventManager eventManager;
 Shader shader;

@@ -37,13 +37,6 @@ using std::string;
 #ifndef LAZARUS_SOUND_MANAGER_H
 #define LAZARUS_SOUND_MANAGER_H
 
-//	TODO:
-//	(1) Ambient sound:
-//	-	Rename `play()` to `playAmbientSound()`, this function will be used to just play stuff as if it were itunes or something		
-//
-//	(2) Loop function:
-//	-	Create a function which can loop the current sound
-
 class SoundManager
 {
 	public:
@@ -60,6 +53,7 @@ class SoundManager
 
 		bool isPaused;
 		
+
 	private:
 		void checkErrors(FMOD_RESULT res);
 

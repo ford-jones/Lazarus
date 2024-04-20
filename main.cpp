@@ -20,7 +20,7 @@ int main()
     light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
     cameraBuilder       = std::make_unique<Camera>(shaderProgram);
-    camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 1.0, 1.0, 3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
+    camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     worldBuilder        = std::make_unique<Mesh>(shaderProgram);
     world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
@@ -30,23 +30,25 @@ int main()
 
     soundManager.init();
     soundManager.load("assets/sound/springWaltz.mp3", true, 0);
-    // soundManager.positionSource(0.0f, 0.0f, 0.0f);
+    soundManager.positionSource(0.0f, 0.0f, 0.0f);
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-
-        // fpsCounter.calculateFramesPerSec();
-        // std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
+        keyCapture(eventManager.keyString);
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
             light = std::move(lightBuilder->initialiseLight(light));
             
-            // camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
-            // camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
-            moveCamera(eventManager.keyString);
+            //  The POSITIVE Z axis of a mesh is determined as the OPPOSITE direction which the camera is facing
+            //  In other words; the POSITIVE Z axis scale for a mesh is strictly equal to the NEGATIVE Z axis scale for the camera
+            //  OpenGL uses a Right-handed system
+
+            // camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
+            // camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
+
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -73,10 +75,11 @@ int main()
             beachball = beachballBuilder->initialiseMesh(beachball);
             beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
             beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
 
-            soundManager.positionSource(beachball->locationX, beachball->locationY, beachball->locationZ);
+            soundManager.positionListener(beachball->locationX, beachball->locationY, beachball->locationZ);
 
             if(soundManager.isPaused == true)
             {
@@ -94,7 +97,7 @@ int main()
     return 0;
 };
 
-void moveCamera(string key)
+void keyCapture(string key)
 {
 		if(key == "up")
 		{

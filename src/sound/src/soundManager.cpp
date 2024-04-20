@@ -54,16 +54,11 @@ void SoundManager::load(string filepath, bool is3D, int loopCount)
 {	
 	this->reader = std::make_unique<FileReader>();
 	this->path = reader->relativePathToAbsolute(filepath);
-	
-	if(is3D == true) 
-	{
-		this->result = system->createSound(this->path.c_str(), FMOD_3D, NULL, &this->sound);
-	}
-	else 
-	{
-		this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
-	};
 
+	(is3D == true) 
+	? this->result = system->createSound(this->path.c_str(), FMOD_3D, NULL, &this->sound) 
+	: this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
+	
 	this->checkErrors(this->result);
 	
 	if(this->sound != NULL)
@@ -72,6 +67,7 @@ void SoundManager::load(string filepath, bool is3D, int loopCount)
 		
 		if (loopCount != 0)
 		{
+			channel->setMode(FMOD_LOOP_NORMAL);
 			channel->setLoopCount(loopCount);
 		};
 		
@@ -110,7 +106,7 @@ void SoundManager::positionSource(float x, float y, float z)
 		((this->currentSourcePosition.x - this->prevSourcePosition.x) * (1000 / 60)),
 		((this->currentSourcePosition.y - this->prevSourcePosition.y) * (1000 / 60)),
 		((this->currentSourcePosition.z - this->prevSourcePosition.z) * (1000 / 60))
-	};	
+	};
 
 	this->result = channel->set3DAttributes(&currentSourcePosition, &sourceVelocity);
 	this->checkErrors(this->result);
