@@ -21,6 +21,9 @@
 SoundManager::SoundManager() 
 {
     std::cout << GREEN_TEXT << "Constructing class 'SoundManager'." << RESET_TEXT << std::endl;
+	this->audio = nullptr;
+	this->reader = nullptr;
+
 	this->isPaused = false;
 	
 	this->system = NULL;
@@ -40,7 +43,7 @@ SoundManager::SoundManager()
 	this->up = {0.0f, 1.0f, 0.0f};
 };
 
-void SoundManager::init()
+void SoundManager::initialise()
 {
 	this->result = FMOD::System_Create(&this->system);
 	this->result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
@@ -50,14 +53,37 @@ void SoundManager::init()
 	this->checkErrors(this->result);
 };
 
-void SoundManager::load(string filepath, bool is3D, int loopCount)
-{	
+shared_ptr<SoundManager::Audio> SoundManager::createAudio(string filepath, bool is3D, int loopCount)
+{
+	this->audio = std::make_shared<SoundManager::Audio>();
 	this->reader = std::make_unique<FileReader>();
-	this->path = reader->relativePathToAbsolute(filepath);
 
-	(is3D == true) 
-	? this->result = system->createSound(this->path.c_str(), FMOD_3D, NULL, &this->sound) 
-	: this->result = system->createSound(this->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
+	srand(time((0)));
+	audio->id = 1 + (rand() % 2147483647);
+
+	audio->locationX = 0.0f;
+	audio->locationY = 0.0f;
+	audio->locationZ = 0.0f;
+
+	audio->path = reader->relativePathToAbsolute(filepath);
+	audio->is3D = is3D;
+	audio->loopCount = loopCount;
+
+	return audio;
+};
+
+shared_ptr<SoundManager::Audio> SoundManager::loadAudio(shared_ptr<SoundManager::Audio> audioData)
+{	
+	if(this->audio != nullptr)
+	{
+		audio.reset();
+	};
+
+	this->audio = std::move(audioData);
+
+	(audio->is3D == true) 
+	? this->result = system->createSound(audio->path.c_str(), FMOD_3D, NULL, &this->sound) 
+	: this->result = system->createSound(audio->path.c_str(), FMOD_DEFAULT, NULL, &this->sound);
 	
 	this->checkErrors(this->result);
 	
@@ -65,13 +91,13 @@ void SoundManager::load(string filepath, bool is3D, int loopCount)
 	{
 		this->result = system->playSound(this->sound, group, false, &channel);
 		
-		if (loopCount != 0)
+		if (audio->loopCount != 0)
 		{
 			channel->setMode(FMOD_LOOP_NORMAL);
-			channel->setLoopCount(loopCount);
+			channel->setLoopCount(audio->loopCount);
 		};
 		
-		this->togglePaused();
+		this->togglePaused(this->audio);
 	}
 	else
 	{
@@ -80,26 +106,44 @@ void SoundManager::load(string filepath, bool is3D, int loopCount)
 	}
 
 	this->checkErrors(this->result);
+	
+	return audio;
 };
 
-void SoundManager::togglePaused()
+shared_ptr<SoundManager::Audio> SoundManager::togglePaused(shared_ptr<SoundManager::Audio> audioData)
 {
-	if(this->isPaused == true)
+	if(this->audio != nullptr)
+	{
+		audio.reset();
+	};
+
+	this->audio = std::move(audioData);
+
+	if(audio->isPaused == true)
 	{
 		this->result = channel->setPaused(false);
-		this->isPaused = false;
+		audio->isPaused = false;
 	}
-	else if(this->isPaused == false)
+	else if(audio->isPaused == false)
 	{
 		this->result = channel->setPaused(true);
-		this->isPaused = true;
+		audio->isPaused = true;
 	}
 
 	this->checkErrors(this->result);
+
+	return audio;
 };
 
-void SoundManager::positionSource(float x, float y, float z)
+shared_ptr<SoundManager::Audio> SoundManager::positionSource(shared_ptr<SoundManager::Audio> audioData, float x, float y, float z)
 {
+	if(this->audio != nullptr)
+	{
+		audio.reset();
+	};
+
+	this->audio = std::move(audioData);
+
 	this->currentSourcePosition = {x, y, z};
 
 	this->sourceVelocity = {
@@ -115,6 +159,12 @@ void SoundManager::positionSource(float x, float y, float z)
 	this->prevSourcePosition = this->currentSourcePosition;
 
 	this->checkErrors(this->result);
+
+	audio->locationX = this->prevSourcePosition.x;
+	audio->locationY = this->prevSourcePosition.y;
+	audio->locationZ = this->prevSourcePosition.z;
+
+	return audio;
 };
 
 void SoundManager::positionListener(float x, float y, float z)

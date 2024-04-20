@@ -5,6 +5,9 @@ int main()
 	fileReader = std::make_unique<FileReader>();
 	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 	
+    soundManager = std::make_unique<SoundManager>();
+    soundManager->initialise();
+
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
 	
@@ -28,9 +31,9 @@ int main()
     beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
     beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
-    soundManager.init();
-    soundManager.load("assets/sound/springWaltz.mp3", true, 0);
-    soundManager.positionSource(0.0f, 0.0f, 0.0f);
+    sound = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
+    sound = std::move(soundManager->loadAudio(sound));
+    soundManager->positionListener(0.0f, 0.0f, 0.0f);
 	
     while(!glfwWindowShouldClose(win))
     {
@@ -79,11 +82,11 @@ int main()
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
 
-            soundManager.positionListener(beachball->locationX, beachball->locationY, beachball->locationZ);
+            sound = std::move(soundManager->positionSource(sound, beachball->locationX, beachball->locationY, beachball->locationZ));
 
-            if(soundManager.isPaused == true)
+            if(sound->isPaused == true)
             {
-                soundManager.togglePaused();
+                sound = std::move(soundManager->togglePaused(sound));
             }
         }
         else
@@ -101,35 +104,35 @@ void keyCapture(string key)
 {
 		if(key == "up")
 		{
-			moveZ += 0.5;
+			moveZ = 0.5;
 		}
 		else if(key == "down")
 		{
-			moveZ += -0.5;
+			moveZ = -0.5;
 		}
 		else if(key == "left")
 		{
-			moveX += 0.5;
+			moveX = 0.5;
 		}
 		else if(key == "right")
 		{
-			moveX += -0.5;
+			moveX = -0.5;
 		}
 		else if(key == "w")
 		{
-			turnX += -0.5;
+			turnX = -0.5;
 		}
 		else if(key == "s")
 		{
-			turnX += 0.5;
+			turnX = 0.5;
 		}
 		else if(key == "a")
 		{
-			turnY += -0.5;
+			turnY = -0.5;
 		}
 		else if(key == "d")
 		{
-			turnY += 0.5;
+			turnY = 0.5;
 		}
 		else 
 		{
