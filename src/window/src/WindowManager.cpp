@@ -67,7 +67,7 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	    glEnable            (GL_TEXTURE_2D);                                                                                //  Enable 2 dimensional texture use in this context
 	};
 
-    glClearColor        (0.0, 0.0, 1.0, 1.0);                                                                           //  Set the background colour of the scene to black
+    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
     
 	glUseProgram(shader);
 	

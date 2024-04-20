@@ -17,13 +17,13 @@ int main()
     windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
 
     lightBuilder        = std::make_unique<Light>(shaderProgram);
-    light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
+    light               = std::move(lightBuilder->createAmbientLight(0.0, 0.1, 0.0, 1.0, 1.0, 1.0));
     
     cameraBuilder       = std::make_unique<Camera>(shaderProgram);
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     hallwayBuilder        = std::make_unique<Mesh>(shaderProgram);
-    hallway               = std::move(hallwayBuilder->createTriangulatedMesh("assets/mesh/house.obj", "assets/material/house.mtl"));
+    hallway               = std::move(hallwayBuilder->createTriangulatedMesh("assets/mesh/hallway.obj", "assets/material/hallway.mtl"));
 
    footstep = std::move(soundManager->createAudio("assets/sound/footsteps.mp3", true, -1));
    footstep = std::move(soundManager->loadAudio(footstep));
@@ -104,6 +104,38 @@ int main()
                 footstep = std::move(soundManager->play(footstep));
             }
 		}
+        else if(eventManager.keyString == "w")
+		{
+			turnX += -0.5;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else if(eventManager.keyString == "s")
+		{
+			turnX += 0.5;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else if(eventManager.keyString == "a")
+		{
+			turnY += -0.5;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else if(eventManager.keyString == "d")
+		{
+			turnY += 0.5;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
 		else 
 		{
 			moveX = 0.0;
@@ -123,19 +155,19 @@ void keyCapture(string key)
 {
 		if(key == "up")
 		{
-			moveZ = 0.5;
+			moveZ += 0.5;
 		}
 		else if(key == "down")
 		{
-			moveZ = -0.5;
+			moveZ += -0.5;
 		}
 		else if(key == "left")
 		{
-			moveX = 0.5;
+			moveX += 0.5;
 		}
 		else if(key == "right")
 		{
-			moveX = -0.5;
+			moveX += -0.5;
 		}
 		else 
 		{
