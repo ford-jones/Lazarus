@@ -53,7 +53,8 @@ unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> worldBuilder;
 unique_ptr<Mesh> beachballBuilder;
 
-shared_ptr<SoundManager::Audio> sound;
+shared_ptr<SoundManager::Audio> springWaltz;
+shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
 shared_ptr<Mesh::TriangulatedMesh> beachball;

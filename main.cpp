@@ -3,7 +3,6 @@
 int main()
 {
 	fileReader = std::make_unique<FileReader>();
-	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 	
     soundManager = std::make_unique<SoundManager>();
     soundManager->initialise();
@@ -11,6 +10,7 @@ int main()
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
 	
+	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
     win = glfwGetCurrentContext();
@@ -31,9 +31,13 @@ int main()
     beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
     beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
 
-    sound = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
-    sound = std::move(soundManager->loadAudio(sound));
-    soundManager->positionListener(0.0f, 0.0f, 0.0f);
+    springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
+    springWaltz = std::move(soundManager->loadAudio(springWaltz));
+    springWaltz = std::move(soundManager->positionSource(springWaltz, 0.0f, 0.0f, -3.0f));
+
+    footstep = std::move(soundManager->createAudio("assets/sound/footsteps.mp3", true, -1));
+    footstep = std::move(soundManager->loadAudio(footstep));
+    footstep = std::move(soundManager->positionSource(footstep, 0.0f, 0.0f, 3.0f));
 	
     while(!glfwWindowShouldClose(win))
     {
@@ -82,11 +86,18 @@ int main()
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
 
-            sound = std::move(soundManager->positionSource(sound, beachball->locationX, beachball->locationY, beachball->locationZ));
+            springWaltz = std::move(soundManager->positionListener(springWaltz, beachball->locationX, beachball->locationY, beachball->locationZ));
 
-            if(sound->isPaused == true)
+            if(springWaltz->isPaused == true)
             {
-                sound = std::move(soundManager->togglePaused(sound));
+                springWaltz = std::move(soundManager->togglePaused(springWaltz));
+            }
+
+            footstep = std::move(soundManager->positionListener(footstep, beachball->locationX, beachball->locationY, beachball->locationZ));
+
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->togglePaused(footstep));
             }
         }
         else

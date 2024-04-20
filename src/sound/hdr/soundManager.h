@@ -29,12 +29,14 @@
 #include <string>
 #include <memory>
 #include <time.h>
+#include <vector>
 
 #include "../../utils/hdr/fileReader.h"
 
 using std::unique_ptr;
 using std::shared_ptr;
 using std::string;
+using std::vector;
 
 #ifndef LAZARUS_SOUND_MANAGER_H
 #define LAZARUS_SOUND_MANAGER_H
@@ -47,35 +49,48 @@ class SoundManager
 			int id;
 			string path;
 
-			float locationX;
-			float locationY;
-			float locationZ;
+			float listenerLocationX;
+			float listenerLocationY;
+			float listenerLocationZ;
+
+			float sourceLocationX;
+			float sourceLocationY;
+			float sourceLocationZ;
 
 			bool is3D;
 			bool isPaused;
 
 			int loopCount;
+
+			unsigned int audioIndex;
 		};
 
 		SoundManager();
 
 		void initialise();
 		shared_ptr<Audio> createAudio(string filepath, bool is3D = false, int loopCount = 0);
-		shared_ptr<SoundManager::Audio> loadAudio(shared_ptr<Audio> audioData);
+		shared_ptr<Audio> loadAudio(shared_ptr<Audio> audioIn);
 
-		shared_ptr<SoundManager::Audio> togglePaused(shared_ptr<Audio> audio);
-		shared_ptr<SoundManager::Audio> positionSource(shared_ptr<Audio> audio, float x, float y, float z);
-		void positionListener(float x, float y, float z);
+		shared_ptr<Audio> togglePaused(shared_ptr<Audio> audioIn);
+		shared_ptr<Audio> positionSource(shared_ptr<Audio> audioIn, float x, float y, float z);
+		shared_ptr<Audio> positionListener(shared_ptr<Audio> audioIn, float x, float y, float z);
 
 		virtual ~SoundManager();
 
-		bool isPaused;
-
 	private:
+		struct AudioData 
+		{
+			FMOD::Sound *sound;
+			FMOD::Channel *channel;
+			FMOD::ChannelGroup *group;
+		};
+
+		vector<AudioData> audioStore;
+		AudioData audioData;
+
 		void checkErrors(FMOD_RESULT res);
 
 		unique_ptr<FileReader> reader;
-		string path;
 
 		FMOD_RESULT result;
 
@@ -91,11 +106,8 @@ class SoundManager
 		FMOD_VECTOR up;
 
 		FMOD::System *system;
-		FMOD::Sound *sound;
-		FMOD::Channel *channel;
-		FMOD::ChannelGroup *group;
 
-		shared_ptr<Audio> audio;
+		shared_ptr<Audio> audioOut;
 };
 
 #endif
