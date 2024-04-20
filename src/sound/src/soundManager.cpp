@@ -135,6 +135,46 @@ shared_ptr<SoundManager::Audio> SoundManager::togglePaused(shared_ptr<SoundManag
 	return audio;
 };
 
+shared_ptr<SoundManager::Audio> SoundManager::play(shared_ptr<SoundManager::Audio> audioData)
+{
+	if(this->audio != nullptr)
+	{
+		audio.reset();
+	};
+
+	this->audio = std::move(audioData);
+
+	if(audio->isPaused == true)
+	{
+		this->result = channel->setPaused(false);
+		audio->isPaused = false;
+	}
+
+	this->checkErrors(this->result);
+
+	return audio;
+};
+
+shared_ptr<SoundManager::Audio> SoundManager::pause(shared_ptr<SoundManager::Audio> audioData)
+{
+	if(this->audio != nullptr)
+	{
+		audio.reset();
+	};
+
+	this->audio = std::move(audioData);
+
+ 	if(audio->isPaused == false)
+	{
+		this->result = channel->setPaused(true);
+		audio->isPaused = true;
+	}
+
+	this->checkErrors(this->result);
+
+	return audio;
+};
+
 shared_ptr<SoundManager::Audio> SoundManager::positionSource(shared_ptr<SoundManager::Audio> audioData, float x, float y, float z)
 {
 	if(this->audio != nullptr)

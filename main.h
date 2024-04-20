@@ -36,7 +36,6 @@ const char** errorMessage;
 
 float moveX, moveZ;
 float turnX, turnY;
-unsigned char *cursorImage;
 
 void keyCapture(string key);
 
@@ -50,13 +49,11 @@ unique_ptr<SoundManager> soundManager;
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
-unique_ptr<Mesh> worldBuilder;
-unique_ptr<Mesh> beachballBuilder;
+unique_ptr<Mesh> hallwayBuilder;
 
-shared_ptr<SoundManager::Audio> sound;
+shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
-shared_ptr<Mesh::TriangulatedMesh> beachball;
-shared_ptr<Mesh::TriangulatedMesh> world;
+shared_ptr<Mesh::TriangulatedMesh> hallway;
 
 #endif

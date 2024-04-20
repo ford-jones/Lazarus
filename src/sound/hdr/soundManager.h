@@ -64,6 +64,8 @@ class SoundManager
 		shared_ptr<SoundManager::Audio> loadAudio(shared_ptr<Audio> audioData);
 
 		shared_ptr<SoundManager::Audio> togglePaused(shared_ptr<Audio> audio);
+		shared_ptr<SoundManager::Audio> play(shared_ptr<Audio> audio);
+		shared_ptr<SoundManager::Audio> pause(shared_ptr<Audio> audio);
 		shared_ptr<SoundManager::Audio> positionSource(shared_ptr<Audio> audio, float x, float y, float z);
 		void positionListener(float x, float y, float z);
 

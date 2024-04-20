@@ -3,15 +3,12 @@
 int main()
 {
 	fileReader = std::make_unique<FileReader>();
-	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 	
-    soundManager = std::make_unique<SoundManager>();
-    soundManager->initialise();
+   soundManager = std::make_unique<SoundManager>();
+   soundManager->initialise();
 
-    windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
+    windowBuilder = std::make_unique<WindowManager>(800, 600, "Mom's Home!", nullptr, nullptr);
     windowBuilder->initialise();
-	
-	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
     win = glfwGetCurrentContext();
 
@@ -25,20 +22,17 @@ int main()
     cameraBuilder       = std::make_unique<Camera>(shaderProgram);
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
-    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    hallwayBuilder        = std::make_unique<Mesh>(shaderProgram);
+    hallway               = std::move(hallwayBuilder->createTriangulatedMesh("assets/mesh/house.obj", "assets/material/house.mtl"));
 
-    beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
-    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
-
-    sound = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
-    sound = std::move(soundManager->loadAudio(sound));
-    soundManager->positionListener(0.0f, 0.0f, 0.0f);
+   footstep = std::move(soundManager->createAudio("assets/sound/footsteps.mp3", true, -1));
+   footstep = std::move(soundManager->loadAudio(footstep));
+   soundManager->positionListener(0.0f, 0.0f, 0.0f);
 	
     while(!glfwWindowShouldClose(win))
     {
         eventManager.monitorEvents();
-        keyCapture(eventManager.keyString);
+        // keyCapture(eventManager.keyString);
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
@@ -49,50 +43,75 @@ int main()
             //  In other words; the POSITIVE Z axis scale for a mesh is strictly equal to the NEGATIVE Z axis scale for the camera
             //  OpenGL uses a Right-handed system
 
-            // camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
-            // camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
+            camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
+            camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
 
             camera = std::move(cameraBuilder->loadCamera(camera));
+
+            soundManager->positionSource(footstep, camera->locationX, camera->locationY, camera->locationZ);
+            // if(footstep->isPaused == true)
+            // {
+            //     footstep = std::move(soundManager->togglePaused(footstep));
+            // }
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        /*World*/
-        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        /*hallway*/
+        if( hallway->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            world = worldBuilder->initialiseMesh(world);
+            hallway = hallwayBuilder->initialiseMesh(hallway);
             
-            worldBuilder->loadMesh(world);
-            worldBuilder->drawMesh(world);
+            hallwayBuilder->loadMesh(hallway);
+            hallwayBuilder->drawMesh(hallway);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*Beachball*/
-        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        {
-            beachball = beachballBuilder->initialiseMesh(beachball);
-            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
-
-            beachballBuilder->loadMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
-
-            sound = std::move(soundManager->positionSource(sound, beachball->locationX, beachball->locationY, beachball->locationZ));
-
-            if(sound->isPaused == true)
+        if(eventManager.keyString == "up")
+		{
+			moveZ = 1;
+            if(footstep->isPaused == true)
             {
-                sound = std::move(soundManager->togglePaused(sound));
+                footstep = std::move(soundManager->play(footstep));
             }
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+		}
+		else if(eventManager.keyString == "down")
+		{
+			moveZ = -1;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else if(eventManager.keyString == "left")
+		{
+			moveX = 1;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else if(eventManager.keyString == "right")
+		{
+			moveX = -1;
+            if(footstep->isPaused == true)
+            {
+                footstep = std::move(soundManager->play(footstep));
+            }
+		}
+		else 
+		{
+			moveX = 0.0;
+			moveZ = 0.0;
+			turnX = 0.0;
+			turnY = 0.0;
+            footstep = std::move(soundManager->pause(footstep));
+		};
         
 		windowBuilder->handleBuffers();
     };
@@ -117,22 +136,6 @@ void keyCapture(string key)
 		else if(key == "right")
 		{
 			moveX = -0.5;
-		}
-		else if(key == "w")
-		{
-			turnX = -0.5;
-		}
-		else if(key == "s")
-		{
-			turnX = 0.5;
-		}
-		else if(key == "a")
-		{
-			turnY = -0.5;
-		}
-		else if(key == "d")
-		{
-			turnY = 0.5;
 		}
 		else 
 		{
