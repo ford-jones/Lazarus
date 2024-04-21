@@ -49,10 +49,6 @@ class SoundManager
 			int id;
 			string path;
 
-			float listenerLocationX;
-			float listenerLocationY;
-			float listenerLocationZ;
-
 			float sourceLocationX;
 			float sourceLocationY;
 			float sourceLocationZ;
@@ -71,11 +67,17 @@ class SoundManager
 		shared_ptr<Audio> createAudio(string filepath, bool is3D = false, int loopCount = 0);
 		shared_ptr<Audio> loadAudio(shared_ptr<Audio> audioIn);
 
-		shared_ptr<Audio> togglePaused(shared_ptr<Audio> audioIn);
+		shared_ptr<Audio> playAudio(shared_ptr<Audio> audioIn);
+		shared_ptr<Audio> pauseAudio(shared_ptr<Audio> audioIn);
+
 		shared_ptr<Audio> positionSource(shared_ptr<Audio> audioIn, float x, float y, float z);
-		shared_ptr<Audio> positionListener(shared_ptr<Audio> audioIn, float x, float y, float z);
+		void positionListener(float x, float y, float z);
 
 		virtual ~SoundManager();
+
+		float listenerLocationX;
+		float listenerLocationY;
+		float listenerLocationZ;
 
 	private:
 		struct AudioData 
@@ -83,29 +85,27 @@ class SoundManager
 			FMOD::Sound *sound;
 			FMOD::Channel *channel;
 			FMOD::ChannelGroup *group;
-		};
 
-		vector<AudioData> audioStore;
-		AudioData audioData;
+			FMOD_VECTOR prevSourcePosition;
+			FMOD_VECTOR currentSourcePosition;
+			FMOD_VECTOR sourceVelocity;
+		};
 
 		void checkErrors(FMOD_RESULT res);
 
-		unique_ptr<FileReader> reader;
-
 		FMOD_RESULT result;
-
-		FMOD_VECTOR prevSourcePosition;
-		FMOD_VECTOR currentSourcePosition;
-		FMOD_VECTOR sourceVelocity;
+		FMOD::System *system;
 
 		FMOD_VECTOR prevListenerPosition;
 		FMOD_VECTOR currentListenerPosition;
 		FMOD_VECTOR listenerVelocity;
+		FMOD_VECTOR listenerForward;
+		FMOD_VECTOR listenerUp;
 
-		FMOD_VECTOR forward;
-		FMOD_VECTOR up;
+		unique_ptr<FileReader> reader;
 
-		FMOD::System *system;
+		vector<AudioData> audioStore;
+		AudioData audioData;
 
 		shared_ptr<Audio> audioOut;
 };

@@ -33,26 +33,26 @@ int main()
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
-    springWaltz = std::move(soundManager->positionSource(springWaltz, 0.0f, 0.0f, -3.0f));
+    springWaltz = std::move(soundManager->positionSource(springWaltz, 0.0f, 0.0f, 3.0f));
+    springWaltz = std::move(soundManager->playAudio(springWaltz));
 
     footstep = std::move(soundManager->createAudio("assets/sound/footsteps.mp3", true, -1));
     footstep = std::move(soundManager->loadAudio(footstep));
-    footstep = std::move(soundManager->positionSource(footstep, 0.0f, 0.0f, 3.0f));
-	
+    footstep = std::move(soundManager->positionSource(footstep, 0.0f, 0.0f, -3.0f));
+    footstep = std::move(soundManager->playAudio(footstep));
+
     while(!glfwWindowShouldClose(win))
     {
+        /*Events*/
         eventManager.monitorEvents();
         keyCapture(eventManager.keyString);
+
+        /*Light*/
+        light = std::move(lightBuilder->initialiseLight(light));
 
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-            light = std::move(lightBuilder->initialiseLight(light));
-            
-            //  The POSITIVE Z axis of a mesh is determined as the OPPOSITE direction which the camera is facing
-            //  In other words; the POSITIVE Z axis scale for a mesh is strictly equal to the NEGATIVE Z axis scale for the camera
-            //  OpenGL uses a Right-handed system
-
             // camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
             // camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
 
@@ -85,20 +85,8 @@ int main()
 
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
-
-            springWaltz = std::move(soundManager->positionListener(springWaltz, beachball->locationX, beachball->locationY, beachball->locationZ));
-
-            if(springWaltz->isPaused == true)
-            {
-                springWaltz = std::move(soundManager->togglePaused(springWaltz));
-            }
-
-            footstep = std::move(soundManager->positionListener(footstep, beachball->locationX, beachball->locationY, beachball->locationZ));
-
-            if(footstep->isPaused == true)
-            {
-                footstep = std::move(soundManager->togglePaused(footstep));
-            }
+            
+            soundManager->positionListener(beachball->locationX, beachball->locationY, beachball->locationZ);
         }
         else
         {
