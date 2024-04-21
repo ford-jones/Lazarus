@@ -162,7 +162,7 @@ shared_ptr<SoundManager::Audio> SoundManager::pauseAudio(shared_ptr<SoundManager
 	return audioOut;
 };
 
-shared_ptr<SoundManager::Audio> SoundManager::positionSource(shared_ptr<SoundManager::Audio> audioIn, float x, float y, float z)
+shared_ptr<SoundManager::Audio> SoundManager::updateSourceLocation(shared_ptr<SoundManager::Audio> audioIn, float x, float y, float z)
 {
 	if(this->audioOut != nullptr)
 	{
@@ -196,7 +196,7 @@ shared_ptr<SoundManager::Audio> SoundManager::positionSource(shared_ptr<SoundMan
 	return audioOut;
 };
 
-void SoundManager::positionListener(float x, float y, float z)
+void SoundManager::updateListenerLocation(float x, float y, float z)
 {
 	//	TODO:
 	//	Tidyup

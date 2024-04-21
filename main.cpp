@@ -33,12 +33,10 @@ int main()
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
-    springWaltz = std::move(soundManager->positionSource(springWaltz, 0.0f, 0.0f, 3.0f));
     springWaltz = std::move(soundManager->playAudio(springWaltz));
 
     footstep = std::move(soundManager->createAudio("assets/sound/footsteps.mp3", true, -1));
     footstep = std::move(soundManager->loadAudio(footstep));
-    footstep = std::move(soundManager->positionSource(footstep, 0.0f, 0.0f, -3.0f));
     footstep = std::move(soundManager->playAudio(footstep));
 
     while(!glfwWindowShouldClose(win))
@@ -46,6 +44,10 @@ int main()
         /*Events*/
         eventManager.monitorEvents();
         keyCapture(eventManager.keyString);
+
+        /*Sounds*/
+        springWaltz = std::move(soundManager->updateSourceLocation(springWaltz, 0.0f, 0.0f, 3.0f));
+        footstep = std::move(soundManager->updateSourceLocation(footstep, 0.0f, 0.0f, -3.0f));
 
         /*Light*/
         light = std::move(lightBuilder->initialiseLight(light));
@@ -86,7 +88,7 @@ int main()
             beachballBuilder->loadMesh(beachball);
             beachballBuilder->drawMesh(beachball);
             
-            soundManager->positionListener(beachball->locationX, beachball->locationY, beachball->locationZ);
+            soundManager->updateListenerLocation(beachball->locationX, beachball->locationY, beachball->locationZ);
         }
         else
         {

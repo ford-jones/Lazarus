@@ -70,8 +70,8 @@ class SoundManager
 		shared_ptr<Audio> playAudio(shared_ptr<Audio> audioIn);
 		shared_ptr<Audio> pauseAudio(shared_ptr<Audio> audioIn);
 
-		shared_ptr<Audio> positionSource(shared_ptr<Audio> audioIn, float x, float y, float z);
-		void positionListener(float x, float y, float z);
+		shared_ptr<Audio> updateSourceLocation(shared_ptr<Audio> audioIn, float x, float y, float z);
+		void updateListenerLocation(float x, float y, float z);
 
 		virtual ~SoundManager();
 
