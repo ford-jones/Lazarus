@@ -38,21 +38,23 @@ float moveX, moveZ;
 float turnX, turnY;
 unsigned char *cursorImage;
 
-void moveCamera(string key);
+void keyCapture(string key);
 
 EventManager eventManager;
 Shader shader;
 Transform transformer;
 FpsCounter fpsCounter;
-SoundManager soundManager;
 
 unique_ptr<FileReader> fileReader;
+unique_ptr<SoundManager> soundManager;
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> worldBuilder;
 unique_ptr<Mesh> beachballBuilder;
 
+shared_ptr<SoundManager::Audio> springWaltz;
+shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
 shared_ptr<Mesh::TriangulatedMesh> beachball;
