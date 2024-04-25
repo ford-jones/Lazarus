@@ -198,9 +198,6 @@ shared_ptr<SoundManager::Audio> SoundManager::updateSourceLocation(shared_ptr<So
 
 void SoundManager::updateListenerLocation(float x, float y, float z)
 {
-	//	TODO:
-	//	Tidyup
-	//	Write Docs
 	this->currentListenerPosition = {x, y, z};
 
 	//	TODO:
