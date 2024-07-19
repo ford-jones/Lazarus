@@ -386,3 +386,74 @@ Params:
 >	- **lightColor:** *The r, g, b color values of the light. (type: glm::vec3)*
 >	- **lightPositionUniformLocation:** *The location / index of the vertex shader position uniform. (type: `GLuint`)*
 >	- **lightColorUniformLocation:** *The location / index of the fragment shader diffuse uniform. (type: `GLuint`)*
+
+## SoundManager:
+A management class using an `FMOD` backend for loading audio, as well as handling audio locations and listeners. 
+
+### Constructor:
+#### SoundManager()
+
+### Functions:
+#### void initialise()
+Initialises `FMOD` core and instantiates a new system for interfacing with up to 512 unique audio channels. 
+
+#### shared_ptr\<Audio> createAudio(string filepath, bool is3D, int loopCount)
+Creates a new instance of `SoundManager::Audio`, initialises the values of its properties and returns it.
+
+Returns a shared pointer to the audio object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+
+Params:
+> **filepath:** *The relative path to the audio (mp3 / wav) asset.* \
+> **is3D:** *Indicates whether the sound has locative properties or it plays ambiently.* \
+> **loopCount:** *The number of times the audio should loop. Use -1 to loop infinitely. (default: `0`)*
+
+#### shared_ptr\<Audio> loadAudio(shared_ptr\<Audio> audioIn)
+Loads an instance of `SoundManager::Audio` into memory and prepares it for playback with `FMOD`.
+
+Params:
+> **audioIn:** *The audio object you want to load.*
+
+#### shared_ptr\<Audio> playAudio(shared_ptr\<Audio> audioIn)
+Plays a `SoundManager::Audio` instance from memory which has been previously loaded with `SoundManager::loadAudio()`.
+
+Params:
+> **audioIn:** *The audio object you want to start playing.*
+
+#### shared_ptr\<Audio> pauseAudio(shared_ptr\<Audio> audioIn)
+Pauses an `SoundManager::Audio` instance from memory which has been previously played with `SoundManager::playAudio()`.
+
+Params:
+> **audioIn:** *The audio object you want to pause / stop playing.*
+
+
+#### shared_ptr\<Audio> updateSourceLocation(shared_ptr\<Audio> audioIn, float x, float y, float z)
+Updates the location in 3D of a `SoundManager::Audio` source; using `FMOD` to calculate the sound's doppler, relative to the listener's current positioning (*see*: `SoundManager::listenerLocationX`, `SoundManager::listenerLocationY` and `SoundManager::listenerLocationZ`).
+
+Params:
+> **audioIn**: *The audio sample to be updated.* \
+> **x**: *The desired audio source location on the x-axis.* \
+> **y**: *The desired audio source location on the y-axis.* \
+> **z**: *The desired audio source location on the z-axis.* 
+
+#### void updateListenerLocation(float x, float y, float z)
+Updates the location in 3D space of the audio's listener; using `FMOD` to calculate the doppler level, relative to the `SoundManager::Audio` current positioning. 
+
+Params:
+> **x**: *The desired audio listener location on the x-axis.* \
+> **y**: *The desired audio listener location on the y-axis.* \
+> **z**: *The desired audio listener location on the z-axis.* 
+
+### Members:
+> **Audio:** *A collection of properties which make up a sound asset. (type: `struct`)*
+>	- **id:** *This audio's unique id. (type: `int`)*
+>	- **sourceLocationX:** *The x-axis coordinate of the audio's position in world space. (type: `float`)*
+>	- **sourceLocationY:** *The y-axis coordinate of the audio's position in world space. (type: `float`)*
+>	- **sourceLocationZ:** *The z-axis coordinate of the audio's position in world space. (type: `float`)*
+>   - **is3D:** *Signifies whether the sound should be played in relation to the space or ambiently. (type: `bool`)*
+>   - **isPaused:** *Signifies whether the sound is currently playing or not (type: `bool`)*
+>   - **loopCount:** *The number of times that this audio sample should loop. Use -1 to loop indefinitely. (type: `int`), (default: `0`)*
+>   - **audioIndex:** *Used internally to identify the audio object's location in the audio vector. (type: `int`)* 
+> 
+> **listenerLocationX:** *The audio listener's location on the x-axis.* \
+> **listenerLocationY:** *The audio listener's location on the y-axis.* \
+> **listenerLocationZ:** *The audio listener's location on the z-axis.*

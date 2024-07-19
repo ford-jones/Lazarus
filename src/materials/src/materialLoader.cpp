@@ -32,31 +32,23 @@ MaterialLoader::MaterialLoader()
 	
 	textureLoader = nullptr;
 	diffuseTexCount = 0;
-	file = NULL;
 };
 
 bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
 {
     diffuseTexCount = 0;
 
-    file = fopen(materialPath.c_str(), "r");                                                                                //  Open the file located at `path` with read permissions
+    file.open(materialPath.c_str());
     char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
     
-    if( file == NULL )
+    if( !file.is_open() )
     {                                                                                                               //  If, the file has a null value                                 
         return false;                                                                                               //  Return from the function, exit the thread
     }   
 
-    while( 1 ) 
-    {
-        int res = fscanf(file, "%s", identifier);                                                                   //  initialise the file scanner
-
-        if (res == EOF)                                                                                             //  If, the scanner has reached the end of the file
-        {
-            break;                                                                                                  //  Break out of the loop.
-        }
-        
-        if( strcmp( identifier, "Kd") == 0 )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
+    while( file.getline(currentLine, 256) ) 
+    {        
+        if( (currentLine[0] == 'K') && (currentLine[1] == 'd') )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
         {
             diffuseTexCount += 1;
             for(auto i: data)
@@ -65,7 +57,19 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
             	int faceCount = i[1];
             	
 	            if(diffuseTexCount == index) {
-    	            fscanf(file, "%f %f %f\n", &diffuse.r, &diffuse.g, &diffuse.b);                                      //  Continue reading the line, the next 3 strings are mapped to a diffuse object in order of r,g,b
+                    string currentString = currentLine;
+                    stringstream ss(currentString);
+                    string token;
+
+                    vector<string> tokenStore;                                     //  Continue reading the line, the next 3 strings are mapped to a diffuse object in order of r,g,b
+                    while(getline(ss, token, ' ')) 
+                    {
+                        tokenStore.push_back(token);
+                    }
+
+                    diffuse.r = stof(tokenStore[1]);
+                    diffuse.g = stof(tokenStore[2]);
+                    diffuse.b = stof(tokenStore[3]);
 
     	            for(int j = 0; j < faceCount * 3; j++)                                                       //  Where n = the number of vertex's using the color (number of triangles * 3)
     	            {
@@ -74,24 +78,26 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     	        };        
             };
         }
-	    // else if( strcmp( identifier, "map_Kd" ) == 0 )
-    	// {
-		// 	string path = texturePath;
-		// 	textureLoader->loadTexture(path);
-	    // };
         
    };
-   if(texturePath != LAZARUS_MESH_NOTEX)
-   {
+    if(texturePath != LAZARUS_MESH_NOTEX)
+    {
 	    this->textureLoader = std::make_unique<TextureLoader>();
 		textureLoader->loadTexture(texturePath);
-   }
-//    textureLoader.reset();
-   return true;
+    }
+
+    if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
+    {
+        file.close();
+    }
+    return true;
 };
 
 MaterialLoader::~MaterialLoader()
 {
-    fclose(file);                                                                                                   //  Close the file
+    if( file.is_open() )
+    {
+        file.close();
+    }
     std::cout << GREEN_TEXT << "Destroying 'MaterialLoader' class." << RESET_TEXT << std::endl;
 };
