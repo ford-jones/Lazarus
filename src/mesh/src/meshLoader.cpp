@@ -60,59 +60,32 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 
         else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
-
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->vertex.x = stof(tokenStore[1]);
-            this->vertex.y = stof(tokenStore[2]);
-            this->vertex.z = stof(tokenStore[3]);
+            this->vertex.x = stof(data[1]);
+            this->vertex.y = stof(data[2]);
+            this->vertex.z = stof(data[3]);
 
             this->temp_vertices.push_back(this->vertex);                                                    //  Push the aforementioned object into the temporary vertices vector
         } 
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 't' )                                             //  If the first string of the current line is "vt" the line holds a set of vertex textures (uv) coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
-
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->uv.x = stof(tokenStore[1]);
-            this->uv.y = stof(tokenStore[2]);
+            this->uv.x = stof(data[1]);
+            this->uv.y = stof(data[2]);
 
             this->temp_uvs.push_back(this->uv);                                                             //  Push the aforementioned object into the temporary uv vector
         }
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 'n' )                                             //  If the first string of the current line is "vn" the line holds a set of normal coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
-
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->normal.x = stof(tokenStore[1]);
-            this->normal.y = stof(tokenStore[2]);
-            this->normal.z = stof(tokenStore[3]);
+            this->normal.x = stof(data[1]);
+            this->normal.y = stof(data[2]);
+            this->normal.z = stof(data[3]);
 
             this->temp_normals.push_back(this->normal);                                                     //  Push the aforementioned object into the temporary normal vector
         }
@@ -121,18 +94,9 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
         {                                                                                       //  (Each face is triangulated on export and so is comprised of 3 vertexes)
             this->triangleCount += 1;
 
-            string currentString = currentLine;
-            stringstream ssI(currentString);
-            string tokenI;
-
-            vector<string> tokenStoreI;
-
-            while(getline(ssI, tokenI, ' ')) 
-            {
-                tokenStoreI.push_back(tokenI);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            for(auto i: tokenStoreI) 
+            for(auto i: data) 
             {
                 stringstream ssJ(i);
                 string tokenJ;
@@ -220,6 +184,22 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 
     return true;
 };
+
+vector<string> MeshLoader::vectorizeWfProperties(char wavefrontData[256], char delim)
+{
+    string token;
+    string currentString = currentLine;
+    stringstream ss(currentString);
+
+    vector<string> tokenStore;
+
+    while(getline(ss, token, delim)) 
+    {
+        tokenStore.push_back(token);
+    }
+
+    return tokenStore;
+}
 
 MeshLoader::~MeshLoader()
 {
