@@ -23,9 +23,6 @@
 #include <memory>
 #include <fstream>
 #include <sstream>
-// #include <cstring>
-// #include <stdarg.h>
-// #include <string.h>
 
 #include "../../utils/hdr/fileReader.h"
 #include "../../materials/hdr/materialLoader.h"
@@ -36,6 +33,7 @@ using std::string;
 using glm::vec3;
 using glm::vec2;
 using std::ifstream;
+using std::stringstream;
 
 #ifndef MESH_LOADER_H
 #define MESH_LOADER_H

@@ -60,9 +60,9 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
         else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
         {
-            string currentString = currentLine;
-            std::stringstream ss(currentString);
             string token;
+            string currentString = currentLine;
+            stringstream ss(currentString);
 
             vector<string> tokenStore;
 
@@ -80,9 +80,9 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 't' )                                             //  If the first string of the current line is "vt" the line holds a set of vertex textures (uv) coordinates
         {
-            string currentString = currentLine;
-            std::stringstream ss(currentString);
             string token;
+            string currentString = currentLine;
+            stringstream ss(currentString);
 
             vector<string> tokenStore;
 
@@ -99,9 +99,9 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 'n' )                                             //  If the first string of the current line is "vn" the line holds a set of normal coordinates
         {
-            string currentString = currentLine;
-            std::stringstream ss(currentString);
             string token;
+            string currentString = currentLine;
+            stringstream ss(currentString);
 
             vector<string> tokenStore;
 
@@ -122,7 +122,7 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             this->triangleCount += 1;
 
             string currentString = currentLine;
-            std::stringstream ssI(currentString);
+            stringstream ssI(currentString);
             string tokenI;
 
             vector<string> tokenStoreI;
@@ -134,7 +134,7 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             
             for(auto i: tokenStoreI) 
             {
-                std::stringstream ssJ(i);
+                stringstream ssJ(i);
                 string tokenJ;
 
                 while(getline(ssJ, tokenJ, '/')) 
@@ -217,6 +217,9 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
 MeshLoader::~MeshLoader()
 {
-    file.close();
+    if( file.is_open() )
+    {
+        file.close();
+    }
 	std::cout << GREEN_TEXT << "Destroying 'MeshLoader' class." << RESET_TEXT << std::endl;
 };
