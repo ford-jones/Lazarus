@@ -21,10 +21,11 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include <filesystem>
-#include <cstring>
-#include <stdarg.h>
-#include <string.h>
+#include <fstream>
+#include <sstream>
+// #include <cstring>
+// #include <stdarg.h>
+// #include <string.h>
 
 #include "../../utils/hdr/fileReader.h"
 #include "../../materials/hdr/materialLoader.h"
@@ -34,8 +35,7 @@ using std::vector;
 using std::string;
 using glm::vec3;
 using glm::vec2;
-
-namespace fs = std::filesystem;
+using std::ifstream;
 
 #ifndef MESH_LOADER_H
 #define MESH_LOADER_H
@@ -43,7 +43,8 @@ namespace fs = std::filesystem;
 class MeshLoader 
 {
     public:
-        FILE *file;                                                                                             //  A file returned from the absolute path
+        // FILE *file;                                                                                             //  A file returned from the absolute path
+        ifstream file;
 
         vector<unsigned int> vertexIndices, uvIndices, normalIndices;                                           //  Vector containing matched index positions
         vector<vec3> temp_vertices;                                                                             //  Temporary buffer for storing each set of 3 corresponding vertex indexes
@@ -72,9 +73,11 @@ class MeshLoader
         int materialIdentifierIndex;
         int triangleCount;
         
+        char currentLine[256];
+        vector<string> attributeIndexes;
+
         int res;
         int matches;
-        char* matFn;
         unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
         
         vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
