@@ -43,7 +43,6 @@ using std::ifstream;
 class MeshLoader 
 {
     public:
-        // FILE *file;                                                                                             //  A file returned from the absolute path
         ifstream file;
 
         vector<unsigned int> vertexIndices, uvIndices, normalIndices;                                           //  Vector containing matched index positions
@@ -75,10 +74,6 @@ class MeshLoader
         
         char currentLine[256];
         vector<string> attributeIndexes;
-
-        int res;
-        int matches;
-        unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];                            //  Arrays to store Vertex, UV and normal index positions. Used to match respective v,vt,vn coordinates for each point in the mesh
         
         vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
         vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector

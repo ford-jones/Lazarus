@@ -31,10 +31,7 @@ MeshLoader::MeshLoader()
 	std::cout << GREEN_TEXT << "Constructing class 'MeshLoader'." << RESET_TEXT << std::endl;
 	this->materialIdentifierIndex	=	0;
 	this->triangleCount				=	0;
-	// this->res 						=	0;
-	this->matches 					=	0;
-	
-	// this->file 						=	NULL;
+
 	this->matFinder 				= 	nullptr;
 	this->matLoader 				=	nullptr;
 };
@@ -56,16 +53,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
     while( file.getline(currentLine, 256) )
     {
-
-        if (file.eof())                                                                         //  If, the scanner has reached the end of the file
-        {
-            this->materialData = {materialIdentifierIndex, triangleCount};
-			this->materialBuffer.push_back(this->materialData);
-            		
-            matFinder.reset();
-            break;                                                                              //  Break out of the loop.
-        }
-
         if( currentLine[0] == 'm' )                                               //  If the first string of the current line is "mtlib" the line holds the name of a valid wavefront material file
         {
             this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);                                     //  Find the file using the file finder
@@ -82,7 +69,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             while(getline(ss, token, ' ')) 
             {
                 tokenStore.push_back(token);
-                // std::cout << token << std::endl;
             }
             
             this->vertex.x = stof(tokenStore[1]);
@@ -156,7 +142,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
                     if (tokenJ != "f") 
                     {
                         attributeIndexes.push_back(tokenJ);
-                        // std::cout << tokenJ << std::endl;
                     }
                 }
             }            
@@ -190,6 +175,16 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
             this->triangleCount = 0;                                                                                  //  Reset the triangle count to 0 for the next read
         }
     }
+
+    if (file.eof())                                                                         //  If, the scanner has reached the end of the file
+    {
+        file.close();
+        this->materialData = {materialIdentifierIndex, triangleCount};
+		this->materialBuffer.push_back(this->materialData);
+        		
+        matFinder.reset();
+    }
+
     for( unsigned int i = 0; i < this->vertexIndices.size(); i++ )                                //  Loop through the vertex match index position array
     {
 
@@ -222,7 +217,6 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
 MeshLoader::~MeshLoader()
 {
-    // fclose(this->file);                                                                           //  Close the file    
     file.close();
 	std::cout << GREEN_TEXT << "Destroying 'MeshLoader' class." << RESET_TEXT << std::endl;
 };
