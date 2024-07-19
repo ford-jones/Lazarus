@@ -52,7 +52,8 @@ void TextureLoader::loadTexture(string texturePath)
 	if(image != NULL)
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 320, 239, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-		glGenerateTextureMipmap(this->texture);
+		// glGenerateTextureMipmap(this->texture);
+		glGenerateMipmap(GL_TEXTURE_2D);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -64,7 +65,8 @@ void TextureLoader::loadTexture(string texturePath)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	
 	
-		glBindTextureUnit(1, this->texture);
+		// glBindTextureUnit(1, this->texture);
+		glBindTexture(GL_TEXTURE_2D, this->texture);
 	}
 	else
 	{

@@ -56,7 +56,10 @@ class Mesh
             string meshFilepath;
             string materialFilepath;
             string textureFilepath;
-            
+
+            //  TODO:
+            //  Order faces into indices array for EBO
+
             float locationX;
             float locationY;
             float locationZ;
@@ -89,6 +92,8 @@ class Mesh
         vector<vec2> uvs;                                                                   //  Buffer to uv data
         vector<vec3> normals;                                                               //  Buffer to store normals data
         vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
+
+        vector<unsigned int> indices;
 		
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object

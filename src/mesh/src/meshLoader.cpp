@@ -39,7 +39,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, vector<unsigned int> &out_indices, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -129,6 +129,10 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
             this->normalIndices.push_back(this->normalIndex[1]);
             this->normalIndices.push_back(this->normalIndex[2]);
 
+            //  Push vertex coord indexes into indices array
+            out_indices.push_back(this->vertexIndex[0]);
+            out_indices.push_back(this->vertexIndex[1]);
+            out_indices.push_back(this->vertexIndex[2]);
         }
         else if( strcmp( identifier, "usemtl" ) == 0 )                                                          //  If the first string of the current line is "usemtl", the following string identifies the use of a new material for following faces
         {
