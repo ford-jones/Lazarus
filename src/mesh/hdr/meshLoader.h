@@ -67,7 +67,7 @@ class MeshLoader
         virtual ~MeshLoader();
 
     private:
-        vector<string> vectorizeWfProperties(char wavefrontData[256], char delim);
+        vector<string> vectorizeWfProperties(const char *wavefrontData, char delim);
 
         vector<vector<int>> materialBuffer;
         vector<int> materialData;

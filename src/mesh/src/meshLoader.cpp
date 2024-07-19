@@ -185,10 +185,10 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
     return true;
 };
 
-vector<string> MeshLoader::vectorizeWfProperties(char wavefrontData[256], char delim)
+vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char delim)
 {
     string token;
-    string currentString = currentLine;
+    string currentString = wavefrontData;
     stringstream ss(currentString);
 
     vector<string> tokenStore;
