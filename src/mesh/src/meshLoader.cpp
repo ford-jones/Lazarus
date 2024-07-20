@@ -94,8 +94,9 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
         {                                                                                       //  (Each face is triangulated on export and so is comprised of 3 vertexes)
             this->triangleCount += 1;
 
+            generateIndicesIndexVec(currentLine, out_indices);
+
             vector<string> data = vectorizeWfProperties(currentLine, ' ');
-            
             for(auto i: data) 
             {
                 stringstream ssJ(i);
@@ -199,6 +200,31 @@ vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char
     }
 
     return tokenStore;
+}
+
+void MeshLoader::generateIndicesIndexVec(const char *in, vector<unsigned int> &out) {
+    temp = in;
+
+    for(unsigned int i = 0; i < temp.size(); i++) 
+    {
+        if(temp[i] == ' ') 
+        {
+            count = 0;
+            foundIndex = "";
+            
+            while((temp[i + count]) != '/')
+            {
+                if(count != 0)
+                {
+                    std::cout << "Count: " << count << std::endl;
+                    foundIndex += temp[i + count];
+                }
+                count += 1;
+            };
+            
+            out.push_back(std::stof(foundIndex) - 1);
+        };
+    };
 }
 
 MeshLoader::~MeshLoader()

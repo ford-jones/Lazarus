@@ -68,6 +68,11 @@ class MeshLoader
 
     private:
         vector<string> vectorizeWfProperties(const char *wavefrontData, char delim);
+        void generateIndicesIndexVec(const char *in, vector<unsigned int> &out);
+
+        int count;
+        string temp;
+        string foundIndex;
 
         vector<vector<int>> materialBuffer;
         vector<int> materialData;

@@ -75,10 +75,6 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
     );
-    std::cout << "indices:" << std::endl;
-    for(unsigned int i = 0; i < indices.size(); i++) {
-        std::cout << indices[i] << std::endl;
-    }
     
     triangulatedMesh->locationX = 0;
     triangulatedMesh->locationY = 0;
