@@ -31,7 +31,7 @@ int main()
     // world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
-    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
+    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/cube.obj", "assets/material/cube.mtl"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));

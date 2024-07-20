@@ -36,7 +36,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, vector<unsigned int> &out_indices, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, vector<unsigned int> &out_indices, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -147,15 +147,32 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
 		this->materialBuffer.push_back(this->materialData);
         		
         matFinder.reset();
+
+        if(texturePath != LAZARUS_MESH_NOTEX)
+        {
+	        matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial, texturePath);
+        } 
+        else
+        {
+            matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial);
+        }
     }
 
     for( unsigned int i = 0; i < this->vertexIndices.size(); i++ )                                //  Loop through the vertex match index position array
     {
 
         unsigned int vertexIndex    =   vertexIndices[i];                                   //  The index position of each item in the array of matched indexes
+        unsigned int normalIndex    =   normalIndices[i];
+        
         vec3 vertex                 =   temp_vertices[vertexIndex - 1];                     //  Each vertex found at corresponding matched index
+        vec3 diffuse                =   out_diffuse[i];
+        vec3 normal                 =   temp_normals[normalIndex - 1];
 
         out_vertices.push_back(vertex);                                                     //  Push the found vertex into the output vector
+
+        out_attributes.push_back(vertex);
+        out_attributes.push_back(diffuse);
+        out_attributes.push_back(normal);
     }
 
     for( unsigned int i = 0; i < this->uvIndices.size(); i++ )                                    //  Loop through the UV match index position array
@@ -172,15 +189,6 @@ bool MeshLoader::loadMesh(vector<vec3> &out_vertices, vector<vec2> &out_uvs, vec
         vec3 normal                 =   temp_normals[normalIndex - 1];                      //  Each Normal found at the corresponding matched index
 
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
-    }
-
-    if(texturePath != LAZARUS_MESH_NOTEX)
-    {
-	    matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial, texturePath);
-    } 
-    else
-    {
-        matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial);
     }
 
     return true;

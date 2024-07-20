@@ -54,6 +54,7 @@ class MeshLoader
     	MeshLoader();	
     	    
         bool loadMesh(
+            vector<vec3> &out_attributes,
             vector<vec3> &out_vertices,                                                                             //  Location of the loaders vertices vector output
             vector<vec2> &out_uvs,                                                                                  //  Location of the loaders uv vector output
             vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
