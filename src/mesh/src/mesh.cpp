@@ -112,20 +112,20 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(float), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(vec3), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
 
-    glGenBuffers(1, &this->EBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
+    // glGenBuffers(1, &this->EBO);
+    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
 
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, (triangulatedMesh->indices.size() * sizeof(float)), &triangulatedMesh->indices[0], GL_STATIC_DRAW);
+    // glBufferData(GL_ELEMENT_ARRAY_BUFFER, (triangulatedMesh->indices.size() * sizeof(float)), &triangulatedMesh->indices[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
     glEnableVertexAttribArray(2);
 
     this->checkErrors(__PRETTY_FUNCTION__);
@@ -162,8 +162,9 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 	
 	triangulatedMesh = std::move(meshData);
 	
-    glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
-    glDrawElements(GL_TRIANGLES, triangulatedMesh->indices.size(), GL_UNSIGNED_INT, 0);
+    // glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
+    // glDrawElements(GL_TRIANGLES, triangulatedMesh->indices.size(), GL_UNSIGNED_INT, 0);
+    glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();
