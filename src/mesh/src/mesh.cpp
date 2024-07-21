@@ -112,45 +112,21 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(vec3), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (8 * sizeof(float)), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (8 * sizeof(float)), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (8 * sizeof(float)), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(float), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
 
     glGenBuffers(1, &this->EBO);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->EBO);
 
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, (triangulatedMesh->indices.size() * sizeof(float)), &triangulatedMesh->indices[0], GL_STATIC_DRAW);
 
-	// glGenBuffers                (1, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
-    // glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[0]);                                                                                  //  Bind the first VBO to openGL's array buffer (which the VAO is bound to)
-    // glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(vec3), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
-	// glVertexAttribPointer       (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-	// glEnableVertexAttribArray   (0);                                                                                                        //  enable the first VBO in this context
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)0);
+    glEnableVertexAttribArray(0);
 
-    // glGenBuffers                (1, &this->VBO[1]);                                                                                               //  Generate 3 vertex buffer objects
-    // glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[1]);                                                                                  //  Bind the second VBO to openGL's array buffer (which the VAO is bound to)
-    // glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->normals.size() * sizeof(vec3), &triangulatedMesh->normals[0], GL_STATIC_DRAW);                           //  Pass normals (vertex-direction) data recieved from the loader function to the VBO                                  
-    // glVertexAttribPointer       (1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-    // glEnableVertexAttribArray   (1);                                                                                                        //  enable the second VBO in this context
-    
-    // glGenBuffers                (1, &this->VBO[2]);                                                                                               //  Generate 3 vertex buffer objects
-    // glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[2]);                                                                                  //  Bind the third VBO to openGL's array buffer (which the VAO is bound to)
-    // glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
-    // glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-    // glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
-    // glGenBuffers                (1, &this->VBO[3]);                                                                                               //  Generate 3 vertex buffer objects
-    // glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[3]);
-    // glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->uvCoords.size() * sizeof(vec2), &triangulatedMesh->uvCoords[0], GL_STATIC_DRAW);
-    // glVertexAttribPointer       (3, 2, GL_FLOAT, GL_FALSE, 0, (void*)(6 * sizeof(vec2)));
-    // glEnableVertexAttribArray   (3);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (9 * sizeof(float)), (void*)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 	
@@ -186,8 +162,8 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 	
 	triangulatedMesh = std::move(meshData);
 	
-    // glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->vertices.size());
-    glDrawElements(GL_TRIANGLES, triangulatedMesh->vertices.size(), GL_UNSIGNED_INT, 0);
+    glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
+    glDrawElements(GL_TRIANGLES, triangulatedMesh->indices.size(), GL_UNSIGNED_INT, 0);
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();
@@ -209,10 +185,6 @@ void Mesh::releaseMesh()
     glDeleteVertexArrays    (1, &this->VAO);
     glDeleteVertexArrays    (1, &this->VBO);
     glDeleteVertexArrays    (1, &this->EBO);
-	// glDeleteBuffers         (1, &this->VBO[0]);
-    // glDeleteBuffers         (1, &this->VBO[1]);
-    // glDeleteBuffers         (1, &this->VBO[2]);
-    // glDeleteBuffers         (1, &this->VBO[3]);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

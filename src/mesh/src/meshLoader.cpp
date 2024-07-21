@@ -117,7 +117,7 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
                 std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
                 return false;
             }
-
+            
             this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));                                            //  Push each matches index position back to its respective vector's memory location
             this->vertexIndices.push_back(stoi(this->attributeIndexes[3]));                                            //  Each of these vectors contain index positions relative to the output data vectors below
             this->vertexIndices.push_back(stoi(this->attributeIndexes[6]));
@@ -224,7 +224,6 @@ void MeshLoader::generateIndicesIndexVec(const char *in, vector<unsigned int> &o
             {
                 if(count != 0)
                 {
-                    std::cout << "Count: " << count << std::endl;
                     foundIndex += temp[i + count];
                 }
                 count += 1;
