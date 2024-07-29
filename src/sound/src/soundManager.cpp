@@ -21,6 +21,7 @@
 SoundManager::SoundManager() 
 {
     std::cout << GREEN_TEXT << "Constructing class 'SoundManager'." << RESET_TEXT << std::endl;
+
 	this->audioOut = nullptr;
 	this->reader = nullptr;
 	

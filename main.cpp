@@ -9,9 +9,10 @@ int main()
 
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
-	
-	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
-	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
+
+	  cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
+
+	  windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
 	
     win = glfwGetCurrentContext();
 
@@ -23,6 +24,7 @@ int main()
     light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
     
     cameraBuilder       = std::make_unique<Camera>(shaderProgram);
+
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     worldBuilder        = std::make_unique<Mesh>(shaderProgram);
@@ -65,6 +67,7 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
+
         /*World*/
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
@@ -78,7 +81,7 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*Beachball*/
+        /*beachball*/
         if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
             beachball = beachballBuilder->initialiseMesh(beachball);

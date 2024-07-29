@@ -23,6 +23,7 @@
 #include <fstream>
 #include <sstream>
 
+using std::unique_ptr;
 using std::vector;
 using std::string;
 using glm::vec3;
@@ -37,7 +38,7 @@ class MaterialLoader
 {
     public:        
         MaterialLoader();
-        bool loadMaterial(string path, vector<vec3> &out, vector<vector<int>> data);
+        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath);
         virtual ~MaterialLoader();
 
     private:

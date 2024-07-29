@@ -35,11 +35,16 @@ Mesh::Mesh(GLuint shader)
 	this->finder = nullptr;
 	this->loader = nullptr;
 	this->triangulatedMesh = nullptr;
+
+    this->vertices = {};
+    this->uvs = {};
+    this->normals = {};
+    this->diffuse = {};
 	
 	this->errorCode = GL_NO_ERROR;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath, string texturePath)
 {
     this->finder = std::make_unique<FileReader>();
     this->loader = std::make_unique<MeshLoader>();
@@ -50,7 +55,25 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
 
     triangulatedMesh->meshFilepath =  finder->relativePathToAbsolute(meshPath);
     triangulatedMesh->materialFilepath = finder->relativePathToAbsolute(materialPath);
-    loader->loadMesh(triangulatedMesh->meshFilepath.c_str(), triangulatedMesh->materialFilepath.c_str(), vertices, uvs, normals, diffuse);
+    
+    if(texturePath != "")
+    {
+	    triangulatedMesh->textureFilepath = finder->relativePathToAbsolute(texturePath);
+    }
+    else
+    {
+    	triangulatedMesh->textureFilepath = LAZARUS_MESH_NOTEX;
+    };
+    
+    loader->loadMesh(
+        vertexAttributes,
+        vertices, 
+        uvs, 
+        normals,
+        diffuse,
+        triangulatedMesh->meshFilepath.c_str(),
+        triangulatedMesh->materialFilepath.c_str()
+    );
     
     triangulatedMesh->locationX = 0;
     triangulatedMesh->locationY = 0;
@@ -59,11 +82,14 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     triangulatedMesh->numOfVertices = vertices.size();
     triangulatedMesh->numOfFaces = (vertices.size()) / 3;
 
+    triangulatedMesh->attributes = vertexAttributes;
     triangulatedMesh->vertices = vertices;
+    triangulatedMesh->uvCoords = uvs;
     triangulatedMesh->normals = normals;
     triangulatedMesh->diffuse = diffuse;
     triangulatedMesh->modelviewMatrix = mat4(1.0f);                                                                                          //  Define the model-view matrix to default 4x4
     triangulatedMesh->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
+    triangulatedMesh->samplerUniformLocation = glGetUniformLocation(shaderProgram, "texImg");
 
     return triangulatedMesh;
 };
@@ -77,26 +103,23 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 	
 	triangulatedMesh = std::move(meshData);
 	
-    glGenVertexArrays           (1, &this->VAO);                                                                                                  //  Generate a vertex array object to store the buffers
-	glBindVertexArray           (this->VAO);                                                                                                      //  Bind the VAO to this openGL context
+    glGenVertexArrays(1, &this->VAO);                                                                                                  //  Generate a vertex array object to store the buffers
+	  glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
 
-	glGenBuffers                (3, &this->VBO[0]);                                                                                               //  Generate 3 vertex buffer objects
-	
-    glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[0]);                                                                                  //  Bind the first VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->vertices.size() * sizeof(vec3), &triangulatedMesh->vertices[0], GL_STATIC_DRAW);                        //  Pass vertices (vertex-position) data recieved from the loader function to the VBO                                  
-	glVertexAttribPointer       (0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-	glEnableVertexAttribArray   (0);                                                                                                        //  enable the first VBO in this context
+    glGenBuffers(1, &this->VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[1]);                                                                                  //  Bind the second VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->normals.size() * sizeof(vec3), &triangulatedMesh->normals[0], GL_STATIC_DRAW);                           //  Pass normals (vertex-direction) data recieved from the loader function to the VBO                                  
-    glVertexAttribPointer       (1, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-    glEnableVertexAttribArray   (1);                                                                                                        //  enable the second VBO in this context
-    
-    glBindBuffer                (GL_ARRAY_BUFFER, this->VBO[2]);                                                                                  //  Bind the third VBO to openGL's array buffer (which the VAO is bound to)
-    glBufferData                (GL_ARRAY_BUFFER, triangulatedMesh->diffuse.size() * sizeof(vec3), &triangulatedMesh->diffuse[0], GL_STATIC_DRAW);                           //  Pass diffuse (diffuse-color) data recieved from the loader function to the VBO                                  
-    glVertexAttribPointer       (2, 3, GL_FLOAT, GL_FALSE, 0, nullptr);                                                                     //  Create a pointer to the first generic vertex attribute in the array. 
-    glEnableVertexAttribArray   (2);                                                                                                        //  enable the third VBO in this context    
-    
+    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(vec3), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
+    glEnableVertexAttribArray(2);
+
     this->checkErrors(__PRETTY_FUNCTION__);
 	
     return triangulatedMesh;
@@ -115,22 +138,23 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 	};
 	
 	triangulatedMesh = std::move(meshData);
-	
+
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
+    glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };
 
 void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 {
-	if(triangulatedMesh != nullptr)
-	{
-		triangulatedMesh.reset();
-	};
+	  if(triangulatedMesh != nullptr)
+	  {
+		  triangulatedMesh.reset();
+	  };
 	
-	triangulatedMesh = std::move(meshData);
+	  triangulatedMesh = std::move(meshData);
 	
-    glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->vertices.size());                                                                                //  Draw the contents of the enabled VAO's stored in this context
+    glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
@@ -151,9 +175,7 @@ void Mesh::checkErrors(const char *invoker)
 void Mesh::releaseMesh()
 {
     glDeleteVertexArrays    (1, &this->VAO);
-	glDeleteBuffers         (1, &this->VBO[0]);
-    glDeleteBuffers         (1, &this->VBO[1]);
-    glDeleteBuffers         (1, &this->VBO[2]);
+    glDeleteVertexArrays    (1, &this->VBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

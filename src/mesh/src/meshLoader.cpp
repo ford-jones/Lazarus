@@ -36,7 +36,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse) 
+bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, const char* meshPath, const char* materialPath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -60,59 +60,33 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
 
         else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
 
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->vertex.x = stof(tokenStore[1]);
-            this->vertex.y = stof(tokenStore[2]);
-            this->vertex.z = stof(tokenStore[3]);
+            this->vertex.x = stof(data[1]);
+            this->vertex.y = stof(data[2]);
+            this->vertex.z = stof(data[3]);
 
             this->temp_vertices.push_back(this->vertex);                                                    //  Push the aforementioned object into the temporary vertices vector
         } 
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 't' )                                             //  If the first string of the current line is "vt" the line holds a set of vertex textures (uv) coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
-
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->uv.x = stof(tokenStore[1]);
-            this->uv.y = stof(tokenStore[2]);
+            this->uv.x = stof(data[1]);
+            this->uv.y = stof(data[2]);
 
             this->temp_uvs.push_back(this->uv);                                                             //  Push the aforementioned object into the temporary uv vector
         }
 
         else if ( (currentLine[0] == 'v') && currentLine[1] == 'n' )                                             //  If the first string of the current line is "vn" the line holds a set of normal coordinates
         {
-            string token;
-            string currentString = currentLine;
-            stringstream ss(currentString);
-
-            vector<string> tokenStore;
-
-            while(getline(ss, token, ' ')) 
-            {
-                tokenStore.push_back(token);
-            }
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
-            this->normal.x = stof(tokenStore[1]);
-            this->normal.y = stof(tokenStore[2]);
-            this->normal.z = stof(tokenStore[3]);
+            this->normal.x = stof(data[1]);
+            this->normal.y = stof(data[2]);
+            this->normal.z = stof(data[3]);
 
             this->temp_normals.push_back(this->normal);                                                     //  Push the aforementioned object into the temporary normal vector
         }
@@ -121,18 +95,8 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
         {                                                                                       //  (Each face is triangulated on export and so is comprised of 3 vertexes)
             this->triangleCount += 1;
 
-            string currentString = currentLine;
-            stringstream ssI(currentString);
-            string tokenI;
-
-            vector<string> tokenStoreI;
-
-            while(getline(ssI, tokenI, ' ')) 
-            {
-                tokenStoreI.push_back(tokenI);
-            }
-            
-            for(auto i: tokenStoreI) 
+            vector<string> data = vectorizeWfProperties(currentLine, ' ');
+            for(auto i: data) 
             {
                 stringstream ssJ(i);
                 string tokenJ;
@@ -168,8 +132,8 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
         }
         else if( currentLine[0] == 'u' )                                                          //  If the first string of the current line is "usemtl", the following string identifies the use of a new material for following faces
         {
-			this->materialData = {materialIdentifierIndex, triangleCount};
-			this->materialBuffer.push_back(this->materialData);
+			      this->materialData = {materialIdentifierIndex, triangleCount};
+			      this->materialBuffer.push_back(this->materialData);
 			
             this->materialIdentifierIndex += 1;                                                                       //  Increase the material identification number by 1
             this->triangleCount = 0;                                                                                  //  Reset the triangle count to 0 for the next read
@@ -180,7 +144,9 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
     {
         file.close();
         this->materialData = {materialIdentifierIndex, triangleCount};
-		this->materialBuffer.push_back(this->materialData);
+		    this->materialBuffer.push_back(this->materialData);
+
+        matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial);
         		
         matFinder.reset();
     }
@@ -189,9 +155,17 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
     {
 
         unsigned int vertexIndex    =   vertexIndices[i];                                   //  The index position of each item in the array of matched indexes
+        unsigned int normalIndex    =   normalIndices[i];
+        
         vec3 vertex                 =   temp_vertices[vertexIndex - 1];                     //  Each vertex found at corresponding matched index
+        vec3 diffuse                =   out_diffuse[i];
+        vec3 normal                 =   temp_normals[normalIndex - 1];
 
         out_vertices.push_back(vertex);                                                     //  Push the found vertex into the output vector
+
+        out_attributes.push_back(vertex);
+        out_attributes.push_back(diffuse);
+        out_attributes.push_back(normal);
     }
 
     for( unsigned int i = 0; i < this->uvIndices.size(); i++ )                                    //  Loop through the UV match index position array
@@ -210,10 +184,24 @@ bool MeshLoader::loadMesh(const char* meshPath, const char* materialPath, vector
         out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
     }
 
-	matLoader->loadMaterial(foundMaterial, out_diffuse, materialBuffer);
-
     return true;
 };
+
+vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char delim)
+{
+    string token;
+    string currentString = wavefrontData;
+    stringstream ss(currentString);
+
+    vector<string> tokenStore;
+
+    while(getline(ss, token, delim)) 
+    {
+        tokenStore.push_back(token);
+    }
+
+    return tokenStore;
+}
 
 MeshLoader::~MeshLoader()
 {

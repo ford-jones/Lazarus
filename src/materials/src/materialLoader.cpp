@@ -29,15 +29,15 @@
 MaterialLoader::MaterialLoader()
 {
 	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
+	
 	diffuseTexCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<int>> data) 
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath)
 {
     diffuseTexCount = 0;
 
-    file.open(path.c_str());
-    char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
+    file.open(materialPath.c_str());
     
     if( !file.is_open() )
     {                                                                                                               //  If, the file has a null value                                 
@@ -76,6 +76,12 @@ bool MaterialLoader::loadMaterial(string path, vector<vec3> &out, vector<vector<
     	        };        
             };
         }
+        
+   };
+
+    if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
+    {
+        file.close();
     }
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
     {

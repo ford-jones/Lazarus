@@ -1,11 +1,11 @@
-    #version 330 core
+#version 330 core
 
-    in vec3 normal;
-    in vec3 fragPosition;
-    in vec3 fragColor;
+in vec3 normal;
+in vec3 fragPosition;
+in vec3 fragColor;
 
-    uniform vec3 lightPosition;
-    uniform vec3 lightColor;
+uniform vec3 lightPosition;
+uniform vec3 lightColor;
 
     out vec4 outFragColor;
 
