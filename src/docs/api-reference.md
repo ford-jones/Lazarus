@@ -238,6 +238,7 @@ Be sure to bring the back buffer forward to see the draw result.
 >	- **locationX:** *The x-axis coordinate of the mesh's position in world space. (type: float)*
 >	- **locationY:** *The y-axis coordinate of the mesh's position in world space. (type: float)*
 >	- **locationZ:** *The z-axis coordinate of the mesh's position in world space. (type: float)*
+>	- **attributes:** *Vector containing interleaved vertex attributes in vec3 form, used to populate this mesh's vertex buffer object. In order: vertex coords, diffuse colors, normals. (type: `glm::vector<glm::vec3>>`)*
 >	- **vertices:** *Vertex position (world coordinates) extracted from the wavefront (obj) file. (type: `glm::vector<glm::vec3>>`)*
 >	- **normals:** *Vertex normals (vertices direction) extracted from the wavefront (obj) file. (type: `glm::vector<glm::vec3>>`)*
 >	- **diffuse:** *Diffuse material (colour) data extracted from the wavefront material (mtl) file. (type: `glm::vector<glm::vec3>>`)*
@@ -252,15 +253,16 @@ A simple loader class for loading wavefront (obj) files and marshalling their co
 Default-initialises this classes members.
 
 ### Functions:
-#### bool loadMesh(const char* path, std::vector\<glm::vec3> &out_vertices, std::vector\<glm::vec2> &out_uvs, std::vector\<glm::vec3> &out_normals, std::vector\<glm::vec3> &out_diffuse)
-Parses a wavefront (obj) file, the contents of which are converted to `float`, stored inside a `glm::vec3` or `glm::vec2` and pushed into one of four `std::vector`s \
-which, hold either vertex coordinates, vertex normals, vertex textures or diffuse colours.
+#### bool loadMesh(const char* path, std::vector\<glm::vec3> &out_attributes,  std::vector\<glm::vec3> &out_vertices, std::vector\<glm::vec2> &out_uvs, std::vector\<glm::vec3> &out_normals, std::vector\<glm::vec3> &out_diffuse)
+Parses a wavefront (obj) file, the contents of which are converted to `float`, stored inside a `glm::vec3` or `glm::vec2` and pushed into one of four `std::vector`'s \
+which, hold either vertex coordinates, vertex normals, UV coordinates or diffuse colours.
 
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
 
 Params:
 > **meshPath:** *The absolute path to this mesh's wavefront (.obj) file* \
 > **materialPath:** *The absolute path to this mesh's wavefront material (.mtl) file* \
+> **out_attributes:** *A vector to store parsed and interleaved vertices data.* \
 > **out_vertices:** *A vector to store parsed and ordered vertex coordinate data.* \
 > **out_uvs:** *A vector to store parsed and ordered vertex uv data.* \
 > **out_normals:**  *A vector to store parsed and ordered vertex normal data.* \
