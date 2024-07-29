@@ -1,4 +1,4 @@
-#version 330 core
+#version 460 core
 
 layout(location = 0) in vec3 inVertex;
 layout(location = 1) in vec3 inDiffuse;
@@ -8,7 +8,7 @@ layout(location = 3) in vec3 inTexCoord;
 out vec3 normal;
 out vec3 fragPosition;
 out vec3 fragColor;
-out vec2 outTexCoord;
+out vec2 texCoord;
 
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
@@ -21,9 +21,7 @@ void main()
 
    vec4 worldPosition = modelMatrix * vec4(inVertex, 1.0);
    gl_Position = projectionMatrix * viewMatrix * worldPosition;
-
-   vec2 texCoord = vec2(inTexCoord.x, inTexCoord.y);
    
-   outTexCoord = texCoord;
+   texCoord = vec2(inTexCoord.x, inTexCoord.y);
    fragColor = inDiffuse;
 }

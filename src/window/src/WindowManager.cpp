@@ -97,7 +97,7 @@ int WindowManager::initialise()
     //  Makes macOS happy
     //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
     if(LAZARUS_RUNNING_ON_DARWIN == true)
     {
