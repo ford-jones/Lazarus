@@ -23,7 +23,6 @@
 #include <fstream>
 #include <sstream>
 
-using std::unique_ptr;
 using std::vector;
 using std::string;
 using glm::vec3;

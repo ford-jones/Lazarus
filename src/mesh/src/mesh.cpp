@@ -56,15 +56,6 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     triangulatedMesh->meshFilepath =  finder->relativePathToAbsolute(meshPath);
     triangulatedMesh->materialFilepath = finder->relativePathToAbsolute(materialPath);
     
-    if(texturePath != "")
-    {
-	    triangulatedMesh->textureFilepath = finder->relativePathToAbsolute(texturePath);
-    }
-    else
-    {
-    	triangulatedMesh->textureFilepath = LAZARUS_MESH_NOTEX;
-    };
-    
     loader->loadMesh(
         vertexAttributes,
         vertices, 
