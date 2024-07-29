@@ -59,7 +59,6 @@ class MeshLoader
             vector<vec2> &out_uvs,                                                                                  //  Location of the loaders uv vector output
             vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
             vector<vec3> &out_diffuse,
-            vector<unsigned int> &out_indices,
             const char *meshPath,
             const char *materialPath,
             const char *texturePath = ""
@@ -69,11 +68,6 @@ class MeshLoader
 
     private:
         vector<string> vectorizeWfProperties(const char *wavefrontData, char delim);
-        void generateIndicesIndexVec(const char *in, vector<unsigned int> &out);
-
-        int count;
-        string temp;
-        string foundIndex;
 
         vector<vector<int>> materialBuffer;
         vector<int> materialData;

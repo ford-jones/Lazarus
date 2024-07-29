@@ -64,7 +64,6 @@ class Mesh
             float locationY;
             float locationZ;
 
-            vector<unsigned int> indices;
             vector<vec3> attributes;
             vector<vec3> vertices;                                                              //  Buffer to store vertex data
             vector<vec2> uvCoords;																//  Buffer to store UV data
@@ -91,19 +90,15 @@ class Mesh
 
         int errorCode;
 
-        vector<vec3> outAttributes;
+        vector<vec3> vertexAttributes;
         vector<vec3> vertices;                                                              //  Buffer to store vertex data
         vector<vec2> uvs;                                                                   //  Buffer to uv data
         vector<vec3> normals;                                                               //  Buffer to store normals data
         vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
-
-        vector<unsigned int> indices;
 		
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
-        // GLuint VBO[4];                                                                      //  The OpenGL Vertex Buffer Object
         GLuint VBO;
-        GLuint EBO;
 
         unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> loader;

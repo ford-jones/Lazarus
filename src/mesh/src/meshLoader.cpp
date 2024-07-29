@@ -36,7 +36,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, vector<unsigned int> &out_indices, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -93,8 +93,6 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
         else if ( currentLine[0] == 'f' )                                              //  If the first string of the current line is "f", the data describes which 3 vertexes build a face
         {                                                                                       //  (Each face is triangulated on export and so is comprised of 3 vertexes)
             this->triangleCount += 1;
-
-            generateIndicesIndexVec(currentLine, out_indices);
 
             vector<string> data = vectorizeWfProperties(currentLine, ' ');
             for(auto i: data) 
@@ -208,30 +206,6 @@ vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char
     }
 
     return tokenStore;
-}
-
-void MeshLoader::generateIndicesIndexVec(const char *in, vector<unsigned int> &out) {
-    temp = in;
-
-    for(unsigned int i = 0; i < temp.size(); i++) 
-    {
-        if(temp[i] == ' ') 
-        {
-            count = 0;
-            foundIndex = "";
-            
-            while((temp[i + count]) != '/')
-            {
-                if(count != 0)
-                {
-                    foundIndex += temp[i + count];
-                }
-                count += 1;
-            };
-            
-            out.push_back(std::stof(foundIndex) - 1);
-        };
-    };
 }
 
 MeshLoader::~MeshLoader()

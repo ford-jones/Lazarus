@@ -66,12 +66,11 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     };
     
     loader->loadMesh(
-        outAttributes,
+        vertexAttributes,
         vertices, 
         uvs, 
         normals,
         diffuse,
-        indices,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
@@ -84,8 +83,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     triangulatedMesh->numOfVertices = vertices.size();
     triangulatedMesh->numOfFaces = (vertices.size()) / 3;
 
-    triangulatedMesh->indices = indices;
-    triangulatedMesh->attributes = outAttributes;
+    triangulatedMesh->attributes = vertexAttributes;
     triangulatedMesh->vertices = vertices;
     triangulatedMesh->uvCoords = uvs;
     triangulatedMesh->normals = normals;
@@ -185,7 +183,6 @@ void Mesh::releaseMesh()
 {
     glDeleteVertexArrays    (1, &this->VAO);
     glDeleteVertexArrays    (1, &this->VBO);
-    glDeleteVertexArrays    (1, &this->EBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };
