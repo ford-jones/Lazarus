@@ -50,13 +50,13 @@ unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> worldBuilder;
-unique_ptr<Mesh> beachballBuilder;
+unique_ptr<Mesh> bricksBuilder;
 
 shared_ptr<SoundManager::Audio> springWaltz;
 shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
-shared_ptr<Mesh::TriangulatedMesh> beachball;
+shared_ptr<Mesh::TriangulatedMesh> bricks;
 shared_ptr<Mesh::TriangulatedMesh> world;
 
 #endif

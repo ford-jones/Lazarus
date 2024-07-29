@@ -161,16 +161,19 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
 
         unsigned int vertexIndex    =   vertexIndices[i];                                   //  The index position of each item in the array of matched indexes
         unsigned int normalIndex    =   normalIndices[i];
+        unsigned int uvIndex        =   uvIndices[i];
         
         vec3 vertex                 =   temp_vertices[vertexIndex - 1];                     //  Each vertex found at corresponding matched index
         vec3 diffuse                =   out_diffuse[i];
         vec3 normal                 =   temp_normals[normalIndex - 1];
+        vec3 uv                     =   vec3(temp_uvs[uvIndex - 1].x, temp_uvs[uvIndex - 1].y, 0.0f);
 
         out_vertices.push_back(vertex);                                                     //  Push the found vertex into the output vector
 
         out_attributes.push_back(vertex);
         out_attributes.push_back(diffuse);
         out_attributes.push_back(normal);
+        out_attributes.push_back(uv);
     }
 
     for( unsigned int i = 0; i < this->uvIndices.size(); i++ )                                    //  Loop through the UV match index position array

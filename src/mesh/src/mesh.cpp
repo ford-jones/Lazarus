@@ -112,14 +112,17 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(vec3), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
     glEnableVertexAttribArray(1);
 
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (3 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
     glEnableVertexAttribArray(2);
+
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(3 * sizeof(vec3)));
+    glEnableVertexAttribArray(3);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 	

@@ -22,6 +22,8 @@ void main()
    vec4 worldPosition = modelMatrix * vec4(inVertex, 1.0);
    gl_Position = projectionMatrix * viewMatrix * worldPosition;
 
+   vec2 texCoord = vec2(inTexCoord.x, inTexCoord.y);
+   
    outTexCoord = inTexCoord;
    fragColor = inDiffuse;
 }

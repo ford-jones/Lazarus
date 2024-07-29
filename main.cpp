@@ -27,11 +27,8 @@ int main()
 
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    // worldBuilder        = std::make_unique<Mesh>(shaderProgram);
-    // world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
-
-    beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
-    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/cube.obj", "assets/material/cube.mtl"));
+    bricksBuilder    = std::make_unique<Mesh>(shaderProgram);
+    bricks           = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
@@ -57,9 +54,6 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-            // camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
-            // camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
-
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -67,30 +61,17 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        // /*World*/
-        // if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        // {
-        //     world = worldBuilder->initialiseMesh(world);
-            
-        //     worldBuilder->loadMesh(world);
-        //     worldBuilder->drawMesh(world);
-        // }
-        // else
-        // {
-        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        // };
-
-        /*beachball*/
-        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        /*bricks*/
+        if( bricks->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         {
-            beachball = beachballBuilder->initialiseMesh(beachball);
-            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+            bricks = bricksBuilder->initialiseMesh(bricks);
+            bricks = transformer.translateMeshAsset(bricks, (moveX / 50), 0.0, (moveZ / 50));
+            bricks = transformer.rotateMeshAsset(bricks, turnX, turnY, 0.0);
 
-            beachballBuilder->loadMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
+            bricksBuilder->loadMesh(bricks);
+            bricksBuilder->drawMesh(bricks);
             
-            soundManager->updateListenerLocation(beachball->locationX, beachball->locationY, beachball->locationZ);
+            soundManager->updateListenerLocation(bricks->locationX, bricks->locationY, bricks->locationZ);
         }
         else
         {
