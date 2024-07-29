@@ -3,7 +3,7 @@
 layout(location = 0) in vec3 inVertex;
 layout(location = 1) in vec3 inDiffuse;
 layout(location = 2) in vec3 inNormal;
-layout(location = 3) in vec2 inTexCoord;
+layout(location = 3) in vec3 inTexCoord;
 
 out vec3 normal;
 out vec3 fragPosition;
@@ -24,6 +24,6 @@ void main()
 
    vec2 texCoord = vec2(inTexCoord.x, inTexCoord.y);
    
-   outTexCoord = inTexCoord;
+   outTexCoord = texCoord;
    fragColor = inDiffuse;
 }
