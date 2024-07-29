@@ -38,7 +38,7 @@ class MaterialLoader
 {
     public:        
         MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, string texturePath = "");
+        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath);
         virtual ~MaterialLoader();
 
     private:

@@ -72,8 +72,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
         normals,
         diffuse,
         triangulatedMesh->meshFilepath.c_str(),
-        triangulatedMesh->materialFilepath.c_str(),
-        triangulatedMesh->textureFilepath.c_str()
+        triangulatedMesh->materialFilepath.c_str()
     );
     
     triangulatedMesh->locationX = 0;

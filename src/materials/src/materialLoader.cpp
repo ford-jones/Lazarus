@@ -33,7 +33,7 @@ MaterialLoader::MaterialLoader()
 	diffuseTexCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath)
 {
     diffuseTexCount = 0;
 

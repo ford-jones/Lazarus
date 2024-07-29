@@ -60,8 +60,7 @@ class MeshLoader
             vector<vec3> &out_normals,                                                                               //  Location of the loaders face vector output
             vector<vec3> &out_diffuse,
             const char *meshPath,
-            const char *materialPath,
-            const char *texturePath = ""
+            const char *materialPath
         );
         
         virtual ~MeshLoader();
