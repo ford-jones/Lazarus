@@ -44,6 +44,7 @@ EventManager eventManager;
 Shader shader;
 Transform transformer;
 FpsCounter fpsCounter;
+
 unique_ptr<FileReader> fileReader;
 unique_ptr<SoundManager> soundManager;
 unique_ptr<WindowManager> windowBuilder;

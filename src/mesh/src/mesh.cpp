@@ -104,7 +104,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 	triangulatedMesh = std::move(meshData);
 	
     glGenVertexArrays(1, &this->VAO);                                                                                                  //  Generate a vertex array object to store the buffers
-	glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
+	  glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
 
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
@@ -147,14 +147,15 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 
 void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 {
-	if(triangulatedMesh != nullptr)
-	{
-		triangulatedMesh.reset();
-	};
+	  if(triangulatedMesh != nullptr)
+	  {
+		  triangulatedMesh.reset();
+	  };
 	
-	triangulatedMesh = std::move(meshData);
+	  triangulatedMesh = std::move(meshData);
 	
     glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
+
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();

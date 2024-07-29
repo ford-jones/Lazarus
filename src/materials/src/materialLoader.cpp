@@ -38,7 +38,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     diffuseTexCount = 0;
 
     file.open(materialPath.c_str());
-    char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
     
     if( !file.is_open() )
     {                                                                                                               //  If, the file has a null value                                 
@@ -80,6 +79,10 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         
    };
 
+    if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
+    {
+        file.close();
+    }
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
     {
         file.close();

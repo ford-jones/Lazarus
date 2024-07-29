@@ -23,8 +23,6 @@ static double LAZARUS_LISTENER_SCROLLCODE = 0;
 
 static const int LAZARUS_MOUSE_NOCLICK = 999;
 
-static const char *LAZARUS_MESH_NOTEX = "Textureless mesh.";
-
 static const char *LAZARUS_FILE_NOT_FOUND = "The requested file cannot be found.";
 static const char *LAZARUS_FILE_UNREADABLE = "The requested file cannot be read.";
 static const char *LAZARUS_FILESTREAM_CLOSED = "The filestream is closed.";

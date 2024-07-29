@@ -60,6 +60,7 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
 
         else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )                                              //  If the first string of the current line is "v" the line holds a set of vertex coordinates
         {
+
             vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
             this->vertex.x = stof(data[1]);
@@ -115,7 +116,7 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
                 std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
                 return false;
             }
-            
+
             this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));                                            //  Push each matches index position back to its respective vector's memory location
             this->vertexIndices.push_back(stoi(this->attributeIndexes[3]));                                            //  Each of these vectors contain index positions relative to the output data vectors below
             this->vertexIndices.push_back(stoi(this->attributeIndexes[6]));
@@ -127,11 +128,12 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
             this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
 
             attributeIndexes.clear();
+
         }
         else if( currentLine[0] == 'u' )                                                          //  If the first string of the current line is "usemtl", the following string identifies the use of a new material for following faces
         {
-			this->materialData = {materialIdentifierIndex, triangleCount};
-			this->materialBuffer.push_back(this->materialData);
+			      this->materialData = {materialIdentifierIndex, triangleCount};
+			      this->materialBuffer.push_back(this->materialData);
 			
             this->materialIdentifierIndex += 1;                                                                       //  Increase the material identification number by 1
             this->triangleCount = 0;                                                                                  //  Reset the triangle count to 0 for the next read
@@ -142,7 +144,9 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
     {
         file.close();
         this->materialData = {materialIdentifierIndex, triangleCount};
-		this->materialBuffer.push_back(this->materialData);
+		    this->materialBuffer.push_back(this->materialData);
+
+        matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial);
         		
         matFinder.reset();
     }
