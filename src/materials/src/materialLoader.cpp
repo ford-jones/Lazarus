@@ -30,7 +30,6 @@ MaterialLoader::MaterialLoader()
 {
 	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
 	
-	textureLoader = nullptr;
 	diffuseTexCount = 0;
 };
 
@@ -80,11 +79,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         }
         
    };
-    if(texturePath != LAZARUS_MESH_NOTEX)
-    {
-	    this->textureLoader = std::make_unique<TextureLoader>();
-		textureLoader->loadTexture(texturePath);
-    }
 
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
     {
