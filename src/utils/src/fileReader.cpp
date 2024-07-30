@@ -67,11 +67,6 @@ const char *FileReader::readFromText(string filepath)
     };
 };
 
-//	TODO:
-//	This function should also make accessible the returned cursor size values
-//	Currently the user has to know the cursor images actual size
-//	Preferably they could access it from here and pass it as an argument to WindowManager::createCursor()
-
 FileReader::Image FileReader::readFromImage(string filename)
 {
 	const char *img = filename.c_str();

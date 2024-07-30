@@ -57,9 +57,6 @@ class Mesh
             string materialFilepath;
             string textureFilepath;
 
-            //  TODO:
-            //  Order faces into indices array for EBO
-
             float locationX;
             float locationY;
             float locationZ;

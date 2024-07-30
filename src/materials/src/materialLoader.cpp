@@ -31,12 +31,14 @@ MaterialLoader::MaterialLoader()
 	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
 	
 	textureLoader = nullptr;
-	diffuseTexCount = 0;
+	diffuseCount = 0;
+    texCount = 0;
 };
 
 bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
 {
-    diffuseTexCount = 0;
+    diffuseCount = 0;
+    texCount = 0;
 
     file.open(materialPath.c_str());
     char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
@@ -50,13 +52,13 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     {        
         if( (currentLine[0] == 'K') && (currentLine[1] == 'd') )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
         {
-            diffuseTexCount += 1;
+            diffuseCount += 1;
             for(auto i: data)
             {
             	int index = i[0];
             	int faceCount = i[1];
             	
-	            if(diffuseTexCount == index) {
+	            if(diffuseCount == index) {
                     string currentString = currentLine;
                     stringstream ss(currentString);
                     string token;
@@ -78,10 +80,21 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     	        };        
             };
         }
-        //  TODO
-        //  Check for Map_Kd
-        //  Remove hardcoded Kd values from untitled.mtl
-        //  Ensure multiple tex'd mesh's can work in the same scene
+        if( ((currentLine[0] == 'm') && (currentLine[1] == 'a') && (currentLine[2] == 'p')))
+        {
+            texCount += 1;
+            if( diffuseCount == 0 )
+            {
+                for(auto i: data)
+                {
+                    int faceCount = i[1];
+                    for(int j = 0; j < faceCount * 3; j++)
+                    {
+                        out.push_back(vec3(1.0f, 1.0f, 1.0f));
+                    }
+                }
+            }
+        }
     };
 
     if(texturePath != LAZARUS_MESH_NOTEX)

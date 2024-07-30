@@ -77,6 +77,9 @@ int main()
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
+
+        //  TODO:
+        //  Debug (diffuse || sampler) texture differentiation 
         
 		windowBuilder->handleBuffers();
     };

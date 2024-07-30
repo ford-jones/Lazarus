@@ -48,7 +48,8 @@ class MaterialLoader
         vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
         ifstream file;
         char currentLine[256];
-        int diffuseTexCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
+        int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
+        int texCount;
 };
 
 #endif
