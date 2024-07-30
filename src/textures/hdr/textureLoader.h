@@ -36,10 +36,12 @@ class TextureLoader
 		void loadTexture(string texturePath);
 		virtual ~TextureLoader();
 		
+		FileReader::Image image;
 	private:
 		shared_ptr<FileReader> loader;
-		unsigned char *image;
+
 		GLuint texture;
+
 };
 
 #endif

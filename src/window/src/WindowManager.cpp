@@ -122,7 +122,7 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-	  this->initialiseGLEW();
+	this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };

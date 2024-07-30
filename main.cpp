@@ -12,7 +12,7 @@ int main()
 
 	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 
-	windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
+	windowBuilder->createCursor(32, 32, 0, 0, cursorImage.pixelData);
 	
     win = glfwGetCurrentContext();
 
@@ -27,8 +27,8 @@ int main()
 
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    bricksBuilder    = std::make_unique<Mesh>(shaderProgram);
-    bricks           = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
+    bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
+    bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));

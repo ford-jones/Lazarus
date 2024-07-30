@@ -78,11 +78,16 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     	        };        
             };
         }
-        
-   };
+        //  TODO
+        //  Check for Map_Kd
+        //  Remove hardcoded Kd values from untitled.mtl
+        //  Ensure multiple tex'd mesh's can work in the same scene
+    };
+
     if(texturePath != LAZARUS_MESH_NOTEX)
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
+        
 		textureLoader->loadTexture(texturePath);
     }
 

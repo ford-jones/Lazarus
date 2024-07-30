@@ -26,6 +26,7 @@
 FileReader::FileReader()
 {
 	this->imageData = 0;
+    this->outImage = {};
 	this->x = 0;
 	this->y = 0;
 	this->n = 0;	
@@ -71,22 +72,31 @@ const char *FileReader::readFromText(string filepath)
 //	Currently the user has to know the cursor images actual size
 //	Preferably they could access it from here and pass it as an argument to WindowManager::createCursor()
 
-unsigned char *FileReader::readFromImage(string filename)
+FileReader::Image FileReader::readFromImage(string filename)
 {
 	const char *img = filename.c_str();
 	
 	this->imageData = stbi_load(img, &x, &y, &n, 0);
-	
+
 	//	TODO:
 	//	Add this to the error checker class
-	
-	if(imageData == NULL)
+
+    if(imageData != NULL) 
+    {
+        outImage.pixelData = imageData;
+        outImage.height = y;
+        outImage.width = x;
+    }
+	else
 	{
-		std::cout << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << stbi_failure_reason() << RESET_TEXT << std::endl;
-		return 0;
+        outImage.pixelData = NULL;
+        outImage.height = 0;
+        outImage.width = 0;
+
+		std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << stbi_failure_reason() << RESET_TEXT << std::endl;
 	};
 	
-	return imageData;
+	return outImage;
 };
 
 FileReader::~FileReader()

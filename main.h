@@ -36,7 +36,7 @@ const char** errorMessage;
 
 float moveX, moveZ;
 float turnX, turnY;
-unsigned char *cursorImage;
+FileReader::Image cursorImage;
 
 void keyCapture(string key);
 

@@ -41,12 +41,21 @@ class FileReader
     public:
 		FileReader();
         
+        struct Image 
+        {
+            unsigned char *pixelData;
+
+            int height;
+            int width;
+        };
+
 		string relativePathToAbsolute(string filepath);
-        unsigned char *readFromImage(string filepath);
+        Image readFromImage(string filepath);
         const char *readFromText(string filepath);
         
 		int x, y, n;
         virtual ~FileReader();
+
         
 	private:
 		unsigned char *imageData;
@@ -58,7 +67,9 @@ class FileReader
         string contents;
         string absolutePath;
         
-        string filenameString;  
+        string filenameString;
+
+        Image outImage;
 };
 
 #endif

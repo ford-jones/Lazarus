@@ -170,9 +170,10 @@ void Mesh::checkErrors(const char *invoker)
     
     if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
     {
-        std::cout << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
-        std::cout << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
+        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
+        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
     };
+
 };
 
 void Mesh::releaseMesh()
