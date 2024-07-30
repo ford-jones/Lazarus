@@ -19,14 +19,14 @@ void main()
 
     vec4 texColor = texture(texImg, texCoord);
 
-    if( (texColor.r > 0.0) || 
-        (texColor.g > 0.0) || 
-        (texColor.b > 0.0) )
+    if( (diffuse.r >= 0.0) && 
+        (diffuse.g >= 0.0) && 
+        (diffuse.b >= 0.0) )
     {
-        outFragColor = texColor;
+        outFragColor = vec4(diffuse, 1.0);
     }
     else
     {
-        outFragColor = vec4(diffuse, 1.0);
+        outFragColor = texColor;
     }
 }

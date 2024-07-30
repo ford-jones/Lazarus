@@ -30,6 +30,9 @@ int main()
     bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
     bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
 
+    worldBuilder       = std::make_unique<Mesh>(shaderProgram);
+    world              = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
     springWaltz = std::move(soundManager->playAudio(springWaltz));
@@ -72,6 +75,19 @@ int main()
             bricksBuilder->drawMesh(bricks);
             
             soundManager->updateListenerLocation(bricks->locationX, bricks->locationY, bricks->locationZ);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
+
+        /*world*/
+        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            world = worldBuilder->initialiseMesh(world);
+
+            worldBuilder->loadMesh(world);
+            worldBuilder->drawMesh(world);
         }
         else
         {

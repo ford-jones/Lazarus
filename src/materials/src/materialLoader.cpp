@@ -90,7 +90,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
                     int faceCount = i[1];
                     for(int j = 0; j < faceCount * 3; j++)
                     {
-                        out.push_back(vec3(1.0f, 1.0f, 1.0f));
+                        out.push_back(vec3(-0.1f, -0.1f, -0.1f));
                     }
                 }
             }
