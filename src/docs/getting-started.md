@@ -114,9 +114,19 @@ Do the same for the `FMOD` headers:
 sudo mv ./fmodstudioapi2022<OS>/api/core/inc/* /usr/local/include
 ```
 
-Finally, update your loaders' scoped libraries with:
+Finally, if you're running linux you will need to update your loaders' scoped libraries with:
 ```
 sudo ldconfig
+```
+
+**If you're installing FMOD on macOS and encounter the following message:**
+
+*“libfmod.dylib” can’t be opened because Apple cannot check it for malicious software.*
+
+Run the following commands:
+```
+xattr -d com.apple.quarantine /usr/local/lib/libfmod.dylib
+xattr -d com.apple.quarantine /usr/local/lib/libfmodL.dylib
 ```
 
 ## Known caveats and limitations:
