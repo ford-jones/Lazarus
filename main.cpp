@@ -30,6 +30,9 @@ int main()
     bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
     bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
 
+    tilesBuilder       = std::make_unique<Mesh>(shaderProgram);
+    tiles              = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/tiles.png"));
+
     worldBuilder        = std::make_unique<Mesh>(shaderProgram);
     world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
@@ -80,6 +83,22 @@ int main()
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
+
+        // //  TODO:
+        // //  Resolve texture instantiation failure 
+
+        // /*tiles*/
+        // if( tiles->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        // {
+        //     tiles = tilesBuilder->initialiseMesh(tiles);
+
+        //     tilesBuilder->loadMesh(tiles);
+        //     tilesBuilder->drawMesh(tiles);
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
 
         /*world*/
         if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
