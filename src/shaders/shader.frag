@@ -20,28 +20,27 @@ vec3 calculateLambertianDeflection (vec3 colorData)
     return illuminatedFrag;
 }
 
-vec3 interpretTextureData ()
+vec3 interpretColorData ()
 {
     if((diffuseColor.r >= 0.0) &&
        (diffuseColor.g >= 0.0) && 
        (diffuseColor.b >= 0.0))
     {
-        vec3 ilumSolidColor = calculateLambertianDeflection(diffuseColor);
-        return ilumSolidColor;
+        return diffuseColor;
     }
     else 
     {
         vec4 tex = texture(texImg, textureCoordinate);
         vec3 texColor = vec3(tex.r, tex.g, tex.b);
 
-        vec3 ilumTexColor = calculateLambertianDeflection(texColor);
-        return ilumTexColor;
+        return texColor;
     }
 }
 
 void main ()
 {
-    vec3 processedFrag = interpretTextureData();
+    vec3 fragColor = interpretColorData();
+    vec3 illumFrag = calculateLambertianDeflection(fragColor);
 
-    outFragment = vec4(processedFrag, 1.0);
+    outFragment = vec4(illumFrag, 1.0);
 }
