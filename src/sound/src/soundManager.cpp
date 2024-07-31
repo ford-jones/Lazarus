@@ -171,28 +171,28 @@ shared_ptr<SoundManager::Audio> SoundManager::updateSourceLocation(shared_ptr<So
 	};
 
 	this->audioOut = std::move(audioIn);
-	
-	// this->audioData = this->audioStore[audioOut->audioIndex - 1];
 
-	this->audioStore[audioOut->audioIndex - 1].currentSourcePosition = {x, y, z};
+	AudioData targetAudio = this->audioStore[audioOut->audioIndex - 1];
 
-	this->audioStore[audioOut->audioIndex - 1].sourceVelocity = {
-		((this->audioStore[audioOut->audioIndex - 1].currentSourcePosition.x - this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.x) * (1000 / 60)),
-		((this->audioStore[audioOut->audioIndex - 1].currentSourcePosition.y - this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.y) * (1000 / 60)),
-		((this->audioStore[audioOut->audioIndex - 1].currentSourcePosition.z - this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.z) * (1000 / 60))
+	targetAudio.currentSourcePosition = {x, y, z};
+
+	targetAudio.sourceVelocity = {
+		((targetAudio.currentSourcePosition.x - targetAudio.prevSourcePosition.x) * (1000 / 60)),
+		((targetAudio.currentSourcePosition.y - targetAudio.prevSourcePosition.y) * (1000 / 60)),
+		((targetAudio.currentSourcePosition.z - targetAudio.prevSourcePosition.z) * (1000 / 60))
 	};
 
-	this->result = this->audioStore[audioOut->audioIndex - 1].channel->set3DAttributes(&audioStore[audioOut->audioIndex - 1].currentSourcePosition, &audioStore[audioOut->audioIndex - 1].sourceVelocity);
+	this->result = targetAudio.channel->set3DAttributes(&targetAudio.currentSourcePosition, &targetAudio.sourceVelocity);
 	this->checkErrors(this->result);
 
 	this->result = system->update();
-	this->audioStore[audioOut->audioIndex - 1].prevSourcePosition = this->audioStore[audioOut->audioIndex - 1].currentSourcePosition;
+	targetAudio.prevSourcePosition = targetAudio.currentSourcePosition;
 
 	this->checkErrors(this->result);
 
-	audioOut->sourceLocationX = this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.x;
-	audioOut->sourceLocationY = this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.y;
-	audioOut->sourceLocationZ = this->audioStore[audioOut->audioIndex - 1].prevSourcePosition.z;
+	audioOut->sourceLocationX = targetAudio.prevSourcePosition.x;
+	audioOut->sourceLocationY = targetAudio.prevSourcePosition.y;
+	audioOut->sourceLocationZ = targetAudio.prevSourcePosition.z;
 
 	return audioOut;
 };
@@ -244,7 +244,7 @@ SoundManager::~SoundManager()
 {
     std::cout << GREEN_TEXT << "Destroying 'SoundManager' class." << RESET_TEXT << std::endl;
 	
-	for(unsigned int i; i < this->audioStore.size(); i++)
+	for(unsigned int i = 0; i < this->audioStore.size(); i++)
 	{
 		SoundManager::AudioData data = this->audioStore[i];
 
