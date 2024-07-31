@@ -15,18 +15,20 @@ void main()
 {
     vec3 lightDirection = normalize(lightPosition - fragPosition);
     float diff = max(dot(normal, lightDirection), 0.0);
-    vec3 diffuse = fragColor * lightColor * diff;
-
-    vec4 texColor = texture(texImg, texCoord);
 
     if( (fragColor.r >= 0.0) && 
         (fragColor.g >= 0.0) && 
         (fragColor.b >= 0.0) )
     {
+        vec3 diffuse = fragColor * lightColor * diff;
+
         outFragColor = vec4(diffuse, 1.0);
     }
     else
     {
-        outFragColor = texColor;
+        vec4 texColor = texture(texImg, texCoord);
+        vec3 diffuse = vec3(texColor.r, texColor.g, texColor.b) * lightColor * diff;
+        
+        outFragColor = vec4(diffuse, 1.0);
     }
 }
