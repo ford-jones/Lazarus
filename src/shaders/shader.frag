@@ -19,9 +19,9 @@ void main()
 
     vec4 texColor = texture(texImg, texCoord);
 
-    if( (diffuse.r >= 0.0) && 
-        (diffuse.g >= 0.0) && 
-        (diffuse.b >= 0.0) )
+    if( (fragColor.r >= 0.0) && 
+        (fragColor.g >= 0.0) && 
+        (fragColor.b >= 0.0) )
     {
         outFragColor = vec4(diffuse, 1.0);
     }
