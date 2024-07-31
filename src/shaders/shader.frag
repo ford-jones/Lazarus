@@ -11,27 +11,37 @@ uniform sampler2D texImg;
 
 out vec4 outFragment;
 
-vec3 applyLambertianLight ()
+vec3 calculateLambertianDeflection (vec3 colorData) 
 {
     vec3 lightDirection = normalize(lightPosition - fragPosition);
     float diff = max(dot(normalCoordinate, lightDirection), 0.0);
 
+    vec3 illuminatedFrag = (colorData * lightColor * diff);
+    return illuminatedFrag;
+}
+
+vec3 interpretTextureData ()
+{
     if((diffuseColor.r >= 0.0) &&
        (diffuseColor.g >= 0.0) && 
        (diffuseColor.b >= 0.0))
     {
-        return (diffuseColor * lightColor * diff);
+        vec3 ilumSolidColor = calculateLambertianDeflection(diffuseColor);
+        return ilumSolidColor;
     }
     else 
     {
-        vec4 texColor = texture(texImg, textureCoordinate);
-        return (vec3(texColor.r, texColor.g, texColor.b) * lightColor * diff);
+        vec4 tex = texture(texImg, textureCoordinate);
+        vec3 texColor = vec3(tex.r, tex.g, tex.b);
+
+        vec3 ilumTexColor = calculateLambertianDeflection(texColor);
+        return ilumTexColor;
     }
 }
 
-void main()
+void main ()
 {
-    vec3 illuminatedSurface = applyLambertianLight();
+    vec3 processedFrag = interpretTextureData();
 
-    outFragment = vec4(illuminatedSurface, 1.0);
+    outFragment = vec4(processedFrag, 1.0);
 }

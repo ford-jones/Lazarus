@@ -30,8 +30,8 @@ int main()
     bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
     bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
 
-    worldBuilder       = std::make_unique<Mesh>(shaderProgram);
-    world              = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
@@ -93,9 +93,6 @@ int main()
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
-
-        //  TODO:
-        //  Debug (diffuse || sampler) texture differentiation 
         
 		windowBuilder->handleBuffers();
     };
