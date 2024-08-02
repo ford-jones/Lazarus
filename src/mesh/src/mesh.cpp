@@ -166,7 +166,7 @@ void Mesh::checkErrors(const char *invoker)
 void Mesh::releaseMesh()
 {
     glDeleteVertexArrays    (1, &this->VAO);
-    glDeleteBuffers    (1, &this->VBO);
+    glDeleteBuffers         (1, &this->VBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

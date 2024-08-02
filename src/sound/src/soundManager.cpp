@@ -244,7 +244,7 @@ SoundManager::~SoundManager()
 {
     std::cout << GREEN_TEXT << "Destroying 'SoundManager' class." << RESET_TEXT << std::endl;
 	
-	for(unsigned int i; i < this->audioStore.size(); i++)
+	for(unsigned int i = 0; i < this->audioStore.size(); i++)
 	{
 		SoundManager::AudioData data = this->audioStore[i];
 
