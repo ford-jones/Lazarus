@@ -26,12 +26,14 @@
 #endif
 
 #include "../hdr/WindowManager.h"
-
-//	TODO: 
-//	Make monitor and window optional
-//	Rename arguments
-//	Update docs
-
+/* =======================================
+	TODO: 
+	- Make monitor and window optional
+	- Rename arguments
+    - Enable fullscreen 
+    - Handle resizing
+	- Update docs
+========================================== */
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
@@ -94,8 +96,10 @@ int WindowManager::initialise()
         return -1;
     };
 
-    //  Makes macOS happy
-    //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
+    /* ==================================================================================== 
+        Makes macOS happy
+        allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default) 
+    ======================================================================================= */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
@@ -130,7 +134,7 @@ int WindowManager::initialise()
 int WindowManager::handleBuffers()
 {
 	glfwSwapBuffers(this->window);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
     this->checkErrors();
 
@@ -155,8 +159,8 @@ int WindowManager::checkErrors()
 
 int WindowManager::initialiseGLEW()
 {
-    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    glewInit();                                                                                                         //  Initialise GLEW graphics library
+    glewExperimental = GL_TRUE;
+    glewInit();
 
     return GLEW_NO_ERROR;
 };

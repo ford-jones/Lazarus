@@ -51,8 +51,8 @@ int main()
         keyCapture(eventManager.keyString);
 
         /*Sounds*/
-        springWaltz = std::move(soundManager->updateSourceLocation(springWaltz, 0.0f, 0.0f, 3.0f));
-        footstep = std::move(soundManager->updateSourceLocation(footstep, 0.0f, 0.0f, -3.0f));
+        // springWaltz = std::move(soundManager->updateSourceLocation(springWaltz, 0.0f, 0.0f, 3.0f));
+        // footstep = std::move(soundManager->updateSourceLocation(footstep, 0.0f, 0.0f, -3.0f));
 
         /*Light*/
         light = std::move(lightBuilder->initialiseLight(light));
@@ -61,6 +61,8 @@ int main()
         if( camera->projectionLocation >= 0 )
         {
             camera = std::move(cameraBuilder->loadCamera(camera));
+            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
+            camera = std::move(transformer.rotateCameraAsset(camera, turnX, turnY, 0.0));
         }
         else
         {
@@ -71,13 +73,10 @@ int main()
         // if( bricks->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
         // {
         //     bricks = bricksBuilder->initialiseMesh(bricks);
-        //     bricks = transformer.translateMeshAsset(bricks, (moveX / 50), 0.0, (moveZ / 50));
-        //     bricks = transformer.rotateMeshAsset(bricks, turnX, turnY, 0.0);
 
         //     bricksBuilder->loadMesh(bricks);
         //     bricksBuilder->drawMesh(bricks);
             
-        //     soundManager->updateListenerLocation(bricks->locationX, bricks->locationY, bricks->locationZ);
         // }
         // else
         // {
@@ -94,6 +93,10 @@ int main()
 
             tilesBuilder->loadMesh(tiles);
             tilesBuilder->drawMesh(tiles);
+            // tiles = transformer.translateMeshAsset(tiles, (moveX / 50), 0.0, (moveZ / 50));
+            // tiles = transformer.rotateMeshAsset(tiles, turnX, turnY, 0.0);
+
+            soundManager->updateListenerLocation(tiles->locationX, tiles->locationY, tiles->locationZ);
         }
         else
         {

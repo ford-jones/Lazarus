@@ -20,6 +20,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <cmath>
 
 #include "../../utils/hdr/fileReader.h"
 
@@ -38,10 +39,15 @@ class TextureLoader
 		
 		FileReader::Image image;
 	private:
+		int calculateMipLevels(int width, int height);
+
 		shared_ptr<FileReader> loader;
 
 		GLuint texture;
 
+		int loopCount;
+		int x;
+		int y;
 };
 
 #endif
