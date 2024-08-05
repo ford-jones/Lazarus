@@ -35,7 +35,7 @@ MaterialLoader::MaterialLoader()
     texCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, string texturePath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, string texturePath)
 {
     diffuseCount = 0;
     texCount = 0;
@@ -90,6 +90,18 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
                     int faceCount = i[1];
                     for(int j = 0; j < faceCount * 3; j++)
                     {
+                        /* ===========================================
+                            Negative values passed here are an indicator
+                            to the fragment shader that it should instead 
+                            interpret the desired frag color of this face
+                            from the current layer of the sampler array 
+                            (an image) instead of a diffuse texture.
+
+                            i.e: 
+                                positiveDiffuseValues
+                                ? fragColor(positiveDiffuseValues.xyz) 
+                                : fragColor(images[layer].xyz)
+                        ============================================== */
                         out.push_back(vec3(-0.1f, -0.1f, -0.1f));
                     }
                 }
@@ -101,7 +113,11 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
         
-		textureLoader->loadTexture(texturePath);
+		textureLoader->loadTexture(texturePath, textureId);
+    } 
+    else
+    {
+        textureId = 0;
     }
 
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file

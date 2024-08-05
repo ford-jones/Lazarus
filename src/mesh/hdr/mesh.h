@@ -48,6 +48,8 @@ class Mesh
         struct TriangulatedMesh
         {
             int id;
+            int textureId;
+
             int numOfVertices;
             int numOfFaces;
             //	TODO:
@@ -69,6 +71,7 @@ class Mesh
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
             GLint samplerUniformLocation;
+            GLint textureLayerUniformLocation;
         };
 		
 		Mesh(GLuint shader);
@@ -88,10 +91,8 @@ class Mesh
         int errorCode;
 
         vector<vec3> vertexAttributes;
-        vector<vec3> vertices;                                                              //  Buffer to store vertex data
-        vector<vec2> uvs;                                                                   //  Buffer to uv data
-        vector<vec3> normals;                                                               //  Buffer to store normals data
-        vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
+        vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
+        GLuint textureId;
 		
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object

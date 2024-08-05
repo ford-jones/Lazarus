@@ -27,11 +27,11 @@ int main()
 
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    // bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
-    // bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/brick-texture-png-8.png"));
+    bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
+    bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/blue.png"));
 
     tilesBuilder       = std::make_unique<Mesh>(shaderProgram);
-    tiles              = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/tiles.png"));
+    tiles              = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
 
     worldBuilder        = std::make_unique<Mesh>(shaderProgram);
     world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
@@ -61,8 +61,8 @@ int main()
         if( camera->projectionLocation >= 0 )
         {
             camera = std::move(cameraBuilder->loadCamera(camera));
-            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
-            camera = std::move(transformer.rotateCameraAsset(camera, turnX, turnY, 0.0));
+            // camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
+            // camera = std::move(transformer.rotateCameraAsset(camera, turnX, turnY, 0.0));
         }
         else
         {
@@ -70,18 +70,22 @@ int main()
         };
 
         /*bricks*/
-        // if( bricks->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        // {
-        //     bricks = bricksBuilder->initialiseMesh(bricks);
+        if( bricks->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        {
+            bricks = bricksBuilder->initialiseMesh(bricks);
 
-        //     bricksBuilder->loadMesh(bricks);
-        //     bricksBuilder->drawMesh(bricks);
+            bricksBuilder->loadMesh(bricks);
+            bricksBuilder->drawMesh(bricks);
             
-        // }
-        // else
-        // {
-        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        // };
+            bricks = transformer.translateMeshAsset(bricks, (moveX / 50), 0.0, (moveZ / 50));
+            bricks = transformer.rotateMeshAsset(bricks, turnX, turnY, 0.0);
+
+            soundManager->updateListenerLocation(bricks->locationX, bricks->locationY, bricks->locationZ);
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
 
         // //  TODO:
         // //  Resolve texture instantiation failure 
@@ -93,10 +97,7 @@ int main()
 
             tilesBuilder->loadMesh(tiles);
             tilesBuilder->drawMesh(tiles);
-            // tiles = transformer.translateMeshAsset(tiles, (moveX / 50), 0.0, (moveZ / 50));
-            // tiles = transformer.rotateMeshAsset(tiles, turnX, turnY, 0.0);
 
-            soundManager->updateListenerLocation(tiles->locationX, tiles->locationY, tiles->locationZ);
         }
         else
         {

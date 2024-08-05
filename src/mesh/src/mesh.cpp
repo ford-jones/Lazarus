@@ -36,10 +36,10 @@ Mesh::Mesh(GLuint shader)
 	this->loader = nullptr;
 	this->triangulatedMesh = nullptr;
 
-    this->vertices = {};
-    this->uvs = {};
-    this->normals = {};
-    this->diffuse = {};
+    this->vertexAttributes = {};
+    this->diffuseColors = {};
+    
+    this->textureId = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 };
@@ -67,10 +67,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     
     loader->loadMesh(
         vertexAttributes,
-        vertices, 
-        uvs, 
-        normals,
-        diffuse,
+        diffuseColors,
+        textureId,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
@@ -80,17 +78,15 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     triangulatedMesh->locationY = 0;
     triangulatedMesh->locationZ = 0;
 
-    triangulatedMesh->numOfVertices = vertices.size();
-    triangulatedMesh->numOfFaces = (vertices.size()) / 3;
-
     triangulatedMesh->attributes = vertexAttributes;
-    triangulatedMesh->vertices = vertices;
-    triangulatedMesh->uvCoords = uvs;
-    triangulatedMesh->normals = normals;
-    triangulatedMesh->diffuse = diffuse;
+    triangulatedMesh->textureId = this->textureId;
     triangulatedMesh->modelviewMatrix = mat4(1.0f);                                                                                          //  Define the model-view matrix to default 4x4
     triangulatedMesh->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
-    triangulatedMesh->samplerUniformLocation = glGetUniformLocation(shaderProgram, "texImg");
+    triangulatedMesh->samplerUniformLocation = glGetUniformLocation(shaderProgram, "textures");
+    triangulatedMesh->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "texLayer");
+
+    triangulatedMesh->numOfVertices = vertexAttributes.size() / 4;
+    triangulatedMesh->numOfFaces = (triangulatedMesh->numOfVertices) / 3;
 
     return triangulatedMesh;
 };
@@ -145,6 +141,12 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
     glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
+    
+    if(triangulatedMesh->textureId != 0)
+    {
+        std::cout << "Texture Layer: " << textureId << " - Loaded." << std::endl;
+        glUniform1i(triangulatedMesh->textureLayerUniformLocation, triangulatedMesh->textureId);
+    }
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

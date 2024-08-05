@@ -34,7 +34,7 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void loadTexture(string texturePath);
+		void loadTexture(string texturePath, GLuint &textureId);
 		virtual ~TextureLoader();
 		
 		FileReader::Image image;
@@ -46,8 +46,7 @@ class TextureLoader
 		GLuint texture;
 
 		int loopCount;
-		int x;
-		int y;
+		int x, y;
 };
 
 #endif

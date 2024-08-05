@@ -36,7 +36,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertices, vector<vec2> &out_uvs, vector<vec3> &out_normals, vector<vec3> &out_diffuse, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -148,11 +148,11 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
 
         if(texturePath != LAZARUS_MESH_NOTEX)
         {
-	        matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial, texturePath);
+	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, texturePath);
         } 
         else
         {
-            matLoader->loadMaterial(out_diffuse, materialBuffer, foundMaterial);
+            matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId);
         }
     }
 
@@ -164,32 +164,14 @@ bool MeshLoader::loadMesh(vector<vec3> &out_attributes, vector<vec3> &out_vertic
         unsigned int uvIndex        =   uvIndices[i];
         
         vec3 vertex                 =   temp_vertices[vertexIndex - 1];                     //  Each vertex found at corresponding matched index
-        vec3 diffuse                =   out_diffuse[i];
+        vec3 diffuse                =   outDiffuse[i];
         vec3 normal                 =   temp_normals[normalIndex - 1];
         vec3 uv                     =   vec3(temp_uvs[uvIndex - 1].x, temp_uvs[uvIndex - 1].y, 0.0f);
 
-        out_vertices.push_back(vertex);                                                     //  Push the found vertex into the output vector
-
-        out_attributes.push_back(vertex);
-        out_attributes.push_back(diffuse);
-        out_attributes.push_back(normal);
-        out_attributes.push_back(uv);
-    }
-
-    for( unsigned int i = 0; i < this->uvIndices.size(); i++ )                                    //  Loop through the UV match index position array
-    {
-        unsigned int uvIndex        =   uvIndices[i];                                       //  The index position of each item in the array of matched indexes
-        vec2 uv                     =   temp_uvs[uvIndex - 1];                              //  Each UV found at the corresponding matched index
-
-        out_uvs.push_back(uv);                                                              //  Push the found UV into the output vector
-    }
-
-    for( unsigned int i = 0; i < this->normalIndices.size(); i++ )                                //  Loop through the Normal match index position array
-    {
-        unsigned int normalIndex    =   normalIndices[i];                                   //  The index position of each item in the array of matched indexes
-        vec3 normal                 =   temp_normals[normalIndex - 1];                      //  Each Normal found at the corresponding matched index
-
-        out_normals.push_back(normal);                                                      //  Push the found Normal into the output vector
+        outAttributes.push_back(vertex);
+        outAttributes.push_back(diffuse);
+        outAttributes.push_back(normal);
+        outAttributes.push_back(uv);
     }
 
     return true;

@@ -41,36 +41,64 @@ TextureLoader::TextureLoader()
 	this->loopCount = 0;
 };
 
-void TextureLoader::loadTexture(string texturePath)
-{
-	std::cout << "Filepath: " << texturePath << std::endl;
-	
+void TextureLoader::loadTexture(string texturePath, GLuint &textureId)
+{	
 	this->loader = std::make_shared<FileReader>();
-
 	this->image = loader->readFromImage(texturePath);
-
 	
-	glEnable(GL_TEXTURE_2D);
-	glGenTextures(1, &this->texture);
+	glEnable(GL_TEXTURE_2D_ARRAY);
+	glGenTextures(1, &textureId);
 
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, this->texture);
-	
+	glActiveTexture(GL_TEXTURE0 + (textureId - 1));
+	glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
 	if(image.pixelData != NULL)
 	{	
-		this->calculateMipLevels(image.width, image.height);
+		int mipCount = this->calculateMipLevels(image.width, image.height);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.pixelData);
+		//	TODO:
+		//	Image sanitisation 
+		//  establish constant values to be passed for the following alloc
+		//	i.e. mipcount, w, h, numOfTex
 
-		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexStorage3D(
+			GL_TEXTURE_2D_ARRAY, 
+			mipCount, 
+			GL_RGB8, 
+			image.width, image.height, 
+			textureId // the number of layers to store
+		);
+		// glTexImage3D(
+		// 	GL_TEXTURE_2D_ARRAY, 
+		// 	mipCount, 
+		// 	GL_RGB8, 
+		// 	image.width, image.height, 
+		// 	textureId, 
+		// 	0, 
+		// 	GL_RGBA, 
+		// 	GL_UNSIGNED_BYTE, 
+		// 	((const void *)(image.pixelData))
+		// );
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexSubImage3D(
+			GL_TEXTURE_2D_ARRAY, 
+			0, // mipmap level (leave as 0 if openGL is generating the mipmaps)
+			0, 0, // xy offset into the layer
+			(textureId - 1), // layer depth, in a loop this is i (texId is a unique serial)
+			image.width, image.height,
+			1, // number of layers being passed each time this is called
+			GL_RGBA, 
+			GL_UNSIGNED_BYTE, 
+			((const void *)(image.pixelData)) // texels
+		);
+
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glBindTexture(GL_TEXTURE_2D, this->texture);
 	}
 	else
 	{
