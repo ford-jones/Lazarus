@@ -26,6 +26,7 @@
 
 #include "../../utils/hdr/fileReader.h"
 #include "../hdr/meshLoader.h"
+#include "../../textures/hdr/textureLoader.h"
 
 #define GREEN_TEXT "\x1b[32m"
 #define RESET_TEXT "\x1b[37m"
@@ -64,12 +65,13 @@ class Mesh
             float locationZ;
 
             vector<vec3> attributes;
-            vector<vec3> vertices;                                                              //  Buffer to store vertex data
-            vector<vec2> uvCoords;																//  Buffer to store UV data
-            vector<vec3> normals;                                                               //  Buffer to store normals data
             vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
-            GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
+
+            FileReader::Image textureData;
+
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
+
+            GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
         };
@@ -94,12 +96,15 @@ class Mesh
         vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
         GLuint textureId;
 		
+        FileReader::Image texStore;
+
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO;
 
         unique_ptr<FileReader> finder;
-        unique_ptr<MeshLoader> loader;
+        unique_ptr<MeshLoader> meshLoader;
+        unique_ptr<TextureLoader> texLoader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;
 

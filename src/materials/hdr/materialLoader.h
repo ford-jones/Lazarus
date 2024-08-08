@@ -23,6 +23,7 @@
 #include <fstream>
 #include <sstream>
 
+#include "../../utils/hdr/fileReader.h"
 #include "../../textures/hdr/textureLoader.h"
 
 using std::unique_ptr;
@@ -40,7 +41,7 @@ class MaterialLoader
 {
     public:        
         MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, string texturePath = "");
+        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath = "");
         virtual ~MaterialLoader();
 
     private:

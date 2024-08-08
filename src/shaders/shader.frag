@@ -8,8 +8,9 @@ in vec2 textureCoordinate;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
-uniform int texLayer;
-uniform sampler2DArray textures;
+uniform float texLayer;
+
+layout ( binding = 1 ) uniform sampler2DArray textures;
 
 out vec4 outFragment;
 
@@ -32,7 +33,7 @@ vec3 interpretColorData ()
     }
     else 
     {
-        vec4 tex = texture(textures, vec3(textureCoordinate.xy, (texLayer)));
+        vec4 tex = texture(textures, vec3(textureCoordinate.xy, texLayer));
         vec3 texColor = vec3(tex.r, tex.g, tex.b);
 
         return texColor;

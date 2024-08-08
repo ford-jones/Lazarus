@@ -34,17 +34,20 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void loadTexture(string texturePath, GLuint &textureId);
+		void provisionTextureStorage(string texturePath, GLuint &textureId, FileReader::Image &imageData);
+		void loadTexture(FileReader::Image imageData, GLuint textureId);
 		virtual ~TextureLoader();
 		
 		FileReader::Image image;
 	private:
 		int calculateMipLevels(int width, int height);
+		void checkErrors(const char *invoker);
 
 		shared_ptr<FileReader> loader;
 
 		GLuint texture;
-
+		GLenum errorCode;
+		
 		int loopCount;
 		int x, y;
 };

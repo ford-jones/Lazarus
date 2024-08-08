@@ -61,7 +61,7 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	
 	if(testDepth == true)
 	{
-	    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
+	    glEnable            (GL_DEPTH_TEST);      
 	};
 
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
@@ -103,14 +103,7 @@ int WindowManager::initialise()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-    if(LAZARUS_RUNNING_ON_DARWIN == true)
-    {
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    }
-    else 
-    {
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-    }
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     this->checkErrors();
 

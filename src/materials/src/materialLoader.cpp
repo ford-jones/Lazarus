@@ -35,7 +35,7 @@ MaterialLoader::MaterialLoader()
     texCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, string texturePath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath)
 {
     diffuseCount = 0;
     texCount = 0;
@@ -113,11 +113,15 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
         
-		textureLoader->loadTexture(texturePath, textureId);
+		textureLoader->provisionTextureStorage(texturePath, textureId, imageData);
     } 
     else
     {
         textureId = 0;
+
+        imageData.width = 0;
+        imageData.height = 0;
+        imageData.pixelData = NULL;
     }
 
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file

@@ -36,7 +36,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
@@ -148,11 +148,11 @@ bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse,
 
         if(texturePath != LAZARUS_MESH_NOTEX)
         {
-	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, texturePath);
+	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData, texturePath);
         } 
         else
         {
-            matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId);
+            matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData);
         }
     }
 
