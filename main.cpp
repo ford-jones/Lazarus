@@ -28,13 +28,13 @@ int main()
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
     bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
-    bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/blue.png"));
+    bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/skull.obj", "assets/material/skull.mtl", "assets/images/skull.png"));
 
-    tilesBuilder        = std::make_unique<Mesh>(shaderProgram);
-    tiles               = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
+    // tilesBuilder        = std::make_unique<Mesh>(shaderProgram);
+    // tiles               = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
 
-    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
-    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    // worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    // world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
@@ -48,7 +48,7 @@ int main()
     {
         fpsCounter.calculateFramesPerSec();
         std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
-        
+
         /*Events*/
         eventManager.monitorEvents();
         keyCapture(eventManager.keyString);
@@ -84,32 +84,32 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*tiles*/
-        if( tiles->modelviewUniformLocation >= 0)
-        {
-            tiles = std::move(tilesBuilder->initialiseMesh(tiles));
+        // /*tiles*/
+        // if( tiles->modelviewUniformLocation >= 0)
+        // {
+        //     tiles = std::move(tilesBuilder->initialiseMesh(tiles));
 
-            tiles = std::move(tilesBuilder->loadMesh(tiles));
-            tiles = std::move(tilesBuilder->drawMesh(tiles));
+        //     tiles = std::move(tilesBuilder->loadMesh(tiles));
+        //     tiles = std::move(tilesBuilder->drawMesh(tiles));
 
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
 
-        /*world*/
-        if( world->modelviewUniformLocation >= 0)
-        {
-            world = std::move(worldBuilder->initialiseMesh(world));
+        // /*world*/
+        // if( world->modelviewUniformLocation >= 0)
+        // {
+        //     world = std::move(worldBuilder->initialiseMesh(world));
 
-            world = std::move(worldBuilder->loadMesh(world));
-            world = std::move(worldBuilder->drawMesh(world));
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+        //     world = std::move(worldBuilder->loadMesh(world));
+        //     world = std::move(worldBuilder->drawMesh(world));
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
         
 		windowBuilder->handleBuffers();
     };
