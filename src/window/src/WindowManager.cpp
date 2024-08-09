@@ -96,10 +96,6 @@ int WindowManager::initialise()
         return -1;
     };
 
-    /* ==================================================================================== 
-        Makes macOS happy
-        allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default) 
-    ======================================================================================= */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 

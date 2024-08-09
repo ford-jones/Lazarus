@@ -38,13 +38,14 @@ class TextureLoader
 		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
 		virtual ~TextureLoader();
 		
-		FileReader::Image image;
 	private:
 		int calculateMipLevels(int width, int height);
 		void checkErrors(const char *invoker);
 
 		shared_ptr<FileReader> loader;
 
+		FileReader::Image image;
+		
 		GLuint texture;
 		GLenum errorCode;
 		

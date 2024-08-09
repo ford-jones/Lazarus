@@ -43,8 +43,13 @@ void EventManager::monitorEvents()
 
 void EventManager::updateKeyboardState()
 {
-	//	TODO: 
-	//	Create cases and unique strings for remaining weird keys; capslock, pgup/down, screenshot etc 
+	/* ==============================
+		TODO: 
+		Create cases and unique strings for remaining weird keys:
+		- capslock 
+		- pgup/down 
+		- screenshot 
+	================================= */
 	
 	this->keyString = "";
 	this->keyCode = 0;
@@ -90,10 +95,11 @@ void EventManager::updateKeyboardState()
 			case GLFW_KEY_RIGHT_CONTROL :
 				this->keyString = "ctrl-r";
 				break;
-			
-			//	TODO: 
-			//	alt and super keys seem buggy?
-			//	investigate
+			/* ==================================
+				TODO: 
+				alt and super keys seem buggy?
+				investigate.
+			===================================== */
 			
 			case GLFW_KEY_LEFT_ALT :
 				this->keyString = "alt-l";
@@ -124,10 +130,13 @@ void EventManager::updateMouseState()
 	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
 	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);		
 	
-	//	TODO: 
-	//	This is utter nonsense, scroll right now can only be either 1 (up) || -1 (down)
-	//	It will do for now, but should probably be changed to some sort of incrementing / decrementing number
-	//	At the very least, it should be reset to 0 when the scrollwheel is not in motion
+
+	/* =========================================================
+		TODO: 
+		Right now scroll can only be either 1 (up) || -1 (down)
+		It will do for now, but should probably be changed to some sort of incrementing / decrementing number
+		At the very least, it should be reset to 0 when the scrollwheel is not in motion
+	============================================================ */
 	this->scrollCode = static_cast<int>(LAZARUS_LISTENER_SCROLLCODE);
 };
 
