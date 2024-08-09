@@ -107,8 +107,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
 	triangulatedMesh = std::move(meshData);
 	
-    glGenVertexArrays(1, &this->VAO);                                                                                                  //  Generate a vertex array object to store the buffers
-	glBindVertexArray(this->VAO);                                                                                                      //  Bind the VAO to this openGL context
+    glGenVertexArrays(1, &this->VAO);
+	glBindVertexArray(this->VAO);
 
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
@@ -129,6 +129,17 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
+    /* ===========================================================
+        This is somewhat ridiculous.
+        This allocs a new TextureLoader to memory and destroys it every single frame.
+
+        Ideally this entire texturing process could be done during mesh creation
+        which does seem to work when using a single mesh. 
+        
+        Alternatively, removing the current TextureLoader implmentation from inside 
+        the MeshLoader would mean that this no longer has to be a heap allocation due to the
+        fact the only reference would exist here.
+    ============================================================== */
     if(triangulatedMesh->textureFilepath != LAZARUS_MESH_NOTEX)
     {
 	    this->texLoader = std::make_unique<TextureLoader>();
@@ -139,12 +150,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
     return triangulatedMesh;
 };
 
-//	TODO:
-//	Ownership is never release from the following two functions
-//	Either don't take ownership at all or return the pointer to the function's invocator
-//	Update docs
-
-void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 {
 	if(triangulatedMesh != nullptr)
 	{
@@ -154,19 +160,19 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
 	triangulatedMesh = std::move(meshData);
 
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
-    glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
     
     if(triangulatedMesh->textureId != 0)
     {
-        std::cout << "Texture Layer: " << textureId << " - Loaded." << std::endl;
-
+        glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
         glUniform1f(triangulatedMesh->textureLayerUniformLocation, (triangulatedMesh->textureId - 1));
     }
 
     this->checkErrors(__PRETTY_FUNCTION__);
+
+    return triangulatedMesh;
 };
 
-void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 {
 	if(triangulatedMesh != nullptr)
 	{
@@ -176,9 +182,12 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
 	triangulatedMesh = std::move(meshData);
 	
     glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
+
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();
+
+    return triangulatedMesh;
 };
 
 void Mesh::checkErrors(const char *invoker)

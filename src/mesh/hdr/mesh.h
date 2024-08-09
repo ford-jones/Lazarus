@@ -82,8 +82,8 @@ class Mesh
         shared_ptr<TriangulatedMesh> createTriangulatedMesh(string meshPath, string materialPath, string texturePath = "");
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
-        void loadMesh(shared_ptr<TriangulatedMesh> meshData);
-        void drawMesh(shared_ptr<TriangulatedMesh> meshData);
+        shared_ptr<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData);
+        shared_ptr<TriangulatedMesh> drawMesh(shared_ptr<TriangulatedMesh> meshData);
         virtual ~Mesh();
 
     private:

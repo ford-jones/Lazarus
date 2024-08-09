@@ -34,8 +34,8 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void provisionTextureStorage(string texturePath, GLuint &textureId, FileReader::Image &imageData);
-		void loadTexture(FileReader::Image imageData, GLuint textureId);
+		void storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData);
+		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
 		virtual ~TextureLoader();
 		
 		FileReader::Image image;
@@ -48,6 +48,7 @@ class TextureLoader
 		GLuint texture;
 		GLenum errorCode;
 		
+		int mipCount;
 		int loopCount;
 		int x, y;
 };

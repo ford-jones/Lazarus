@@ -43,10 +43,10 @@ class MeshLoader
     public:
         ifstream file;
 
-        vector<unsigned int> vertexIndices, uvIndices, normalIndices;                                           //  Vector containing matched index positions
-        vector<vec3> temp_vertices;                                                                             //  Temporary buffer for storing each set of 3 corresponding vertex indexes
-        vector<vec2> temp_uvs;                                                                                  //  Temporary buffer for storing each set of 3 corresponding uv indexes
-        vector<vec3> temp_normals;                                                                              //  Temporary buffer for storing each set of 3 corresponding normal indexes
+        vector<unsigned int> vertexIndices, uvIndices, normalIndices;
+        vector<vec3> temp_vertices;
+        vector<vec2> temp_uvs;
+        vector<vec3> temp_normals;
         vector<vec3> temp_diffuse;
 
         string foundMaterial;
@@ -76,9 +76,9 @@ class MeshLoader
         char currentLine[256];
         vector<string> attributeIndexes;
         
-        vec3 vertex;                                                                                            //  Vertex (singular mesh point) x,y,z vector
-        vec2 uv;                                                                                                //  Vertex texture (UV) x,y vector
-        vec3 normal;                                                                                            //  Vertex normals (direction) x,y,z vector
+        vec3 vertex;
+        vec2 uv;
+        vec3 normal;
 
 		unique_ptr<FileReader> matFinder;
 		unique_ptr<MaterialLoader> matLoader;

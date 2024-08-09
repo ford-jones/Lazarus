@@ -39,89 +39,82 @@ TextureLoader::TextureLoader()
 	this->x = 0;
 	this->y = 0;
 	this->loopCount = 0;
+	this->mipCount = 0;
 	this->errorCode = 0;
 };
 
-void TextureLoader::provisionTextureStorage(string texturePath, GLuint &textureId, FileReader::Image &imageData)
+void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData)
 {	
 	this->loader = std::make_shared<FileReader>();
 	this->image = loader->readFromImage(texturePath);
-
-	//	This is all running prior to VBO data being bound
-	//	Could be the problem...
 	
-	// glEnable(GL_TEXTURE_2D_ARRAY);
-	glGenTextures(1, &textureId);
-	
-	// glActiveTexture(GL_TEXTURE0 + (textureId - 1));
-	glBindTexture(GL_TEXTURE_2D_ARRAY, textureId);
-	
-	if(image.pixelData != NULL)
+	if(this->image.pixelData != NULL)
 	{	
+		/* =========================================================================
+			Note that the value given to textureLayer by glGenTextures serves a 
+			number of different purposes here, namely:
+			
+			1. To specify the total expected texture-array length when the storage 
+			   size is allocated / re-alloc'd
+			2. As an identifier during texel loading for which layer / position in the 
+			   array the loaded texels refer to.
+			3. As a Mesh::TriangulatedMesh property which is converted to floating 
+			   point and passed to the fragment shader as a uniform value; used to 
+			   traverse the z-axis of the array (subnote: the array is a cube).
+
+			i.e. size, index position & uniform value
+		============================================================================ */
+		glGenTextures(1, &textureLayer);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
+
+		this->mipCount = this->calculateMipLevels(image.width, image.height);
+
+		glTexStorage3D(
+			GL_TEXTURE_2D_ARRAY, 								//	target
+			this->mipCount, 									//	the expected number of levels (mips) found in each layer
+			GL_RGB8, 											//	gl internal size to store texel data
+			this->image.width, this->image.height, 				// 	expected (max) image width and height
+			textureLayer 										// 	the number of layers to store (max array size)
+		);
+
 		imageData.width = this->image.width;
 		imageData.height = this->image.height;
 		imageData.pixelData = this->image.pixelData;
-		
-		int mipCount = this->calculateMipLevels(image.width, image.height);
-
-	// glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGB8, this->image.width, this->image.height, textureId - 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, ((void*)(this->image.pixelData)));
-		glTexStorage3D(
-			GL_TEXTURE_2D_ARRAY, 
-			mipCount, 
-			GL_RGB8, 
-			image.width, image.height, 
-			textureId // the number of layers to store
-		);
-
-	// 	glTexSubImage3D(
-	// 	GL_TEXTURE_2D_ARRAY, 
-	// 	0, // mipmap level (leave as 0 if openGL is generating the mipmaps)
-	// 	0, 0, // xy offset into the layer
-	// 	(textureId - 1), // layer depth, in a loop this is i (texId is a unique serial)
-	// 	this->image.width, this->image.height,
-	// 	1, // number of layers being passed each time this is called
-	// 	GL_RGBA, 
-	// 	GL_UNSIGNED_BYTE, 
-	// 	((const void *)(this->image.pixelData)) // texels
-	// );
-	// glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-
-	// glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	// glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	// glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
-
 	}
 	else
 	{
 		std::cerr << LAZARUS_FILE_NOT_FOUND << std::endl;
+		textureLayer = 0;
 
 		imageData.width = 0;
         imageData.height = 0;
         imageData.pixelData = NULL;
 	};
-		this->checkErrors(__PRETTY_FUNCTION__);
+
+	this->texture = textureLayer;
+
+	this->checkErrors(__PRETTY_FUNCTION__);
 };
 
-void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureId)
+void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
 {
-	this->image.width = imageData.width;
-	this->image.height = imageData.height;
-	this->image.pixelData = imageData.pixelData;
 
-	if(this->image.pixelData != NULL)
+	if(imageData.pixelData != NULL)
 	{
+		this->image.width = imageData.width;
+		this->image.height = imageData.height;
+		this->image.pixelData = imageData.pixelData;
+
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY, 
-			0, // mipmap level (leave as 0 if openGL is generating the mipmaps)
-			0, 0, // xy offset into the layer
-			(textureId - 1), // layer depth, in a loop this is i (texId is a unique serial)
-			this->image.width, this->image.height,
-			1, // number of layers being passed each time this is called
-			GL_RGBA, 
-			GL_UNSIGNED_BYTE, 
-			((const void *)(this->image.pixelData)) // texels
+			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
+			0, 0, 													// 	xy offset into the layer
+			(textureLayer - 1), 									// 	layer depth to set this texture, zero-indexed
+			this->image.width, this->image.height,					//	actual texture width / height
+			1, 														// 	number of layers being passed each time this is called
+			GL_RGBA, 												//	texel data format
+			GL_UNSIGNED_BYTE, 										//	texel data type
+			((const void *)(this->image.pixelData)) 				// 	texel data
 		);
 	
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
@@ -131,7 +124,6 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureId)
 	
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
-
 	}
 
 	this->checkErrors(__PRETTY_FUNCTION__);
@@ -140,14 +132,13 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureId)
 
 void TextureLoader::checkErrors(const char *invoker)
 {
-    this->errorCode = glGetError();                                                                                       //  Check for errors
+    this->errorCode = glGetError();
     
-    if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
+    if(this->errorCode != 0)
     {
-        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
-        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
+        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
+        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
     };
-
 };
 
 
@@ -189,6 +180,8 @@ TextureLoader::~TextureLoader()
 {
 	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
 	
-	glDisable(GL_TEXTURE_2D);
-	glDeleteTextures(1, &this->texture);
+	if(this->texture != 0)
+	{
+		glDeleteTextures(1, &this->texture);
+	}
 };

@@ -18,7 +18,7 @@ int main()
 
     shaderProgram = shader.initialiseShader();
 	
-    windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
+    windowBuilder->loadConfig(shaderProgram);
 
     lightBuilder        = std::make_unique<Light>(shaderProgram);
     light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
@@ -30,8 +30,8 @@ int main()
     bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
     bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/untitled.obj", "assets/material/untitled.mtl", "assets/images/blue.png"));
 
-    tilesBuilder       = std::make_unique<Mesh>(shaderProgram);
-    tiles              = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
+    tilesBuilder        = std::make_unique<Mesh>(shaderProgram);
+    tiles               = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
 
     worldBuilder        = std::make_unique<Mesh>(shaderProgram);
     world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
@@ -46,13 +46,12 @@ int main()
 
     while(!glfwWindowShouldClose(win))
     {
+        fpsCounter.calculateFramesPerSec();
+        std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
+        
         /*Events*/
         eventManager.monitorEvents();
         keyCapture(eventManager.keyString);
-
-        /*Sounds*/
-        // springWaltz = std::move(soundManager->updateSourceLocation(springWaltz, 0.0f, 0.0f, 3.0f));
-        // footstep = std::move(soundManager->updateSourceLocation(footstep, 0.0f, 0.0f, -3.0f));
 
         /*Light*/
         light = std::move(lightBuilder->initialiseLight(light));
@@ -61,8 +60,6 @@ int main()
         if( camera->projectionLocation >= 0 )
         {
             camera = std::move(cameraBuilder->loadCamera(camera));
-            // camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
-            // camera = std::move(transformer.rotateCameraAsset(camera, turnX, turnY, 0.0));
         }
         else
         {
@@ -70,12 +67,12 @@ int main()
         };
 
         /*bricks*/
-        if( bricks->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( bricks->modelviewUniformLocation >= 0)
         {
-            bricks = bricksBuilder->initialiseMesh(bricks);
+            bricks = std::move(bricksBuilder->initialiseMesh(bricks));
 
-            bricksBuilder->loadMesh(bricks);
-            bricksBuilder->drawMesh(bricks);
+            bricks = std::move(bricksBuilder->loadMesh(bricks));
+            bricks = std::move(bricksBuilder->drawMesh(bricks));
             
             bricks = transformer.translateMeshAsset(bricks, (moveX / 50), 0.0, (moveZ / 50));
             bricks = transformer.rotateMeshAsset(bricks, turnX, turnY, 0.0);
@@ -87,16 +84,13 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        // //  TODO:
-        // //  Resolve texture instantiation failure 
-
         /*tiles*/
-        if( tiles->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( tiles->modelviewUniformLocation >= 0)
         {
-            tiles = tilesBuilder->initialiseMesh(tiles);
+            tiles = std::move(tilesBuilder->initialiseMesh(tiles));
 
-            tilesBuilder->loadMesh(tiles);
-            tilesBuilder->drawMesh(tiles);
+            tiles = std::move(tilesBuilder->loadMesh(tiles));
+            tiles = std::move(tilesBuilder->drawMesh(tiles));
 
         }
         else
@@ -105,12 +99,12 @@ int main()
         };
 
         /*world*/
-        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        if( world->modelviewUniformLocation >= 0)
         {
-            world = worldBuilder->initialiseMesh(world);
+            world = std::move(worldBuilder->initialiseMesh(world));
 
-            worldBuilder->loadMesh(world);
-            worldBuilder->drawMesh(world);
+            world = std::move(worldBuilder->loadMesh(world));
+            world = std::move(worldBuilder->drawMesh(world));
         }
         else
         {

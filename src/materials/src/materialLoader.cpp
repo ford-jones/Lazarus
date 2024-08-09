@@ -113,7 +113,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
         
-		textureLoader->provisionTextureStorage(texturePath, textureId, imageData);
+		textureLoader->storeTexture(texturePath, textureId, imageData);
     } 
     else
     {
