@@ -30,14 +30,18 @@ MaterialLoader::MaterialLoader()
 {
 	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
 	
-	diffuseTexCount = 0;
+	textureLoader = nullptr;
+	diffuseCount = 0;
+    texCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath)
 {
-    diffuseTexCount = 0;
+    diffuseCount = 0;
+    texCount = 0;
 
     file.open(materialPath.c_str());
+    char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
     
     if( !file.is_open() )
     {                                                                                                               //  If, the file has a null value                                 
@@ -48,13 +52,13 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     {        
         if( (currentLine[0] == 'K') && (currentLine[1] == 'd') )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
         {
-            diffuseTexCount += 1;
+            diffuseCount += 1;
             for(auto i: data)
             {
             	int index = i[0];
             	int faceCount = i[1];
             	
-	            if(diffuseTexCount == index) {
+	            if(diffuseCount == index) {
                     string currentString = currentLine;
                     stringstream ss(currentString);
                     string token;
@@ -76,13 +80,50 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     	        };        
             };
         }
-        
-   };
+        if( ((currentLine[0] == 'm') && (currentLine[1] == 'a') && (currentLine[2] == 'p')))
+        {
+            texCount += 1;
+            if( diffuseCount == 0 )
+            {
+                for(auto i: data)
+                {
+                    int faceCount = i[1];
+                    for(int j = 0; j < faceCount * 3; j++)
+                    {
+                        /* ===========================================
+                            Negative values passed here are an indicator
+                            to the fragment shader that it should instead 
+                            interpret the desired frag color of this face
+                            from the current layer of the sampler array 
+                            (an image) instead of a diffuse texture.
 
-    if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
+                            i.e: 
+                                positiveDiffuseValues
+                                ? fragColor(positiveDiffuseValues.xyz) 
+                                : fragColor(images[layer].xyz)
+                        ============================================== */
+                        out.push_back(vec3(-0.1f, -0.1f, -0.1f));
+                    }
+                }
+            }
+        }
+    };
+
+    if(texturePath != LAZARUS_MESH_NOTEX)
     {
-        file.close();
+	    this->textureLoader = std::make_unique<TextureLoader>();
+        
+		textureLoader->storeTexture(texturePath, textureId, imageData);
+    } 
+    else
+    {
+        textureId = 0;
+
+        imageData.width = 0;
+        imageData.height = 0;
+        imageData.pixelData = NULL;
     }
+
     if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
     {
         file.close();

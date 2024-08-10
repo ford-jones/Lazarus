@@ -26,6 +26,7 @@
 
 #include "../../utils/hdr/fileReader.h"
 #include "../hdr/meshLoader.h"
+#include "../../textures/hdr/textureLoader.h"
 
 #define GREEN_TEXT "\x1b[32m"
 #define RESET_TEXT "\x1b[37m"
@@ -48,6 +49,8 @@ class Mesh
         struct TriangulatedMesh
         {
             int id;
+            int textureId;
+
             int numOfVertices;
             int numOfFaces;
             //	TODO:
@@ -57,21 +60,20 @@ class Mesh
             string materialFilepath;
             string textureFilepath;
 
-            //  TODO:
-            //  Order faces into indices array for EBO
-
             float locationX;
             float locationY;
             float locationZ;
 
             vector<vec3> attributes;
-            vector<vec3> vertices;                                                              //  Buffer to store vertex data
-            vector<vec2> uvCoords;																//  Buffer to store UV data
-            vector<vec3> normals;                                                               //  Buffer to store normals data
             vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
-            GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
+
+            FileReader::Image textureData;
+
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
+
+            GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             GLint samplerUniformLocation;
+            GLint textureLayerUniformLocation;
         };
 		
 		Mesh(GLuint shader);
@@ -80,8 +82,8 @@ class Mesh
         shared_ptr<TriangulatedMesh> createTriangulatedMesh(string meshPath, string materialPath, string texturePath = "");
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
-        void loadMesh(shared_ptr<TriangulatedMesh> meshData);
-        void drawMesh(shared_ptr<TriangulatedMesh> meshData);
+        shared_ptr<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData);
+        shared_ptr<TriangulatedMesh> drawMesh(shared_ptr<TriangulatedMesh> meshData);
         virtual ~Mesh();
 
     private:
@@ -91,17 +93,18 @@ class Mesh
         int errorCode;
 
         vector<vec3> vertexAttributes;
-        vector<vec3> vertices;                                                              //  Buffer to store vertex data
-        vector<vec2> uvs;                                                                   //  Buffer to uv data
-        vector<vec3> normals;                                                               //  Buffer to store normals data
-        vector<vec3> diffuse;                                                               //  Buffer to store diffusion color data
+        vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
+        GLuint textureId;
 		
+        FileReader::Image texStore;
+
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO;
 
         unique_ptr<FileReader> finder;
-        unique_ptr<MeshLoader> loader;
+        unique_ptr<MeshLoader> meshLoader;
+        unique_ptr<TextureLoader> texLoader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;
 

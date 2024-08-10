@@ -10,15 +10,15 @@ int main()
     windowBuilder = std::make_unique<WindowManager>(800, 600, "Lazarus::Experimental", nullptr, nullptr);
     windowBuilder->initialise();
 
-	  cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
+	cursorImage = fileReader->readFromImage("assets/images/crosshair.png");
 
-	  windowBuilder->createCursor(32, 32, 0, 0, cursorImage);
+	windowBuilder->createCursor(32, 32, 0, 0, cursorImage.pixelData);
 	
     win = glfwGetCurrentContext();
 
     shaderProgram = shader.initialiseShader();
 	
-    windowBuilder->loadConfig(shaderProgram);									//  Use the newly created shader program
+    windowBuilder->loadConfig(shaderProgram);
 
     lightBuilder        = std::make_unique<Light>(shaderProgram);
     light               = std::move(lightBuilder->createAmbientLight(1.0, 1.0, 1.0, 1.0, 1.0, 1.0));
@@ -27,11 +27,14 @@ int main()
 
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    worldBuilder        = std::make_unique<Mesh>(shaderProgram);
-    world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
+    skullBuilder       = std::make_unique<Mesh>(shaderProgram);
+    skull              = std::move(skullBuilder->createTriangulatedMesh("assets/mesh/skull.obj", "assets/material/skull.mtl", "assets/images/skull.png"));
 
-    beachballBuilder    = std::make_unique<Mesh>(shaderProgram);
-    beachball           = std::move(beachballBuilder->createTriangulatedMesh("assets/mesh/beachball.obj", "assets/material/beachball.mtl"));
+    // tilesBuilder        = std::make_unique<Mesh>(shaderProgram);
+    // tiles               = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
+
+    // worldBuilder        = std::make_unique<Mesh>(shaderProgram);
+    // world               = std::move(worldBuilder->createTriangulatedMesh("assets/mesh/world.obj", "assets/material/world.mtl"));
 
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
@@ -43,13 +46,12 @@ int main()
 
     while(!glfwWindowShouldClose(win))
     {
+        fpsCounter.calculateFramesPerSec();
+        std::cout << "FPS: " << fpsCounter.framesPerSecond << std::endl;
+
         /*Events*/
         eventManager.monitorEvents();
         keyCapture(eventManager.keyString);
-
-        /*Sounds*/
-        springWaltz = std::move(soundManager->updateSourceLocation(springWaltz, 0.0f, 0.0f, 3.0f));
-        footstep = std::move(soundManager->updateSourceLocation(footstep, 0.0f, 0.0f, -3.0f));
 
         /*Light*/
         light = std::move(lightBuilder->initialiseLight(light));
@@ -57,9 +59,6 @@ int main()
 		/*Camera*/
         if( camera->projectionLocation >= 0 )
         {
-            // camera = transformer.rotateCameraAsset(camera, -turnX, -turnY, 0.0);
-            // camera = transformer.translateCameraAsset(camera, (-moveX / 50), 0.0, (-moveZ / 50));
-
             camera = std::move(cameraBuilder->loadCamera(camera));
         }
         else
@@ -67,36 +66,50 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-
-        /*World*/
-        if( world->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
+        /*skull*/
+        if( skull->modelviewUniformLocation >= 0)
         {
-            world = worldBuilder->initialiseMesh(world);
+            skull = std::move(skullBuilder->initialiseMesh(skull));
+
+            skull = std::move(skullBuilder->loadMesh(skull));
+            skull = std::move(skullBuilder->drawMesh(skull));
             
-            worldBuilder->loadMesh(world);
-            worldBuilder->drawMesh(world);
+            skull = transformer.translateMeshAsset(skull, (moveX / 50), 0.0, (moveZ / 50));
+            skull = transformer.rotateMeshAsset(skull, turnX, turnY, 0.0);
+
+            soundManager->updateListenerLocation(skull->locationX, skull->locationY, skull->locationZ);
         }
         else
         {
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
         };
 
-        /*beachball*/
-        if( beachball->modelviewUniformLocation >= 0)                                                                  //  If the locations are not -1
-        {
-            beachball = beachballBuilder->initialiseMesh(beachball);
-            beachball = transformer.translateMeshAsset(beachball, (moveX / 50), 0.0, (moveZ / 50));
-            beachball = transformer.rotateMeshAsset(beachball, turnX, turnY, 0.0);
+        // /*tiles*/
+        // if( tiles->modelviewUniformLocation >= 0)
+        // {
+        //     tiles = std::move(tilesBuilder->initialiseMesh(tiles));
 
-            beachballBuilder->loadMesh(beachball);
-            beachballBuilder->drawMesh(beachball);
-            
-            soundManager->updateListenerLocation(beachball->locationX, beachball->locationY, beachball->locationZ);
-        }
-        else
-        {
-            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
-        };
+        //     tiles = std::move(tilesBuilder->loadMesh(tiles));
+        //     tiles = std::move(tilesBuilder->drawMesh(tiles));
+
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
+
+        // /*world*/
+        // if( world->modelviewUniformLocation >= 0)
+        // {
+        //     world = std::move(worldBuilder->initialiseMesh(world));
+
+        //     world = std::move(worldBuilder->loadMesh(world));
+        //     world = std::move(worldBuilder->drawMesh(world));
+        // }
+        // else
+        // {
+        //     std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        // };
         
 		windowBuilder->handleBuffers();
     };

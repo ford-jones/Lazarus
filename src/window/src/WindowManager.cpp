@@ -26,12 +26,14 @@
 #endif
 
 #include "../hdr/WindowManager.h"
-
-//	TODO: 
-//	Make monitor and window optional
-//	Rename arguments
-//	Update docs
-
+/* =======================================
+	TODO: 
+	- Make monitor and window optional
+	- Rename arguments
+    - Enable fullscreen 
+    - Handle resizing
+	- Update docs
+========================================== */
 WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
@@ -59,7 +61,7 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	
 	if(testDepth == true)
 	{
-	    glEnable            (GL_DEPTH_TEST);                                                                                //  Run a depth test on each fragment, render frags in order of perspective rather than order drawn.
+	    glEnable            (GL_DEPTH_TEST);      
 	};
 
     glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
@@ -94,19 +96,10 @@ int WindowManager::initialise()
         return -1;
     };
 
-    //  Makes macOS happy
-    //  allows usage of the GL profile beyond v2.1 fixed-function pipeline (OSX default)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
-    if(LAZARUS_RUNNING_ON_DARWIN == true)
-    {
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    }
-    else 
-    {
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
-    }
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     this->checkErrors();
 
@@ -122,7 +115,7 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
-	  this->initialiseGLEW();
+	this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };
@@ -130,7 +123,7 @@ int WindowManager::initialise()
 int WindowManager::handleBuffers()
 {
 	glfwSwapBuffers(this->window);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);                                                    //  Clear the depth and color buffers
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
     this->checkErrors();
 
@@ -155,8 +148,8 @@ int WindowManager::checkErrors()
 
 int WindowManager::initialiseGLEW()
 {
-    glewExperimental = GL_TRUE;                                                                                         //  Enable GLEW's experimental features
-    glewInit();                                                                                                         //  Initialise GLEW graphics library
+    glewExperimental = GL_TRUE;
+    glewInit();
 
     return GLEW_NO_ERROR;
 };

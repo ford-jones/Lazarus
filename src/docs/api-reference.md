@@ -18,7 +18,7 @@ Params:
 > **win**: *A pointer to another window used when the user enters fullscreen.*
 
 ### Functions:
-#### int loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth, bool texTwoDimensions)
+#### int loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth)
 Creates a configuration for the window's render pipeline.
 
 Params:
@@ -26,7 +26,6 @@ Params:
 > **enableCursor:** *Whether or not the cursor should be visible on the screen or disabled. (deafult: `true`)* \
 > **cullFaces:** *Enables face culling. When active; faces which are not currently in eyespace are not rendered. (default: `true`)* \
 > **testDepth:** *Enables depth testing. Renders fragments in order of perspective rather than the order they're drawn in. (default `true`)* \
-> **texTwoDimensions:** *Enables usage of two dimensional textures. (default: `true`)*
 
 #### int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
 Builds a unique cursor for the window from an image loaded in by the user.
@@ -116,13 +115,18 @@ Reads a file who's contents are expressed in ascii. Stores the files contents in
 Params:
 > **filepath**: The relative path to the file you would like to read from.
 
-#### unsigned char *readFromImage(std::string filepath)
+#### FileReader::Image readFromImage(std::string filename)
 Reads and parses the contents of an image file (.png, .jpg, .tga, .pic; view `stb_image` documentation for the full list). 
 Returns the image data in the form of an `unsigned char*`.
 
 Params:
-> **filepath**: The relative path to the file you would like to read from.
+> **filename**: The relative path to the file you would like to read from.
 
+### Members:
+> **Image:** *The properties of an image returned from stb_image. (type: `struct`)* 
+>	- **width:** *The images pixel-width.. (type: `int`)* 
+>	- **height:** *The images pixel-height. (type: `int`)* 
+>	- **pixelData:** *The actual image data / texels tightly packed in RGBA order. (type: `unsigned char *`)* 
 ## Transform:
 A class built to handle transformations of different world assets such as mesh, cameras and lights.
 
@@ -216,13 +220,13 @@ Returns a shared pointer to the mesh object. It is recommended you use `std::mov
 Params:
 > **meshData:** *A pointer to the mesh object who's data you wish to write to buffers.*
 
-#### void loadMesh(shared_ptr<TriangulatedMesh> meshData)
+#### shared_ptr\<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData)
 Loads a mesh object's buffer data into their correct GPU uniform positions located inside the shader program that was referenced in the class constructor.
 
 Params:
 > **meshData:** *A pointer to the mesh object who's buffer data you wish to pass into the shader program.*
 
-#### void drawMesh(shared_ptr<TriangulatedMesh> meshData)
+#### shared_ptr\<TriangulatedMesh> drawMesh(shared_ptr<TriangulatedMesh> meshData)
 Draws the mesh object contents of the shader program's uniforms onto the render loops back buffer (see: `WindowManager::handleBuffers()`). \
 Be sure to bring the back buffer forward to see the draw result.
 
@@ -232,18 +236,22 @@ Be sure to bring the back buffer forward to see the draw result.
 ### Members:
 > **TriangulatedMesh:** *A collection of properties which make up a mesh object. (type: `struct`)* 
 >	- **id:** *The unique id of the mesh object. (type: `int`)* 
+>	- **id:** *The serialised id of the mesh objects texture. The layer depth of the texture. (type: `int`)* 
 >	- **numOfFaces:** *The number of faces that make up the mesh. (type: `int`)* 
 >	- **numOfVertices:** *The number of vertices that make up the mesh. (type: `int`)* 
->	- **filepath:** *The absolute path (from system root) to the wavefront file containing this mesh's vertex data. (type: `const char*`)*
+>	- **meshFilepath:** *The absolute path (from system root) to the wavefront file containing this mesh's vertex data. (type: `std::string`)*
+>	- **materialFilepath:** *The absolute path (from system root) to the wavefront file containing this mesh's material data. (type: `std::string*`)*
+>	- **textureFilepath:** *The absolute path (from system root) to the wavefront file containing this mesh's texture image. (type: `std::string`)*
 >	- **locationX:** *The x-axis coordinate of the mesh's position in world space. (type: float)*
 >	- **locationY:** *The y-axis coordinate of the mesh's position in world space. (type: float)*
 >	- **locationZ:** *The z-axis coordinate of the mesh's position in world space. (type: float)*
->	- **attributes:** *Vector containing interleaved vertex attributes in vec3 form, used to populate this mesh's vertex buffer object. In order: vertex coords, diffuse colors, normals. (type: `glm::vector<glm::vec3>>`)*
->	- **vertices:** *Vertex position (world coordinates) extracted from the wavefront (obj) file. (type: `glm::vector<glm::vec3>>`)*
->	- **normals:** *Vertex normals (vertices direction) extracted from the wavefront (obj) file. (type: `glm::vector<glm::vec3>>`)*
+>	- **attributes:** *This mesh's vertex attributes interleaved in order of position, diffuse color, normal coords and finally uv coords. (type: `glm::vector<glm::vec3>>`)*
 >	- **diffuse:** *Diffuse material (colour) data extracted from the wavefront material (mtl) file. (type: `glm::vector<glm::vec3>>`)*
->	- **modelViewUniformLocation:** *The uniform location / index of the vert shader's modelview matrice. (type: GLuint)*
+>   - **textureData:** *A struct containing image data. (type: `FileReader::Image`)*
 >	- **modelViewMatrix:** *A 4x4 modelview matrix to be passed into the shader program at the uniform location of `modelViewUniformLocation`. (type: `glm::mat4`)*
+>	- **modelViewUniformLocation:** *The uniform location / index of the vert shader's modelview matrice. (type: GLuint)*
+>   - **samplerUniformLocation:** *The location inside of the shader program of the texture array uniform which holds this mesh's texture data (if any). (type: `GLint`)*
+>   - **textureLayerUniformLocation:** *The location inside of the shader program of the uniform in which the active texture layer is passed.*
 
 ## MeshLoader:
 A simple loader class for loading wavefront (obj) files and marshalling their contents into variables.
@@ -253,31 +261,30 @@ A simple loader class for loading wavefront (obj) files and marshalling their co
 Default-initialises this classes members.
 
 ### Functions:
-#### bool loadMesh(const char* path, std::vector\<glm::vec3> &out_attributes,  std::vector\<glm::vec3> &out_vertices, std::vector\<glm::vec2> &out_uvs, std::vector\<glm::vec3> &out_normals, std::vector\<glm::vec3> &out_diffuse)
-Parses a wavefront (obj) file, the contents of which are converted to `float`, stored inside a `glm::vec3` or `glm::vec2` and pushed into one of four `std::vector`'s \
-which, hold either vertex coordinates, vertex normals, UV coordinates or diffuse colours.
+#### bool loadMesh(const char* path, std::vector\<glm::vec3> &outAttributes, std::vector\<glm::vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char *meshPath, const char *materialPath, const char *texturePath = "")
+Parses a wavefront (obj) file.
 
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
 
 Params:
+> **outAttributes:** *A vector to store interleaved vertex attribute data in AOS format in the following order: vertex positions, diffuse colors, normal coordinates, uv coordinates.* \
+> **outDiffuse:** *A vector for storing diffuse color data. Literal `-0.01f` values indicate the use of an image texture.* \
+> **outTextureId:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
+> **imageData:** *A struct containing texel data, image width and height.* \
 > **meshPath:** *The absolute path to this mesh's wavefront (.obj) file* \
-> **materialPath:** *The absolute path to this mesh's wavefront material (.mtl) file* \
-> **out_attributes:** *A vector to store parsed and interleaved vertices data.* \
-> **out_vertices:** *A vector to store parsed and ordered vertex coordinate data.* \
-> **out_uvs:** *A vector to store parsed and ordered vertex uv data.* \
-> **out_normals:**  *A vector to store parsed and ordered vertex normal data.* \
-> **out_diffuse:** *A vector to store parsed and ordered diffuse colour data.*
+> **materialPath:** *The absolute path to this mesh's wavefront material (.mtl) file.* \
+> **texturePath:** *The absolute path to this mesh's texture file (optional).* 
 
 ### Members:
 > **foundMaterial:** *The absolute path to this mesh's matertial (.mtl) file. (type: `std::string`)* \
-> **file:** *A pointer to the material file stored in your local filesystem. (type: `FILE*`)* \
+> **file:** *A pointer to the material file stored in your local filesystem. (type: `std::ifstream*`)* \
 > **vertexIndices:** *Grouped indexes / locations of relevant vertex coordinate data who's values make up the geometry of one of the mesh's faces. (type: `std::vector<unsigned int>`)* \
 > **uvIndices:** *Grouped indexes / locations of relevant vertex texture data who's values make up the texture wrap of one of the mesh's faces. (type: `std::vector<unsigned int>`)* \
 > **normalIndices:** *Grouped indexes / locations of relevant vertex normal data who's values make up the direction that one of the mesh's faces is facing. (type: `std::vector<unsigned int>`)* \
-> **temp_vertices:** *A vector to store the actual vertex coordinate values found at the `vertexIndices` indexes. (type: `std::vector<glm::vec3>`)* \
-> **temp_uvs:** *A vector to store the actual texture values found at the `uvIndices` indexes. (type: `std::vector<glm::vec2>`)* \
-> **temp_normals:** *A vector to store the actual vertex normal values found at the `normalIndices` indexes. (type: `std::vector<glm::vec3>`)* \
-> **temp_diffuse:** *A vector to store diffuse colour data returned from a call to `MaterialLoader::loadMaterial()`. (type: `std::vector<glm::vec3>`)*
+> **tempVertices:** *A vector to store the actual vertex coordinate values found at the `vertexIndices` indexes. (type: `std::vector<glm::vec3>`)* \
+> **tempUvs:** *A vector to store the actual texture values found at the `uvIndices` indexes. (type: `std::vector<glm::vec2>`)* \
+> **tempNormals:** *A vector to store the actual vertex normal values found at the `normalIndices` indexes. (type: `std::vector<glm::vec3>`)* \
+> **tempDiffuse:** *A vector to store diffuse colour data returned from a call to `MaterialLoader::loadMaterial()`. (type: `std::vector<glm::vec3>`)*
 
 ## MaterialLoader:
 A simple loader class for loading wavefront (obj) files and marshalling their contents into variables.
@@ -287,21 +294,46 @@ A simple loader class for loading wavefront (obj) files and marshalling their co
 Default-initialises this classes members.
 
 ### Functions: 
-#### bool loadMaterial(std::string path, std::vector\<glm::vec3> &out, std::vector<std::vector<int>> data)
+#### bool loadMaterial(std::vector\<glm::vec3> &out, std::vector<std::vector<int>> data, std::string materialPath, GLuint &textureId, FileReader::Image &imageData, std::string texturePath = "")
 Parses a wavefront material (mtl) file for it's diffuse colour values, which are converted to `float` and stored inside a `glm::vec3`. \
 
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
 
 Params:
-> **path:** *The absolute path to this mesh's matertial (.mtl) file.* \
 > **out:** *A vector for storing diffuse colour data.* \
-> **data:** *A vector which has length equal to the number of unique materials used by this mesh. At each index of the vector is* \
-> *another vector which; at index 0 holds a material id and at index 1 is the number of faces using it.*
+> **data:** *another vector which; at index 0 holds a material id and at index 1 is the number of faces using it.*
+> **materialPath:** *The absolute path to this mesh's matertial (.mtl) file.* \
+> **textureId:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
+> **imageData:** *A struct containing texel data, image width and height.* \
+> **texturePath:** *The absolute path to this mesh's texture file (optional).*
 
-## Camera:
-A management class for camera assets and their properties. 
+## TextureLoader:
+A management class for the handling of a mesh's texture assets.
 
 ### Constructor:
+Default initialises this class's members.
+
+### Functions:
+#### void storeTexture(std::string texturePath, GLuint &textureLayer, FileReader::Image &imageData)
+Loads the image file, invokes the generation of a new texture unit and allocates / realocates the programs texture image storage.
+
+Params:
+> **texturePath:** *The absolute path to this mesh's texture file.* \
+> **textureLayer:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
+> **imageData:** *A struct containing texel data, image width and height.* \
+
+#### void loadTexture(FileReader::Image imageData, GLuint textureLayer)
+Passes texel data into the target texture layer, generates a mipmap for it and sets the textures parameters.
+
+Params:
+> **imageData:** *A struct containing texel data, image width and height.* \
+> **textureLayer:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
+
+## Camera:
+
+### Constructor:
+Default initialises this class's members.
+
 #### Camera(GLuint shader)
 
 Params:

@@ -17,59 +17,41 @@
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
 
-
 #include <iostream>
-#include <sstream>
-#include <fstream>
-#include <filesystem>
 #include <string>
-#include <vector>
+#include <memory>
+#include <cmath>
 
-#include <stb_image.h>
+#include "../../utils/hdr/fileReader.h"
 
-namespace fs = std::filesystem;
-
-using std::ifstream;
 using std::string;
-using std::vector;
+using std::shared_ptr;
 
-#ifndef PATHFINDER_H
-#define PATHFINDER_H
+#ifndef LAZARUS_TEXTURE_LOADER_H
+#define LAZARUS_TEXTURE_LOADER_H
 
-class FileReader 
+class TextureLoader
 {
-    public:
-		FileReader();
-        
-        struct Image 
-        {
-            unsigned char *pixelData;
-
-            int height;
-            int width;
-        };
-
-		string relativePathToAbsolute(string filepath);
-        Image readFromImage(string filepath);
-        const char *readFromText(string filepath);
-        
-		int x, y, n;
-        virtual ~FileReader();
-
-        
-	private:
-		unsigned char *imageData;
-		const char *textData;
+	public:
+		TextureLoader();
+		void storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData);
+		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
+		virtual ~TextureLoader();
 		
-        std::stringstream stringstream;
-        fs::path path;
-        
-        string contents;
-        string absolutePath;
-        
-        string filenameString;
+	private:
+		int calculateMipLevels(int width, int height);
+		void checkErrors(const char *invoker);
 
-        Image outImage;
+		shared_ptr<FileReader> loader;
+
+		FileReader::Image image;
+		
+		GLuint texture;
+		GLenum errorCode;
+		
+		int mipCount;
+		int loopCount;
+		int x, y;
 };
 
 #endif
