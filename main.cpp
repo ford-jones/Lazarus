@@ -27,8 +27,8 @@ int main()
 
     camera              = std::move(cameraBuilder->createFixedCamera(800, 600, 0.0, 1.0, -3.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0));
 
-    bricksBuilder       = std::make_unique<Mesh>(shaderProgram);
-    bricks              = std::move(bricksBuilder->createTriangulatedMesh("assets/mesh/skull.obj", "assets/material/skull.mtl", "assets/images/skull.png"));
+    skullBuilder       = std::make_unique<Mesh>(shaderProgram);
+    skull              = std::move(skullBuilder->createTriangulatedMesh("assets/mesh/skull.obj", "assets/material/skull.mtl", "assets/images/skull.png"));
 
     // tilesBuilder        = std::make_unique<Mesh>(shaderProgram);
     // tiles               = std::move(tilesBuilder->createTriangulatedMesh("assets/mesh/tiles.obj", "assets/material/tiles.mtl", "assets/images/white.png"));
@@ -66,18 +66,18 @@ int main()
             std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::PROJECTION" << RESET_TEXT << std::endl;
         };
 
-        /*bricks*/
-        if( bricks->modelviewUniformLocation >= 0)
+        /*skull*/
+        if( skull->modelviewUniformLocation >= 0)
         {
-            bricks = std::move(bricksBuilder->initialiseMesh(bricks));
+            skull = std::move(skullBuilder->initialiseMesh(skull));
 
-            bricks = std::move(bricksBuilder->loadMesh(bricks));
-            bricks = std::move(bricksBuilder->drawMesh(bricks));
+            skull = std::move(skullBuilder->loadMesh(skull));
+            skull = std::move(skullBuilder->drawMesh(skull));
             
-            bricks = transformer.translateMeshAsset(bricks, (moveX / 50), 0.0, (moveZ / 50));
-            bricks = transformer.rotateMeshAsset(bricks, turnX, turnY, 0.0);
+            skull = transformer.translateMeshAsset(skull, (moveX / 50), 0.0, (moveZ / 50));
+            skull = transformer.rotateMeshAsset(skull, turnX, turnY, 0.0);
 
-            soundManager->updateListenerLocation(bricks->locationX, bricks->locationY, bricks->locationZ);
+            soundManager->updateListenerLocation(skull->locationX, skull->locationY, skull->locationZ);
         }
         else
         {
