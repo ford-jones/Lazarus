@@ -50,16 +50,18 @@ unique_ptr<SoundManager> soundManager;
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
-unique_ptr<Mesh> worldBuilder;
+
+unique_ptr<Mesh> wallsBuilder;
 unique_ptr<Mesh> skullBuilder;
-unique_ptr<Mesh> tilesBuilder;
+unique_ptr<Mesh> floorsBuilder;
 
 shared_ptr<SoundManager::Audio> springWaltz;
 shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
+
 shared_ptr<Mesh::TriangulatedMesh> skull;
-shared_ptr<Mesh::TriangulatedMesh> world;
-shared_ptr<Mesh::TriangulatedMesh> tiles;
+shared_ptr<Mesh::TriangulatedMesh> walls;
+shared_ptr<Mesh::TriangulatedMesh> floors;
 
 #endif
