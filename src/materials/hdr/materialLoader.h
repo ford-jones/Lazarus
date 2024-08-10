@@ -22,6 +22,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 #include "../../utils/hdr/fileReader.h"
 #include "../../textures/hdr/textureLoader.h"

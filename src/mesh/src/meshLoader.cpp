@@ -60,6 +60,7 @@ bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse,
 
         else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )
         {
+
             vector<string> data = vectorizeWfProperties(currentLine, ' ');
             
             this->vertex.x = stof(data[1]);
@@ -126,7 +127,7 @@ bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse,
                 std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
                 return false;
             }
-            
+
             this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));
             this->vertexIndices.push_back(stoi(this->attributeIndexes[3]));
             this->vertexIndices.push_back(stoi(this->attributeIndexes[6]));
@@ -138,11 +139,12 @@ bool MeshLoader::loadMesh(vector<vec3> &outAttributes, vector<vec3> &outDiffuse,
             this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
 
             attributeIndexes.clear();
+
         }
         else if( currentLine[0] == 'u' )
         {
-			this->materialData = {materialIdentifierIndex, triangleCount};
-			this->materialBuffer.push_back(this->materialData);
+			      this->materialData = {materialIdentifierIndex, triangleCount};
+			      this->materialBuffer.push_back(this->materialData);
 			
             this->materialIdentifierIndex += 1;
             this->triangleCount = 0;

@@ -114,9 +114,19 @@ Do the same for the `FMOD` headers:
 sudo mv ./fmodstudioapi2022<OS>/api/core/inc/* /usr/local/include
 ```
 
-Finally, update your loaders' scoped libraries with:
+Finally, if you're running linux you will need to update your loaders' scoped libraries with:
 ```
 sudo ldconfig
+```
+
+**If you're installing FMOD on macOS and encounter the following message:**
+
+*“libfmod.dylib” can’t be opened because Apple cannot check it for malicious software.*
+
+Run the following commands:
+```
+xattr -d com.apple.quarantine /usr/local/lib/libfmod.dylib
+xattr -d com.apple.quarantine /usr/local/lib/libfmodL.dylib
 ```
 
 ## Known caveats and limitations:
@@ -126,3 +136,4 @@ sudo ldconfig
 4. Upon initialising the render loop and loading of assets, there is an observable "hump" in performance for about 3-5 seconds. A full scene with lights, camera, meshes etc causes a decrease in the framerate by about 12.5% (60 frames becomes 50).
 5. When running Lazarus on OSX the program recieves an OpenGL 1280 (Invalid enum) error, thrown by `Mesh::initialiseMesh`. Apple stopped maintenance for `OpenGL` long ago in favor of their `Metal` API. \
 The repurcussions of this are that we must now use the `GLFW_OPENGL_CORE_PROFILE` to be granted access the modern OpenGL (shader driven) API. The core profile has some gripes with `GLEW`, whatever the issue between them may be - they currently seem inconsequential to this project.
+6. Texture images used in any scene must all have the same pixel width and height. If not the scene will still render but you can expect to find holes in your texture.

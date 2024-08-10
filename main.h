@@ -44,20 +44,21 @@ EventManager eventManager;
 Shader shader;
 Transform transformer;
 FpsCounter fpsCounter;
+
 unique_ptr<FileReader> fileReader;
 unique_ptr<SoundManager> soundManager;
 unique_ptr<WindowManager> windowBuilder;
 unique_ptr<Camera> cameraBuilder;
 unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> worldBuilder;
-unique_ptr<Mesh> bricksBuilder;
+unique_ptr<Mesh> skullBuilder;
 unique_ptr<Mesh> tilesBuilder;
 
 shared_ptr<SoundManager::Audio> springWaltz;
 shared_ptr<SoundManager::Audio> footstep;
 shared_ptr<Camera::FixedCamera> camera;
 shared_ptr<Light::AmbientLight> light;
-shared_ptr<Mesh::TriangulatedMesh> bricks;
+shared_ptr<Mesh::TriangulatedMesh> skull;
 shared_ptr<Mesh::TriangulatedMesh> world;
 shared_ptr<Mesh::TriangulatedMesh> tiles;
 

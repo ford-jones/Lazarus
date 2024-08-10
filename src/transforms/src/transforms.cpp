@@ -22,6 +22,11 @@
 
 #include "../hdr/transforms.h"
 
+/* =================================================
+	TODO: 
+	Create scaling translation
+==================================================== */
+
 shared_ptr<Mesh::TriangulatedMesh> Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 {
     mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, glm::vec3(x, y, z));
@@ -34,8 +39,8 @@ shared_ptr<Mesh::TriangulatedMesh> Transform::translateMeshAsset(shared_ptr<Mesh
 
 shared_ptr<Mesh::TriangulatedMesh> Transform::rotateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 {	
-    mesh->modelviewMatrix = glm::rotate(mesh->modelviewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));                               //  manipulate the model-view matrix's x-axis rotation transform
-    mesh->modelviewMatrix = glm::rotate(mesh->modelviewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));                               //  manipulate the model-view matrix's y-axis rotation transform
+    mesh->modelviewMatrix = glm::rotate(mesh->modelviewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+    mesh->modelviewMatrix = glm::rotate(mesh->modelviewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
 	mesh->modelviewMatrix = glm::rotate(mesh->modelviewMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
 	
     return mesh;
@@ -53,10 +58,12 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 
 shared_ptr<Camera::FixedCamera> Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> camera, float x, float y, float z)
 {
-	//	TODO:
-	//	Rotation in this current manner changes the orientation / location of the camera, as if it were "oribiting" a point.
-	//	These rotations should instead be changing the yaw(x) / pitch(y) / roll(z) of the camera, as if it were "turning" or "spinning"
-	//	Start the program and apply rotation + translation transforms to a mesh asset to visualise the desired behaviour 
+	/* =============================================================================================
+		TODO:
+		Rotation in this current manner changes the orientation / location of the camera, as if it were "oribiting" a point.
+		These rotations should instead be changing the yaw(x) / pitch(y) / roll(z) of the camera, as if it were "turning" or "spinning"
+		Start the program and apply rotation + translation transforms to a mesh asset to visualise the desired behaviour 
+	================================================================================================ */
 	
 	camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
 	camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
