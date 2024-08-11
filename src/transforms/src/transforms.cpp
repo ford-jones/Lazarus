@@ -56,10 +56,6 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 
 	float speed = x + y + z;
 
-	std::cout << "X: " << x << std::endl;
-	std::cout << "Y: " << y << std::endl;
-	std::cout << "Z: " << z << std::endl;
-
 	if(x != 0.0)
 	{
 		camera->cameraPosition += (glm::normalize(glm::cross(camera->direction, camera->upVector)) * speed);
@@ -71,7 +67,7 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 	}
     // camera->cameraPosition = vec3(camera->locationX, camera->locationY, camera->locationZ);                                                                                          //  Define the camera's position
 
-	// camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
+	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
 	
 	return camera;
 };
