@@ -10,11 +10,12 @@
 //                    *... .............  /    ,                                             *,      ,*,,............  ,....     ...                    
 //                     *.   ..... .... ..*                                                  .*        *...................   .  ...                     
 //               *       ... ......... ,.                                                   ,          ... ..........  ...     ..       ,               
-//                ((        LAZARUS...                                                                   .  . .. .  .  ... .  ..      //                
+//                ((        ...... ...                                                                   .  . .. .  .  ... .  ..      //                
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+/*  LAZARUS ENGINE */
 
 #ifndef LAZARUS_GL_INCLUDES_H
     #include "../../utils/hdr/gl_includes.h"
@@ -48,10 +49,12 @@ shared_ptr<Mesh::TriangulatedMesh> Transform::rotateMeshAsset(shared_ptr<Mesh::T
 
 shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> camera, float x, float y, float z)
 {
-	camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
-	camera->locationX += x;
-	camera->locationY += y;
-	camera->locationZ += z;
+	// camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
+	// camera->locationX += x;
+	// camera->locationY += y;
+	// camera->locationZ += z;
+
+	
 	
 	return camera;
 };
@@ -64,10 +67,23 @@ shared_ptr<Camera::FixedCamera> Transform::rotateCameraAsset(shared_ptr<Camera::
 		These rotations should instead be changing the yaw(x) / pitch(y) / roll(z) of the camera, as if it were "turning" or "spinning"
 		Start the program and apply rotation + translation transforms to a mesh asset to visualise the desired behaviour 
 	================================================================================================ */
+	std::cout << "X: " << x << std::endl;
+	std::cout << "Y: " << y << std::endl;
+	std::cout << "Z: " << z << std::endl;
 	
-	camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
-	camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
-	camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+	glm::vec3 temp;
+	temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
+	temp.y = sin(glm::radians(x));
+	temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
+
+	camera->direction = temp;
+
+	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
+
+	// camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+	// camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+	// camera->viewMatrix = glm::rotate(camera->viewMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+	
 	
 	return camera;
 };

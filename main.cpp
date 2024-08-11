@@ -137,25 +137,25 @@ void keyCapture(string key)
 		}
 		else if(key == "w")
 		{
-			turnX = -0.5;
+			turnX += -0.5;
 		}
 		else if(key == "s")
 		{
-			turnX = 0.5;
+			turnX += 0.5;
 		}
 		else if(key == "a")
 		{
-			turnY = -0.5;
+			turnY += -0.5;
 		}
 		else if(key == "d")
 		{
-			turnY = 0.5;
+			turnY += 0.5;
 		}
 		else 
 		{
 			moveX = 0.0;
 			moveZ = 0.0;
-			turnX = 0.0;
-			turnY = 0.0;
+			// turnX = 0.0;
+			// turnY = 0.0;
 		};
 };
