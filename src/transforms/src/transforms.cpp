@@ -50,11 +50,13 @@ shared_ptr<Mesh::TriangulatedMesh> Transform::rotateMeshAsset(shared_ptr<Mesh::T
 shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> camera, float x, float y, float z)
 {
 	// camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
-	// camera->locationX += x;
-	// camera->locationY += y;
-	// camera->locationZ += z;
+	camera->locationX += x;
+	camera->locationY += y;
+	camera->locationZ += z;
 
-	
+    camera->cameraPosition = vec3(camera->locationX, camera->locationY, camera->locationZ);                                                                                          //  Define the camera's position
+
+	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
 	
 	return camera;
 };
