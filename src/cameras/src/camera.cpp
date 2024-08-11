@@ -53,10 +53,10 @@ shared_ptr<Camera::FixedCamera> Camera::createFixedCamera(int arX, int arY, doub
 
     fixedCamera->cameraPosition       =   vec3(fixedCamera->locationX, fixedCamera->locationY, fixedCamera->locationZ);                                                                                          //  Define the camera's position
     fixedCamera->targetPosition		  =	  vec3(tX, tY, tZ);
+    fixedCamera->direction            =   glm::normalize(fixedCamera->cameraPosition - fixedCamera->targetPosition);
     fixedCamera->upVector             =   vec3(uX, uY, uZ);                                                                                          //  Define the tilt / rotation of the camera
-
     
-    fixedCamera->viewMatrix           =   glm::lookAt(fixedCamera->cameraPosition, fixedCamera->targetPosition, fixedCamera->upVector);              //  Define the view-matrix through the camera properties
+    fixedCamera->viewMatrix           =   glm::lookAt(fixedCamera->cameraPosition, (fixedCamera->cameraPosition + fixedCamera->direction), fixedCamera->upVector);              //  Define the view-matrix through the camera properties
     fixedCamera->projectionMatrix     =   glm::perspective(glm::radians(45.0f), fixedCamera->aspectRatio, 0.1f, 100.0f);                             //  Define the projection matrix, responsible for depth and perspective
 
     fixedCamera->viewLocation         =   glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 

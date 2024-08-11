@@ -40,7 +40,8 @@ class Camera
 			float locationZ;
 			
             vec3 cameraPosition;                                                                //  The (x,y,z) location of the camera                                                                  
-            vec3 targetPosition;                                                                //  The (x,y,z) location of the cameras target, where the camera is looking                             
+            vec3 targetPosition;                                                                //  The (x,y,z) location of the cameras target
+            vec3 direction;                                                                     //  where the camera is looking                             
             vec3 upVector;                                                                      //  The tilt / rotation of the camera                                                                  
 
             float aspectRatio;                                                                  //  The viewport aspect ratio
