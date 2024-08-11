@@ -61,7 +61,7 @@ int main()
         {
             camera = std::move(cameraBuilder->loadCamera(camera));
 
-            camera = transformer.translateCameraAsset(camera, (moveX / 50), 0.0, (moveZ / 50));
+            camera = transformer.translateCameraAsset(camera, (moveX / 10), 0.0, (moveZ / 10));
             camera = transformer.rotateCameraAsset(camera, turnX, turnY, 0.0);
 
             soundManager->updateListenerLocation(camera->locationX, camera->locationY, camera->locationZ);

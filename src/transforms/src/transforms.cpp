@@ -54,9 +54,24 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 	camera->locationY += y;
 	camera->locationZ += z;
 
-    camera->cameraPosition = vec3(camera->locationX, camera->locationY, camera->locationZ);                                                                                          //  Define the camera's position
+	float speed = x + y + z;
 
-	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
+	std::cout << "X: " << x << std::endl;
+	std::cout << "Y: " << y << std::endl;
+	std::cout << "Z: " << z << std::endl;
+
+	if(x != 0.0)
+	{
+		camera->cameraPosition += (glm::normalize(glm::cross(camera->direction, camera->upVector)) * speed);
+	}
+
+	if(z != 0.0)
+	{
+		camera->cameraPosition += (speed * camera->direction);
+	}
+    // camera->cameraPosition = vec3(camera->locationX, camera->locationY, camera->locationZ);                                                                                          //  Define the camera's position
+
+	// camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
 	
 	return camera;
 };
@@ -69,9 +84,6 @@ shared_ptr<Camera::FixedCamera> Transform::rotateCameraAsset(shared_ptr<Camera::
 		These rotations should instead be changing the yaw(x) / pitch(y) / roll(z) of the camera, as if it were "turning" or "spinning"
 		Start the program and apply rotation + translation transforms to a mesh asset to visualise the desired behaviour 
 	================================================================================================ */
-	std::cout << "X: " << x << std::endl;
-	std::cout << "Y: " << y << std::endl;
-	std::cout << "Z: " << z << std::endl;
 	
 	glm::vec3 temp;
 	temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
