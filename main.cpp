@@ -78,6 +78,11 @@ int main()
 
             skull = std::move(skullBuilder->loadMesh(skull));
             skull = std::move(skullBuilder->drawMesh(skull));
+
+            // skull = transformer.translateMeshAsset(skull, (moveX / 10), 0.0, (moveZ / 10));
+            // skull = transformer.rotateMeshAsset(skull, turnX, turnY, 0.0);
+
+            // soundManager->updateListenerLocation(skull->locationX, skull->locationY, skull->locationZ);
         }
         else
         {
@@ -129,27 +134,27 @@ void keyCapture(string key)
 		}
 		else if(key == "left")
 		{
-			moveX = 0.5;
+			moveX = -0.5;
 		}
 		else if(key == "right")
 		{
-			moveX = -0.5;
+			moveX = 0.5;
 		}
 		else if(key == "w")
 		{
-			turnX += -0.5;
+			turnX += -1.0;
 		}
 		else if(key == "s")
 		{
-			turnX += 0.5;
+			turnX += 1.0;
 		}
 		else if(key == "a")
 		{
-			turnY += -0.5;
+			turnY += -1.0;
 		}
 		else if(key == "d")
 		{
-			turnY += 0.5;
+			turnY += 1.0;
 		}
 		else 
 		{
