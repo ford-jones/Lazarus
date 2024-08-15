@@ -5,25 +5,23 @@ else ifeq ($(shell uname),Darwin)
 	LDFLAGS += -framework OpenGL
 endif
 
-OBJECTS = main.o src/shaders/shaderProgram/src/shader.o src/lights/src/light.o src/cameras/src/camera.o \
+OBJECTS = src/shaders/shaderProgram/src/shader.o src/lights/src/light.o src/cameras/src/camera.o \
 					src/mesh/src/mesh.o src/transforms/src/transforms.o \
 					src/mesh/src/meshLoader.o src/materials/src/materialLoader.o src/textures/src/textureLoader.o \
 					src/window/src/WindowManager.o src/utils/src/fileReader.o src/window/src/eventManager.o \
 					src/utils/src/fpsCounter.o src/utils/src/imageLoader.o src/sound/src/soundManager.o 
 
-CXX = g++ -std=c++17
+CXX = g++
+
+CXXFLAGS = -std=c++17 -fPIC -shared
+
 ifeq ($(shell uname),Linux)
 	CXX += -lstdc++fs
 endif
 
-run: $(OBJECTS)
+build: $(OBJECTS)
+	$(CXX) $(CXXFLAGS) -o lazarus.so $(OBJECTS) $(LDFLAGS)
 
-		$(CXX) -o run $(OBJECTS) $(LDFLAGS)
-
-debug: $(OBJECTS)
-		$(CXX) -g -o run $(OBJECTS) $(LDFLAGS)
-
-main.o := main.h
 shader.o := src/shaders/shaderProgram/hdr/shader.h
 light.o := src/lights/hdr/light.h
 camera.o := src/cameras/hdr/camera.h
@@ -40,4 +38,4 @@ textureLoader.o := src/textures/hdr/texture.h
 imageLoader.o := /usr/local/include/stb_image.h
 
 clean : 
-		rm run $(OBJECTS)
+		rm lazarus.so $(OBJECTS)
