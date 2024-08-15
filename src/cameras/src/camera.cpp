@@ -23,21 +23,10 @@
 
 #include "../hdr/camera.h"
 
-//	TODO: 
-//	Make this class's workflow similar to the of the Mesh class
-//	i.e. create an initialise function
-
 Camera::Camera(GLuint shader)
 {
     this->shader = shader;
 }
-
-//	TODO:
-//	Camera's should also have a modelview matrix 
-//	This would allow manipulation of location / rotation via the local-space axis
-//	Right now, transforms of the camera's position are done along the world axis
-//	The outcome is that performing rotation on the y-axis is an "orbit" around y rather than a "spin" on-the-spot
-//	Using local-space transformation, "z+" will always be relative to the direction the camera is facing
 
 shared_ptr<Camera::FixedCamera> Camera::createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ)
 {

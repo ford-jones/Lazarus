@@ -54,6 +54,7 @@ unique_ptr<Light> lightBuilder;
 unique_ptr<Mesh> wallsBuilder;
 unique_ptr<Mesh> skullBuilder;
 unique_ptr<Mesh> floorsBuilder;
+unique_ptr<Mesh> swordBuilder;
 
 shared_ptr<SoundManager::Audio> springWaltz;
 shared_ptr<SoundManager::Audio> footstep;
@@ -63,5 +64,6 @@ shared_ptr<Light::AmbientLight> light;
 shared_ptr<Mesh::TriangulatedMesh> skull;
 shared_ptr<Mesh::TriangulatedMesh> walls;
 shared_ptr<Mesh::TriangulatedMesh> floors;
+shared_ptr<Mesh::TriangulatedMesh> sword;
 
 #endif

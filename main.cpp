@@ -36,6 +36,11 @@ int main()
     wallsBuilder        = std::make_unique<Mesh>(shaderProgram);
     walls               = std::move(wallsBuilder->createTriangulatedMesh("assets/mesh/walls.obj", "assets/material/walls.mtl", "assets/images/walls.png"));
 
+    swordBuilder        = std::make_unique<Mesh>(shaderProgram);
+    sword               = std::move(swordBuilder->createTriangulatedMesh("assets/mesh/sword.obj", "assets/material/sword.mtl"));
+    sword = transformer.translateMeshAsset(sword, 0.0, 1.0, 0.0);
+    sword = transformer.translateMeshAsset(sword, 0.0, 0.0, 3.0);
+
     springWaltz = std::move(soundManager->createAudio("assets/sound/springWaltz.mp3", true, 0));
     springWaltz = std::move(soundManager->loadAudio(springWaltz));
     springWaltz = std::move(soundManager->playAudio(springWaltz));
@@ -78,9 +83,23 @@ int main()
 
             skull = std::move(skullBuilder->loadMesh(skull));
             skull = std::move(skullBuilder->drawMesh(skull));
+        }
+        else
+        {
+            std::cout << RED_TEXT << "ERROR::SHADER::VERT::MATRICE::MODELVIEW" << RESET_TEXT << std::endl;
+        };
 
-            // skull = transformer.translateMeshAsset(skull, (moveX / 10), 0.0, (moveZ / 10));
-            // skull = transformer.rotateMeshAsset(skull, turnX, turnY, 0.0);
+        /*sword*/
+        if( sword->modelviewUniformLocation >= 0)
+        {
+            sword = std::move(swordBuilder->initialiseMesh(sword));
+
+            sword = std::move(swordBuilder->loadMesh(sword));
+            sword = std::move(swordBuilder->drawMesh(sword));
+
+            sword = transformer.translateMeshAsset(sword, (0.5 / 10), 0.0, 0.0);
+            // sword = transformer.translateMeshAsset(sword, 0.0, 0.0, 0.0);
+            sword = transformer.rotateMeshAsset(sword, 0.0, 1.0, 0.0);
 
             // soundManager->updateListenerLocation(skull->locationX, skull->locationY, skull->locationZ);
         }

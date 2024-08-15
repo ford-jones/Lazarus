@@ -9,7 +9,7 @@ OBJECTS = main.o src/shaders/shaderProgram/src/shader.o src/lights/src/light.o s
 					src/mesh/src/mesh.o src/transforms/src/transforms.o \
 					src/mesh/src/meshLoader.o src/materials/src/materialLoader.o src/textures/src/textureLoader.o \
 					src/window/src/WindowManager.o src/utils/src/fileReader.o src/window/src/eventManager.o \
-					src/utils/src/fpsCounter.o src/utils/src/stb_image.o src/sound/src/soundManager.o 
+					src/utils/src/fpsCounter.o src/utils/src/imageLoader.o src/sound/src/soundManager.o 
 
 CXX = g++ -std=c++17
 ifeq ($(shell uname),Linux)
@@ -37,6 +37,7 @@ eventManager.o := src/window/hdr/eventManager.h
 fpsCounter.o := src/utils/hdr/fpsCounter.h
 soundManager.o := src/sound/hdr/soundManager.h
 textureLoader.o := src/textures/hdr/texture.h
+imageLoader.o := /usr/local/include/stb_image.h
 
 clean : 
 		rm run $(OBJECTS)

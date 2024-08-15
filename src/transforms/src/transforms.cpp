@@ -49,7 +49,13 @@ shared_ptr<Mesh::TriangulatedMesh> Transform::rotateMeshAsset(shared_ptr<Mesh::T
 
 shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> camera, float x, float y, float z)
 {
-	// camera->viewMatrix = glm::translate(camera->viewMatrix, glm::vec3(x, y, z));
+	/* =========================================
+		TODO:
+		Handle camera roll
+		Restore orbit / handle both camera cases
+		Speed usage here is silly, make it a user input
+		glm::lookAt() helper function
+	============================================ */
 	camera->locationX += x;
 	camera->locationY += y;
 	camera->locationZ += z;
@@ -65,9 +71,8 @@ shared_ptr<Camera::FixedCamera> Transform::translateCameraAsset(shared_ptr<Camer
 	{
 		camera->cameraPosition += (speed * camera->direction);
 	}
-    // camera->cameraPosition = vec3(camera->locationX, camera->locationY, camera->locationZ);                                                                                          //  Define the camera's position
 
-	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties
+	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);
 	
 	return camera;
 };
