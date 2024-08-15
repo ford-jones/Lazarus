@@ -29,7 +29,7 @@ using std::shared_ptr;
 #define MAIN_H
 
 GLuint shaderProgram;                                                               //  Stores the shader program being passed to OpenGL
-GLFWwindow *win; 
+GLFWwindow *win;
 
 int errorCode;
 const char** errorMessage;

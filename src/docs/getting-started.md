@@ -8,12 +8,13 @@ Before jumping into the project, make sure the following libraries / tools are a
 - glm.hpp
 - glew.h
 - stb_image.h
+- fmod.h
 
 If any of these are unavailable to you, downloads can be found in the resources section. \
 *Note: gcc, glfw, glm & glew are available for macOS using* `homebrew` *and should be installed from there.*
 
 ## Compiling the application:
-Compile using the makefile: 
+Compile using the makefile:
 ```
 make run
 ```
@@ -58,19 +59,19 @@ Follow the in-terminal prompts to continue.
 
 ## Installation Notes:
 1. gcc / g++: \
-If you are installing gcc / g++ on mac using homebrew, make sure to create a new symlink in your `$PATH`. It needs to occur *before* your `clang` compiler which is used as the compiler for macOS systems by default. Once your install is complete, this can be done like so; 
+If you are installing gcc / g++ on mac using homebrew, make sure to create a new symlink in your `$PATH`. It needs to occur *before* your `clang` compiler which is used as the compiler for macOS systems by default. Once your install is complete, this can be done like so;
 
 Mac (intel):
 ```
 sudo ln -sf /usr/local/bin/gcc-11 /usr/local/bin/gcc
 ```
 
-Mac (silicone): 
+Mac (silicone):
 ```
 sudo ln -s /opt/homebrew/bin/gcc-11 /usr/local/bin/gcc
 ```
 
-If you are using a silicone-based chip (M1 / M2), you may need to log out of your shell by running: 
+If you are using a silicone-based chip (M1 / M2), you may need to log out of your shell by running:
 ```
 exit
 ```

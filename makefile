@@ -37,6 +37,7 @@ eventManager.o := src/window/hdr/eventManager.h
 fpsCounter.o := src/utils/hdr/fpsCounter.h
 soundManager.o := src/sound/hdr/soundManager.h
 textureLoader.o := src/textures/hdr/texture.h
+stb_image.o := /usr/local/include/stb_image.h
 
 clean :
 		rm run $(OBJECTS)
@@ -49,3 +50,6 @@ run-container:
 
 restart-container:
 		docker stop lazarus && docker rm lazarus && docker run --name lazarus -it lazarus-image
+
+refresh:
+		docker stop lazarus && docker rm lazarus && make build-image && make run-container
