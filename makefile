@@ -1,15 +1,15 @@
 LDFLAGS := -lGLEW -lglfw -lfmod
 ifeq ($(shell uname),Linux)
-	LDFLAGS += -lGL
+	LDFLAGS += -lGL 
 else ifeq ($(shell uname),Darwin)
 	LDFLAGS += -framework OpenGL
 endif
 
-OBJECTS = src/shaders/shaderProgram/src/shader.o src/lights/src/light.o src/cameras/src/camera.o \
-					src/mesh/src/mesh.o src/transforms/src/transforms.o \
-					src/mesh/src/meshLoader.o src/materials/src/materialLoader.o src/textures/src/textureLoader.o \
-					src/window/src/WindowManager.o src/utils/src/fileReader.o src/window/src/eventManager.o \
-					src/utils/src/fpsCounter.o src/utils/src/imageLoader.o src/sound/src/soundManager.o 
+OBJECTS = src/shader.o src/light.o src/camera.o \
+					src/mesh.o src/transforms.o \
+					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
+					src/WindowManager.o src/fileReader.o src/eventManager.o \
+					src/fpsCounter.o src/imageLoader.o src/soundManager.o 
 
 CXX = g++
 
@@ -20,22 +20,22 @@ ifeq ($(shell uname),Linux)
 endif
 
 build: $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o lazarus.so $(OBJECTS) $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o lib/liblazarus.so $(OBJECTS) $(LDFLAGS)
 
-shader.o := src/shaders/shaderProgram/hdr/shader.h
-light.o := src/lights/hdr/light.h
-camera.o := src/cameras/hdr/camera.h
-mesh.o := src/mesh/hdr/mesh.h
-transforms.o := src/transforms/hdr/transforms.h
-meshLoader.o := src/mesh/hdr/meshLoader.h
-materialLoader.o := src/materials/hdr/materialLoader.h
-fileReader.o := src/utils/hdr/fileReader.h
-WindowManager.o := src/window/hdr/WindowManager.h
-eventManager.o := src/window/hdr/eventManager.h
-fpsCounter.o := src/utils/hdr/fpsCounter.h
-soundManager.o := src/sound/hdr/soundManager.h
-textureLoader.o := src/textures/hdr/texture.h
+shader.o := include/shader.h
+light.o := include/light.h
+camera.o := include/camera.h
+mesh.o := include/mesh.h
+transforms.o := include/transforms.h
+meshLoader.o := include/meshLoader.h
+materialLoader.o := include/materialLoader.h
+fileReader.o := include/fileReader.h
+WindowManager.o := include/WindowManager.h
+eventManager.o := include/eventManager.h
+fpsCounter.o := include/fpsCounter.h
+soundManager.o := include/soundManager.h
+textureLoader.o := include/texture.h
 imageLoader.o := /usr/local/include/stb_image.h
 
 clean : 
-		rm lazarus.so $(OBJECTS)
+		rm lib/liblazarus.so $(OBJECTS)
