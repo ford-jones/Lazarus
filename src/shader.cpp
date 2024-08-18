@@ -38,8 +38,8 @@ GLuint Shader::initialiseShader()
     this->vertReader = std::make_unique<FileReader>();
     this->fragReader = std::make_unique<FileReader>();
 
-    this->vertShaderProgram   =   vertReader->readFromText("src/shader.vert");                                                      //  Retrieve the vertex shader file contents through stringstream
-    this->fragShaderProgram   =   fragReader->readFromText("src/shader.frag");                                                      //  Retrieve the fragment shader file contents through stringstream
+    this->vertShaderProgram   =   vertReader->readFromText("shader.vert");                                                      //  Retrieve the vertex shader file contents through stringstream
+    this->fragShaderProgram   =   fragReader->readFromText("shader.frag");                                                      //  Retrieve the fragment shader file contents through stringstream
 
     this->vertShader      =   glCreateShader(GL_VERTEX_SHADER);                                                               //   Create a new instance of a vertex shader program in openGL
     this->fragShader      =   glCreateShader(GL_FRAGMENT_SHADER);                                                             //   Create a new instance of a fragment shader program in openGL
