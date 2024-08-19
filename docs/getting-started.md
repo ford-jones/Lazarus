@@ -28,33 +28,29 @@ To compile the project with debugging information enabled:
 make debug
 ```
 
-To compile an exectutable from a specific file on its own run:
+## Usage:
+Move the library and required headers.
 ```
-g++ -o run ./[filepath]/[file]
-```
-
-## Running the project:
-Launch the executable using:
-```
-./run
+sudo mv lib/liblazarus.so /usr/local/lib/
+sudo mv include/* /usr/local/include/
 ```
 
-Launching the project with the debugger (after compiling with `make debug`):
+Update the loader.
 ```
-valgrind <flags> ./run
-```
-or
-```
-gdb ./run
+sudo ldconfig
 ```
 
-To use valgrind and gdb together, launch with:
-```
-valgrind -q --vgdb-error=0 ./run
-```
-Follow the in-terminal prompts to continue.
+You should now be able to use Lazarus with your project like so:
+```cpp
+#include <lazarus.h>
 
-*Note: A list of valgrind's flags can be found in the manual pages. Simply run `man valgrind`*
+int main()
+{
+    Lazarus::WindowManager window = Lazarus::WindowManager(800, 600, "Game Window", nullptr, nullptr);
+
+    window.initialise()
+}
+```
 
 ## Installation Notes:
 1. gcc / g++: \
