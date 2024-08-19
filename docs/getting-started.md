@@ -47,9 +47,15 @@ You should now be able to use Lazarus with your project like so:
 int main()
 {
     Lazarus::WindowManager window = Lazarus::WindowManager(800, 600, "Game Window", nullptr, nullptr);
+    window.initialise();
 
-    window.initialise()
+    return 0;
 }
+```
+
+When compiling your project you will need to pass the following linker flags:
+```
+g++ main.cpp -lGL -lGLEW -lglfw -lfmod -llazarus
 ```
 
 ## Installation Notes:
