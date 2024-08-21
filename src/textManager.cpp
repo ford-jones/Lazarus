@@ -27,12 +27,23 @@ TextManager::TextManager()
     this->fontLoader = nullptr;
 };
 
-TextManager::Text TextManager::loadText(string text, int symbolWidth, int symbolHeight, string fontPath)
+TextManager::Text TextManager::loadText(string text, string fontPath, int symbolWidth, int symbolHeight)
 {
-    fontLoader = std::make_unique<FileReader>();
-    symbolSet = fontLoader->readFromImage(fontPath);
+    this->fontLoader = std::make_unique<FileReader>();
+    this->symbolSet = fontLoader->readFromImage(fontPath);
 
     this->createQuad(symbolWidth, symbolHeight);
+
+    FT_Init_FreeType(&this->freeType);
+    FT_New_Face(this->freeType, fontPath.c_str(), 0, &this->fontFamily);
+
+    for(unsigned int i = 0; i < text.size(); i++)
+    {
+        char current = text[i];
+        FT_Load_Char(this->fontFamily, current, FT_LOAD_RENDER);
+    }
+
+    return this->text;
 }
 
 void TextManager::drawText(TextManager::Text text)
@@ -42,7 +53,7 @@ void TextManager::drawText(TextManager::Text text)
 
 void TextManager::createQuad(int width, int height)
 {
-
+    
 }
 
 TextManager::~TextManager()

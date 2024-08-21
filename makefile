@@ -1,4 +1,4 @@
-LDFLAGS := -lGLEW -lglfw -lfmod
+LDFLAGS := -lGLEW -lglfw -lfmod -lfreetype
 ifeq ($(shell uname),Linux)
 	LDFLAGS += -lGL 
 else ifeq ($(shell uname),Darwin)
