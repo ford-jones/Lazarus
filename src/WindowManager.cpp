@@ -37,6 +37,8 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.title = t;
     this->frame.monitor = m;
     this->frame.fullscreen = win;
+
+    this->cursor = NULL;
 };
 
 int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth)
@@ -149,7 +151,12 @@ int WindowManager::initialiseGLEW()
 WindowManager::~WindowManager() 
 {
     glfwDestroyWindow(this->window);
-    glfwDestroyCursor(this->cursor);
+
+    if(this->cursor != NULL) 
+    {
+        glfwDestroyCursor(this->cursor);
+    }
+
     glfwTerminate();
 
     std::cout << GREEN_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
