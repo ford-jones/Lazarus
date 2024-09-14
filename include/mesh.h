@@ -81,12 +81,16 @@ class Mesh
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
+            GLint is3DUniformLocation;
+
+            int is3D;
         };
 		
 		Mesh(GLuint shader);
 		
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
         shared_ptr<TriangulatedMesh> createTriangulatedMesh(string meshPath, string materialPath, string texturePath = "");
+        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "");
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
         shared_ptr<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData);
@@ -114,6 +118,7 @@ class Mesh
         unique_ptr<TextureLoader> texLoader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;
+        shared_ptr<TriangulatedMesh> quad;
 
 };
 

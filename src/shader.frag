@@ -8,9 +8,13 @@ in vec2 textureCoordinate;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
-uniform float texLayer;
+uniform float threeDimesionalTexLayerIndex;
+uniform float twoDimesionalTexLayerIndex;
 
-layout ( binding = 1 ) uniform sampler2DArray textures;
+uniform int meshHasThreeDimensions;
+
+layout ( binding = 1 ) uniform sampler2DArray threeDimensionalMeshTextures;
+layout ( binding = 2 ) uniform sampler2DArray twoDimensionalMeshTextures;
 
 out vec4 outFragment;
 
@@ -33,8 +37,16 @@ vec3 interpretColorData ()
     }
     else 
     {
-        vec4 tex = texture(textures, vec3(textureCoordinate.xy, texLayer));
-        vec3 texColor = vec3(tex.r, tex.g, tex.b);
+        if( meshHasThreeDimensions == 1 )
+        {
+            vec4 tex = texture(threeDimensionalMeshTextures, vec3(textureCoordinate.xy, threeDimesionalTexLayerIndex));
+            vec3 texColor = vec3(tex.r, tex.g, tex.b);
+        } 
+        else
+        {
+            vec4 tex = texture(twoDimensionalMeshTextures, vec3(textureCoordinate.xy, twoDimesionalTexLayerIndex));
+            vec3 texColor = vec3(tex.r, tex.g, tex.b);
+        } 
 
         return texColor;
     }
