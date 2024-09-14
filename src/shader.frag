@@ -8,8 +8,8 @@ in vec2 textureCoordinate;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
-uniform float threeDimesionalTexLayerIndex;
-uniform float twoDimesionalTexLayerIndex;
+uniform float threeDimensionalTexLayerIndex;
+uniform float twoDimensionalTexLayerIndex;
 
 uniform int meshHasThreeDimensions;
 
@@ -39,16 +39,17 @@ vec3 interpretColorData ()
     {
         if( meshHasThreeDimensions == 1 )
         {
-            vec4 tex = texture(threeDimensionalMeshTextures, vec3(textureCoordinate.xy, threeDimesionalTexLayerIndex));
+            vec4 tex = texture(threeDimensionalMeshTextures, vec3(textureCoordinate.xy, threeDimensionalTexLayerIndex));
             vec3 texColor = vec3(tex.r, tex.g, tex.b);
+            return texColor;
         } 
         else
         {
-            vec4 tex = texture(twoDimensionalMeshTextures, vec3(textureCoordinate.xy, twoDimesionalTexLayerIndex));
+            vec4 tex = texture(twoDimensionalMeshTextures, vec3(textureCoordinate.xy, twoDimensionalTexLayerIndex));
             vec3 texColor = vec3(tex.r, tex.g, tex.b);
+            return texColor;
         } 
 
-        return texColor;
     }
 }
 
