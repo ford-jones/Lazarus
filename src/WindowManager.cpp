@@ -50,7 +50,8 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	
 	if(cullFaces == true)
 	{
-		glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
+		glEnable            (GL_CULL_FACE);
+        glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
