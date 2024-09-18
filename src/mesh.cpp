@@ -108,7 +108,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     if(texturePath != "")
     {
 	    quad->textureFilepath = finder->relativePathToAbsolute(texturePath);
-        this->texStore = finder->readFromImage(quad->textureFilepath);
+        // this->texStore = finder->readFromImage(quad->textureFilepath);
 
         // this->texLoader
     }
@@ -120,14 +120,23 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     /* ======================================================================================================
             Vertex positions,           Diffuse colors,             Normals,                    UVs 
     ========================================================================================================= */
-    quad->attributes = {
-        vec3(0.0f, 0.0f, 0.0f),     vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(0.0f, height, 0.0f),   vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        quad->attributes = {
+        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+
+        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
     
-        vec3(width, height, 0.0f),  vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(0.0f, height, 0.0f),   vec3(1.0f, 1.0f, 1.0f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f)
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+
     };
 
     quad->numOfVertices = vertexAttributes.size() / 4;
@@ -140,8 +149,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     quad->modelviewMatrix = mat4(1.0f);
 
     quad->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
-    quad->samplerUniformLocation = glGetUniformLocation(shaderProgram, "twoDimensionalMeshTextures");
-    quad->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "twoDimensionalTexLayerIndex");
+    quad->samplerUniformLocation = glGetUniformLocation(shaderProgram, "threeDimensionalMeshTextures");
+    quad->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "threeDimensionalTexLayerIndex");
     quad->is3DUniformLocation = glGetUniformLocation(shaderProgram, "meshHasThreeDimensions");
 
     if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
