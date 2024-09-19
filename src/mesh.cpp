@@ -26,7 +26,7 @@ Mesh::Mesh(GLuint shader)
 	
 	this->finder = nullptr;
 	this->meshLoader = nullptr;
-    this->texLoader = nullptr;
+    this->texLoader = std::make_unique<TextureLoader>();
 	this->triangulatedMesh = nullptr;
     this->quad = nullptr;
 
@@ -105,12 +105,12 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
 
     quad->is3D = 0;
 
+    quad->meshFilepath = "";
+    quad->materialFilepath = "";
+
     if(texturePath != "")
     {
 	    quad->textureFilepath = finder->relativePathToAbsolute(texturePath);
-        // this->texStore = finder->readFromImage(quad->textureFilepath);
-
-        // this->texLoader
     }
     else
     {
@@ -136,11 +136,17 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
         vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
         vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
         vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
-
     };
 
-    quad->numOfVertices = vertexAttributes.size() / 4;
-    quad->numOfFaces = (quad->numOfVertices) / 3;
+    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
+    {
+        texLoader->storeTexture(quad->textureFilepath, this->textureId, this->texStore);
+    }
+
+    quad->textureId = this->textureId;
+    quad->textureData.width = this->texStore.width;
+    quad->textureData.height = this->texStore.height;
+    quad->textureData.pixelData = this->texStore.pixelData;
 
     quad->locationX = 0;
     quad->locationY = 0;
@@ -149,21 +155,12 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     quad->modelviewMatrix = mat4(1.0f);
 
     quad->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
-    quad->samplerUniformLocation = glGetUniformLocation(shaderProgram, "threeDimensionalMeshTextures");
-    quad->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "threeDimensionalTexLayerIndex");
+    quad->samplerUniformLocation = glGetUniformLocation(shaderProgram, "twoDimensionalMeshTextures");
+    quad->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "twoDimensionalTexLayerIndex");
     quad->is3DUniformLocation = glGetUniformLocation(shaderProgram, "meshHasThreeDimensions");
 
-    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
-    {
-	    this->texLoader = std::make_unique<TextureLoader>();
-
-        texLoader->storeTexture(quad->textureFilepath, this->textureId, this->texStore);
-    }
-
-    quad->textureId = this->textureId;
-    quad->textureData.width = this->texStore.width;
-    quad->textureData.height = this->texStore.height;
-    quad->textureData.pixelData = this->texStore.pixelData;
+    quad->numOfVertices = vertexAttributes.size() / 4;
+    quad->numOfFaces = (quad->numOfVertices) / 3;
 
     return quad;
 }
@@ -199,21 +196,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
-    /* ===========================================================
-        This is somewhat ridiculous.
-        This allocs a new TextureLoader to memory and destroys it every single frame.
-
-        Ideally this entire texturing process could be done during mesh creation
-        which does seem to work when using a single mesh. 
-        
-        Alternatively, removing the current TextureLoader implmentation from inside 
-        the MeshLoader would mean that this no longer has to be a heap allocation due to the
-        fact the only reference would exist here.
-    ============================================================== */
     if(triangulatedMesh->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-	    this->texLoader = std::make_unique<TextureLoader>();
-
         texLoader->loadTexture(triangulatedMesh->textureData, triangulatedMesh->textureId);
     }
 	

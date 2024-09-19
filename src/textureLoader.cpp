@@ -96,6 +96,10 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 		this->image.height = imageData.height;
 		this->image.pixelData = imageData.pixelData;
 
+		std::cout << "TexLayer: " << textureLayer << std::endl;
+		std::cout << "width: " << image.width << std::endl;
+		std::cout << "height: " << image.height << std::endl;
+
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY, 
 			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
@@ -171,15 +175,15 @@ TextureLoader::~TextureLoader()
 {
 	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
 
-	for(unsigned int i; i < this->textures.size(); i++) 
+	for(unsigned int i = 0; i < this->textures.size(); i++) 
 	{
-		/* =================================
+		/* ========================================
 			I dont *think* that index 0 of the
 			textures vector should / would ever 
 			actually be literal (int 0) but the 
 			old code used to check for it so I've 
 			left it here just in case.
-		==================================== */
+		=========================================== */
 		if(textures[0] != 0)
 		{
 			glDeleteTextures(1, &textures[i]);

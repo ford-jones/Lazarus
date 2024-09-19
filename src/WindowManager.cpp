@@ -56,10 +56,10 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	
 	if(testDepth == true)
 	{
-	    glEnable            (GL_DEPTH_TEST);      
+	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
+    glClearColor        (0.0, 0.0, 1.0, 1.0);
     
 	glUseProgram(shader);
 	
