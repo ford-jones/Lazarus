@@ -26,7 +26,7 @@ TextureLoader::TextureLoader()
 	this->loader = nullptr;	
 
 	this->image = {pixelData: NULL, height: 0, width: 0};
-	this->texture = 0;
+	this->textures = {};
 
 	this->x = 0;
 	this->y = 0;
@@ -83,14 +83,13 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
         imageData.pixelData = NULL;
 	};
 
-	this->texture = textureLayer;
+	this->textures.push_back(textureLayer);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
 };
 
 void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
 {
-
 	if(imageData.pixelData != NULL)
 	{
 		this->image.width = imageData.width;
@@ -171,9 +170,19 @@ int TextureLoader::calculateMipLevels(int width, int height)
 TextureLoader::~TextureLoader()
 {
 	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
-	
-	if(this->texture != 0)
+
+	for(unsigned int i; i < this->textures.size(); i++) 
 	{
-		glDeleteTextures(1, &this->texture);
+		/* =================================
+			I dont *think* that index 0 of the
+			textures vector should / would ever 
+			actually be literal (int 0) but the 
+			old code used to check for it so I've 
+			left it here just in case.
+		==================================== */
+		if(textures[0] != 0)
+		{
+			glDeleteTextures(1, &textures[i]);
+		}
 	}
 };

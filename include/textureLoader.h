@@ -28,11 +28,13 @@
 #include <string>
 #include <memory>
 #include <cmath>
+#include <vector>
 
 #include "fileReader.h"
 
 using std::string;
 using std::shared_ptr;
+using std::vector;
 
 #ifndef LAZARUS_TEXTURE_LOADER_H
 #define LAZARUS_TEXTURE_LOADER_H
@@ -53,7 +55,7 @@ class TextureLoader
 
 		FileReader::Image image;
 		
-		GLuint texture;
+		vector<GLuint> textures;
 		GLenum errorCode;
 		
 		int mipCount;
