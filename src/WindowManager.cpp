@@ -59,8 +59,18 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 1.0, 1.0);
-    
+    glClearColor        (0.0, 0.0, 0.0, 0.0);
+
+    /* ===============================================
+        TODO:
+        Allow color transparency / overlap 
+        e.g.
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendEquation(GL_FUNC_ADD);
+    ================================================== */
+
 	glUseProgram(shader);
 	
 	this->checkErrors();
