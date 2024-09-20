@@ -8,13 +8,13 @@ in vec2 textureCoordinate;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
-uniform float threeDimensionalTexLayerIndex;
-uniform float twoDimensionalTexLayerIndex;
+uniform float xyzTexLayerIndex;
+uniform float xyTexLayerIndex;
 
-uniform int meshHasThreeDimensions;
+uniform int spriteAsset;
 
-layout ( binding = 1 ) uniform sampler2DArray threeDimensionalMeshTextures;
-layout ( binding = 2 ) uniform sampler2DArray twoDimensionalMeshTextures;
+layout ( binding = 1 ) uniform sampler2DArray xyzAssetTextures;
+layout ( binding = 2 ) uniform sampler2DArray xyAssetTextures;
 
 out vec4 outFragment;
 
@@ -40,14 +40,14 @@ vec4 interpretColorData ()
     }
     else 
     {
-        if( meshHasThreeDimensions == 1 )
+        if( spriteAsset == 1 )
         {
-            vec4 tex = texture(threeDimensionalMeshTextures, vec3(textureCoordinate.xy, threeDimensionalTexLayerIndex));
+            vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, xyzTexLayerIndex));
             return tex;
         } 
         else
         {
-            vec4 tex = texture(twoDimensionalMeshTextures, vec3(textureCoordinate.xy, twoDimensionalTexLayerIndex));
+            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
 
             if(tex.a < 0.1)
             {

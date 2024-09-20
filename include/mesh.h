@@ -27,7 +27,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <time.h>
 #include <stdlib.h>
 #include <memory>
 
@@ -55,7 +54,6 @@ class Mesh
     public:
         struct TriangulatedMesh
         {
-            int id;
             int textureId;
 
             int numOfVertices;
@@ -98,6 +96,9 @@ class Mesh
         virtual ~Mesh();
 
     private:
+        void resolveFilepaths(shared_ptr<TriangulatedMesh> &asset, string texPath = "", string mtlPath = "", string objPath = "");
+        void setInherentProperties(shared_ptr<TriangulatedMesh> &asset);
+        void lookupUniforms(shared_ptr<TriangulatedMesh> &asset);
         void checkErrors(const char *invoker);
         void releaseMesh();
 
@@ -112,6 +113,7 @@ class Mesh
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO;
+
 
         unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> meshLoader;

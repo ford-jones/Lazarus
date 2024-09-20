@@ -23,6 +23,8 @@ static double LAZARUS_LISTENER_SCROLLCODE = 0;
 
 static const int LAZARUS_MOUSE_NOCLICK = 999;
 
+static const char *LAZARUS_MESH_NOOBJ = "Non-wavefront mesh.";
+static const char *LAZARUS_MESH_NOMTL = "Colourless mesh.";
 static const char *LAZARUS_MESH_NOTEX = "Textureless mesh.";
 
 static const char *LAZARUS_FILE_NOT_FOUND = "The requested file cannot be found.";

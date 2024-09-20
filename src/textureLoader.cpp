@@ -83,6 +83,14 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
         imageData.pixelData = NULL;
 	};
 
+	/* ======================================
+		Indexing through this texture vector 
+		could become expensive at large sizes.
+
+		A better implementation might make use
+		of std::map (i.e. red-black BST).
+	========================================= */
+	
 	this->textures.push_back(textureLayer);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
