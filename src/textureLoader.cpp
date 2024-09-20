@@ -64,7 +64,7 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 		glTexStorage3D(
 			GL_TEXTURE_2D_ARRAY, 								//	target
 			this->mipCount, 									//	the expected number of levels (mips) found in each layer
-			GL_RGB8, 											//	gl internal size to store texel data
+			GL_RGBA8, 											//	gl internal size to store texel data
 			this->image.width, this->image.height, 				// 	expected (max) image width and height
 			textureLayer 										// 	the number of layers to store (max array size)
 		);
