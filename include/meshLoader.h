@@ -51,10 +51,10 @@ class MeshLoader
         ifstream file;
 
         vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-        vector<vec3> temp_vertices;
-        vector<vec2> temp_uvs;
-        vector<vec3> temp_normals;
-        vector<vec3> temp_diffuse;
+        vector<vec3> tempVertexPositions;
+        vector<vec2> tempUvs;
+        vector<vec3> tempNormals;
+        vector<vec3> tempDiffuse;
 
         string foundMaterial;
     	
@@ -73,7 +73,11 @@ class MeshLoader
         virtual ~MeshLoader();
 
     private:
-        vector<string> vectorizeWfProperties(const char *wavefrontData, char delim);
+        vector<string> splitTokensFromLine(const char *wavefrontData, char delim);
+        void interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes);
+        void constructTriangle();
+
+        vector<string> coordinates;
 
         vector<vector<int>> materialBuffer;
         vector<int> materialData;

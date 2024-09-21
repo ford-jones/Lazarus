@@ -46,50 +46,60 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
     while( file.getline(currentLine, 256) )
     {
-        if( currentLine[0] == 'm' )
+        switch (currentLine[0])
         {
+        case 'm':
+            /* ============================================
+                materialPath should be optional.
+                The path / filename can be gathered by
+                reading the file. The materialPath argument
+                should only need to be used as an overide.
+
+                For instance if the filename was changed 
+                since export.
+            ================================================ */
             this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);
-        }
+            break;
+        
+        case 'v':
+            if ( currentLine[1] == ' ' )
+            {
+                coordinates = splitTokensFromLine(currentLine, ' ');
 
-        else if ( (currentLine[0] == 'v') && (currentLine[1] == ' ') )
-        {
+                this->vertex.x = stof(coordinates[1]);
+                this->vertex.y = stof(coordinates[2]);
+                this->vertex.z = stof(coordinates[3]);
 
-            vector<string> data = vectorizeWfProperties(currentLine, ' ');
-            
-            this->vertex.x = stof(data[1]);
-            this->vertex.y = stof(data[2]);
-            this->vertex.z = stof(data[3]);
+                this->tempVertexPositions.push_back(this->vertex);
+            } 
 
-            this->temp_vertices.push_back(this->vertex);
-        } 
+            else if ( currentLine[1] == 't' )
+            {
+                coordinates = splitTokensFromLine(currentLine, ' ');
 
-        else if ( (currentLine[0] == 'v') && currentLine[1] == 't' )
-        {
-            vector<string> data = vectorizeWfProperties(currentLine, ' ');
-            
-            this->uv.x = stof(data[1]);
-            this->uv.y = stof(data[2]);
+                this->uv.x = stof(coordinates[1]);
+                this->uv.y = stof(coordinates[2]);
 
-            this->temp_uvs.push_back(this->uv);
-        }
+                this->tempUvs.push_back(this->uv);
+            }
 
-        else if ( (currentLine[0] == 'v') && currentLine[1] == 'n' )
-        {
-            vector<string> data = vectorizeWfProperties(currentLine, ' ');
-            
-            this->normal.x = stof(data[1]);
-            this->normal.y = stof(data[2]);
-            this->normal.z = stof(data[3]);
+            else if ( currentLine[1] == 'n' )
+            {
+                coordinates = splitTokensFromLine(currentLine, ' ');
 
-            this->temp_normals.push_back(this->normal);
-        }
+                this->normal.x = stof(coordinates[1]);
+                this->normal.y = stof(coordinates[2]);
+                this->normal.z = stof(coordinates[3]);
 
-        else if ( currentLine[0] == 'f' )
-        {
+                this->tempNormals.push_back(this->normal);
+            }
+            break;
+
+        case 'f':
             this->triangleCount += 1;
 
-            vector<string> data = vectorizeWfProperties(currentLine, ' ');
-            for(auto i: data) 
+            coordinates = splitTokensFromLine(currentLine, ' ');
+            for(auto i: coordinates) 
             {
                 stringstream ssJ(i);
                 string tokenJ;
@@ -102,45 +112,21 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
                     }
                 }
             }            
-            /* =======================================================
-                In the wavefront file format a literal 'f' preceeds 
-                face data containing the line numbers of each points'
-                relevant vertex attribute data.
 
-                Lazarus does not yet deal with polygons, only triangles. 
-                This means a face should have 3 points, each with 3 
-                different vertex attributes. If the face data contains
-                any more than 9 vertex attribute indexes we know this 
-                mesh hasn't been triangulated and can't be rendered 
-                correctly.
-            ========================================================== */
-            if ( this->attributeIndexes.size() !=  9)
-            {
-                std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER" << RESET_TEXT << std::endl;
-                std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
-                return false;
-            }
+            this->constructTriangle();
 
-            this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));
-            this->vertexIndices.push_back(stoi(this->attributeIndexes[3]));
-            this->vertexIndices.push_back(stoi(this->attributeIndexes[6]));
-            this->uvIndices    .push_back(stoi(this->attributeIndexes[1]));
-            this->uvIndices    .push_back(stoi(this->attributeIndexes[4]));
-            this->uvIndices    .push_back(stoi(this->attributeIndexes[7]));
-            this->normalIndices.push_back(stoi(this->attributeIndexes[2]));
-            this->normalIndices.push_back(stoi(this->attributeIndexes[5]));
-            this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
+            break;
 
-            attributeIndexes.clear();
-
-        }
-        else if( currentLine[0] == 'u' )
-        {
-			      this->materialData = {materialIdentifierIndex, triangleCount};
-			      this->materialBuffer.push_back(this->materialData);
+        case 'u':
+            this->materialData = {materialIdentifierIndex, triangleCount};
+			this->materialBuffer.push_back(this->materialData);
 			
             this->materialIdentifierIndex += 1;
             this->triangleCount = 0;
+            break;
+
+        default:
+            break;
         }
     }
 
@@ -162,28 +148,12 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         }
     }
 
-    for( unsigned int i = 0; i < this->vertexIndices.size(); i++ )
-    {
-
-        unsigned int vertexIndex    =   vertexIndices[i];
-        unsigned int normalIndex    =   normalIndices[i];
-        unsigned int uvIndex        =   uvIndices[i];
-        
-        vec3 vertex                 =   temp_vertices[vertexIndex - 1];
-        vec3 diffuse                =   outDiffuse[i];
-        vec3 normal                 =   temp_normals[normalIndex - 1];
-        vec3 uv                     =   vec3(temp_uvs[uvIndex - 1].x, temp_uvs[uvIndex - 1].y, 0.0f);
-
-        outAttributes.push_back(vertex);
-        outAttributes.push_back(diffuse);
-        outAttributes.push_back(normal);
-        outAttributes.push_back(uv);
-    }
+    this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size());
 
     return true;
 };
 
-vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char delim)
+vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char delim)
 {
     string token;
     string currentString = wavefrontData;
@@ -199,6 +169,64 @@ vector<string> MeshLoader::vectorizeWfProperties(const char *wavefrontData, char
     return tokenStore;
 }
 
+void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes)
+{
+    for( unsigned int i = 0; i < numOfAttributes; i++ )
+    {
+
+        unsigned int vertexIndex    =   vertexIndices[i];
+        unsigned int normalIndex    =   normalIndices[i];
+        unsigned int uvIndex        =   uvIndices[i];
+        
+        /* =========================================
+            uv is extended from its generic xy components
+            to include a z value here to meet the expected
+            stride range for attributes in the vertex buffer.
+            
+            i.e: (4 * sizeof(vec3)) = 12
+
+            Once in the shaders it is disregarded. 
+        ============================================ */
+        vec3 vertex                 =   tempVertexPositions[vertexIndex - 1];
+        vec3 diffuse                =   outDiffuse[i];
+        vec3 normal                 =   tempNormals[normalIndex - 1];
+        vec3 uv                     =   vec3(tempUvs[uvIndex - 1].x, tempUvs[uvIndex - 1].y, 0.0f);
+
+        outAttributes.push_back(vertex);
+        outAttributes.push_back(diffuse);
+        outAttributes.push_back(normal);
+        outAttributes.push_back(uv);
+    }
+}
+
+void MeshLoader::constructTriangle()
+{
+    /* =======================================================
+        A face should have 3 points, each with 3 
+        different vertex attributes. If the face data contains
+        any more than 9 vertex attribute indexes we know this 
+        mesh hasn't been triangulated and can't be rendered 
+        correctly.
+    ========================================================== */
+    if ( this->attributeIndexes.size() !=  9)
+    {
+        std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER" << RESET_TEXT << std::endl;
+        std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
+    }
+
+    this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));
+    this->vertexIndices.push_back(stoi(this->attributeIndexes[3]));
+    this->vertexIndices.push_back(stoi(this->attributeIndexes[6]));
+    this->uvIndices    .push_back(stoi(this->attributeIndexes[1]));
+    this->uvIndices    .push_back(stoi(this->attributeIndexes[4]));
+    this->uvIndices    .push_back(stoi(this->attributeIndexes[7]));
+    this->normalIndices.push_back(stoi(this->attributeIndexes[2]));
+    this->normalIndices.push_back(stoi(this->attributeIndexes[5]));
+    this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
+
+    attributeIndexes.clear();
+}
+
 MeshLoader::~MeshLoader()
 {
     if( file.is_open() )
@@ -207,3 +235,4 @@ MeshLoader::~MeshLoader()
     }
 	std::cout << GREEN_TEXT << "Destroying 'MeshLoader' class." << RESET_TEXT << std::endl;
 };
+
