@@ -27,17 +27,12 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <time.h>
 #include <stdlib.h>
 #include <memory>
 
 #include "fileReader.h"
 #include "meshLoader.h"
 #include "textureLoader.h"
-
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
 
 using std::unique_ptr;
 using std::shared_ptr;
@@ -55,7 +50,6 @@ class Mesh
     public:
         struct TriangulatedMesh
         {
-            int id;
             int textureId;
 
             int numOfVertices;
@@ -81,12 +75,16 @@ class Mesh
             GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
+            GLint is3DUniformLocation;
+
+            int is3D;
         };
 		
 		Mesh(GLuint shader);
 		
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
-        shared_ptr<TriangulatedMesh> createTriangulatedMesh(string meshPath, string materialPath, string texturePath = "");
+        shared_ptr<TriangulatedMesh> create3DAsset(string meshPath, string materialPath, string texturePath = "");
+        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "");
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
         shared_ptr<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData);
@@ -94,6 +92,9 @@ class Mesh
         virtual ~Mesh();
 
     private:
+        void resolveFilepaths(shared_ptr<TriangulatedMesh> &asset, string texPath = "", string mtlPath = "", string objPath = "");
+        void setInherentProperties(shared_ptr<TriangulatedMesh> &asset);
+        void lookupUniforms(shared_ptr<TriangulatedMesh> &asset);
         void checkErrors(const char *invoker);
         void releaseMesh();
 
@@ -101,7 +102,9 @@ class Mesh
 
         vector<vec3> vertexAttributes;
         vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
-        GLuint textureId;
+
+        GLuint xyzTextureId;
+        GLuint xyTextureId;
 		
         FileReader::Image texStore;
 
@@ -114,6 +117,7 @@ class Mesh
         unique_ptr<TextureLoader> texLoader;
         
         shared_ptr<TriangulatedMesh> triangulatedMesh;
+        shared_ptr<TriangulatedMesh> quad;
 
 };
 

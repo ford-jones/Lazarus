@@ -60,7 +60,7 @@ class MeshLoader
     	
     	MeshLoader();	
     	    
-        bool loadMesh(
+        bool parseWavefrontObj(
             vector<vec3> &outAttributes,
             vector<vec3> &outDiffuse,
             GLuint &outTextureId,

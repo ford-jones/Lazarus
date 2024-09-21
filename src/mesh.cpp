@@ -26,68 +26,152 @@ Mesh::Mesh(GLuint shader)
 	
 	this->finder = nullptr;
 	this->meshLoader = nullptr;
-    this->texLoader = nullptr;
-	this->triangulatedMesh = nullptr;
+    this->texLoader = std::make_unique<TextureLoader>();
+	triangulatedMesh = nullptr;
+    quad = nullptr;
 
     this->vertexAttributes = {};
     this->diffuseColors = {};
     
-    this->textureId = 0;
+    this->xyTextureId = 0;
+    this->xyzTextureId = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath, string texturePath)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
-    this->finder = std::make_unique<FileReader>();
     this->meshLoader = std::make_unique<MeshLoader>();
-    this->triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
+    triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
 
-    srand(time((0)));
-    triangulatedMesh->id = 1 + (rand() % 2147483647);
+    triangulatedMesh->is3D = 1;
 
-    triangulatedMesh->meshFilepath =  finder->relativePathToAbsolute(meshPath);
-    triangulatedMesh->materialFilepath = finder->relativePathToAbsolute(materialPath);
+    this->resolveFilepaths(triangulatedMesh, texturePath, materialPath, meshPath);
     
-    if(texturePath != "")
-    {
-	    triangulatedMesh->textureFilepath = finder->relativePathToAbsolute(texturePath);
-    }
-    else
-    {
-    	triangulatedMesh->textureFilepath = LAZARUS_MESH_NOTEX;
-    };
-    
-    this->meshLoader->loadMesh(
+    meshLoader->parseWavefrontObj(
         this->vertexAttributes,
         this->diffuseColors,
-        this->textureId,
+        this->xyzTextureId,
         this->texStore,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
     );
-    
-    triangulatedMesh->locationX = 0;
-    triangulatedMesh->locationY = 0;
-    triangulatedMesh->locationZ = 0;
 
-    triangulatedMesh->attributes = this->vertexAttributes;
-    triangulatedMesh->textureId = this->textureId;
-    triangulatedMesh->textureData.width = this->texStore.width;
-    triangulatedMesh->textureData.height = this->texStore.height;
-    triangulatedMesh->textureData.pixelData = this->texStore.pixelData;
+    triangulatedMesh->textureId = this->xyzTextureId;
 
-    triangulatedMesh->modelviewMatrix = mat4(1.0f);                                                                                          //  Define the model-view matrix to default 4x4
-
-    triangulatedMesh->modelviewUniformLocation = glGetUniformLocation(shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
-    triangulatedMesh->samplerUniformLocation = glGetUniformLocation(shaderProgram, "textures");
-    triangulatedMesh->textureLayerUniformLocation = glGetUniformLocation(shaderProgram, "texLayer");
-
-    triangulatedMesh->numOfVertices = vertexAttributes.size() / 4;
-    triangulatedMesh->numOfFaces = (triangulatedMesh->numOfVertices) / 3;
+    this->setInherentProperties(triangulatedMesh);
+    this->lookupUniforms(triangulatedMesh);
 
     return triangulatedMesh;
+};
+
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float height, string texturePath)
+{
+    quad = std::make_shared<TriangulatedMesh>();
+
+    quad->is3D = 0;
+
+    this->resolveFilepaths(quad, texturePath);
+
+    /* ======================================================================================================
+            Vertex positions,           Diffuse colors,             Normals,                    UVs 
+    ========================================================================================================= */
+    this->vertexAttributes = {
+        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+
+        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+    
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+
+        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+    };
+
+    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
+    {
+        texLoader->storeTexture(quad->textureFilepath, this->xyTextureId, this->texStore);
+    }
+
+    quad->textureId = this->xyTextureId;
+
+    this->setInherentProperties(quad);
+    this->lookupUniforms(quad);
+
+    return quad;
+}
+
+void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, string texPath, string mtlPath, string objPath)
+{
+    this->finder = std::make_unique<FileReader>();
+    if(objPath != "") 
+    {
+        asset->meshFilepath =  finder->relativePathToAbsolute(objPath);
+    } 
+    else
+    {
+        asset->meshFilepath = LAZARUS_MESH_NOOBJ;
+    };
+
+    if(mtlPath != "") 
+    {
+        asset->materialFilepath = finder->relativePathToAbsolute(mtlPath);
+    }
+    else
+    {
+        asset->materialFilepath = LAZARUS_MESH_NOMTL;
+    }
+    
+    if(texPath != "")
+    {
+	    asset->textureFilepath = finder->relativePathToAbsolute(texPath);
+    }
+    else
+    {
+    	asset->textureFilepath = LAZARUS_MESH_NOTEX;
+    };
+};
+
+void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
+{
+    asset->attributes = this->vertexAttributes;
+
+    asset->textureData.width = this->texStore.width;
+    asset->textureData.height = this->texStore.height;
+    asset->textureData.pixelData = this->texStore.pixelData;
+
+    asset->locationX = 0;
+    asset->locationY = 0;
+    asset->locationZ = 0;
+
+    asset->modelviewMatrix = mat4(1.0f);
+
+    asset->numOfVertices = asset->attributes.size() / 4;
+    asset->numOfFaces = (asset->numOfVertices) / 3;
+}
+
+void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
+{
+    asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
+    asset->is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
+
+    if(asset->is3D == 1)
+    {
+        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
+        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
+    }
+    else 
+    {
+        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
+        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
+    }
 };
 
 std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> meshData)
@@ -121,21 +205,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
-    /* ===========================================================
-        This is somewhat ridiculous.
-        This allocs a new TextureLoader to memory and destroys it every single frame.
-
-        Ideally this entire texturing process could be done during mesh creation
-        which does seem to work when using a single mesh. 
-        
-        Alternatively, removing the current TextureLoader implmentation from inside 
-        the MeshLoader would mean that this no longer has to be a heap allocation due to the
-        fact the only reference would exist here.
-    ============================================================== */
     if(triangulatedMesh->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-	    this->texLoader = std::make_unique<TextureLoader>();
-
         texLoader->loadTexture(triangulatedMesh->textureData, triangulatedMesh->textureId);
     }
 	
@@ -152,10 +223,10 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::loadMesh(shared_ptr<TriangulatedMe
 	triangulatedMesh = std::move(meshData);
 
     glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
-    
+    glUniform1i(triangulatedMesh->is3DUniformLocation, triangulatedMesh->is3D);
+
     if(triangulatedMesh->textureId != 0)
     {
-        glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
         glUniform1f(triangulatedMesh->textureLayerUniformLocation, (triangulatedMesh->textureId - 1));
     }
 

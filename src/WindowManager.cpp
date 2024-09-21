@@ -50,16 +50,27 @@ int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, 
 	
 	if(cullFaces == true)
 	{
-		glEnable            (GL_CULL_FACE);                                                                                 //  Disable rendering of faces oposite to the viewport
+		glEnable            (GL_CULL_FACE);
+        glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
 	{
-	    glEnable            (GL_DEPTH_TEST);      
+	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 0.0, 1.0);                                                                           //  Set the background colour of the scene to black
-    
+    glClearColor        (0.0, 0.0, 0.0, 0.0);
+
+    /* ===============================================
+        TODO:
+        Allow color transparency / overlap 
+        e.g.
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendEquation(GL_FUNC_ADD);
+    ================================================== */
+
 	glUseProgram(shader);
 	
 	this->checkErrors();
