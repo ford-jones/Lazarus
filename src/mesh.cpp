@@ -231,14 +231,6 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::loadMesh(shared_ptr<TriangulatedMe
         glUniform1f(triangulatedMesh->textureLayerUniformLocation, (triangulatedMesh->textureId - 1));
     }
 
-    // if(triangulatedMesh->is3D == 1) {
-    //     glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
-    // }
-    // else if (triangulatedMesh->is3D == 0)
-    // {
-    //     glUniform1i(triangulatedMesh->samplerUniformLocation, 1);   
-    // }
-
     this->checkErrors(__PRETTY_FUNCTION__);
 
     return triangulatedMesh;
