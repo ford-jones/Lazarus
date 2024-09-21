@@ -1,12 +1,6 @@
 #ifndef LAZARUS_CONSTANTS_H
 #define LAZARUS_CONSTANTS_H
 
-#ifdef __APPLE__
-    #define LAZARUS_RUNNING_ON_DARWIN true
-#else
-    #define LAZARUS_RUNNING_ON_DARWIN false
-#endif
-
 #define GREEN_TEXT "\x1b[32m"
 #define BLUE_TEXT "\x1b[34m"
 #define RESET_TEXT "\x1b[37m"
