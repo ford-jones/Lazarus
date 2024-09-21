@@ -134,7 +134,7 @@ A class built to handle transformations of different world assets such as mesh, 
 #### shared_ptr\<Mesh::TriangulatedMesh> translateMeshAsset(shared_ptr\<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 Applies a translation transformation (movement) to a mesh asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Mesh::TriangulatedMesh` object in real time. \
-Returns a shared pointer to the mesh object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the mesh object.
 
 Params:
 > **mesh:** *A pointer to the mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
@@ -145,7 +145,7 @@ Params:
 #### shared_ptr\<Mesh::TriangulatedMesh> rotateMeshAsset(shared_ptr\<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
 Applies a rotation transformation to a mesh asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the mesh. Not to be confused with an orbital rotation. \
-Returns a shared pointer to the mesh object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the mesh object.
 
 Params:
 > **mesh:** *A pointer to the mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
@@ -156,7 +156,7 @@ Params:
 #### shared_ptr\<Camera::FixedCamera> translateCameraAsset(shared_ptr\<Camera::FixedCamera> camera, float x, float y, float z)
 Applies a translation transformation (movement) to a camera asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Camera::FixedCamera` object in real time. \
-Returns a shared pointer to the camera object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the camera object.
 
 Params:
 > **camera:** *A pointer to the camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
@@ -167,7 +167,7 @@ Params:
 #### shared_ptr\<Camera::FixedCamera> rotateCameraAsset(shared_ptr\<Camera::FixedCamera> camera, float x, float y, float z)
 Applies a rotation transformation to a camera asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the camera. Not to be confused with an orbital rotation. \
-Returns a shared pointer to the camera object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the camera object.
 
 Params:
 > **camera:** *A pointer to the camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
@@ -178,7 +178,7 @@ Params:
 #### shared_ptr\<Light::AmbientLight> translateLightAsset(shared_ptr\<Light::AmbientLight> light, float x, float y, float z)
 Applies a translation transformation (movement) to a light asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Light::AmbientLight` object in real time. \
-Returns a shared pointer to the light object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the light object.
 
 
 Params:
@@ -197,16 +197,28 @@ Params:
 > **shader:** *The id of the shader program used to render this mesh. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions:
-#### shared_ptr\<TriangulatedMesh> createTriangulatedMesh(std::string meshPath, std::string materialPath)
-Finds and reads a wavefront (obj) file located at `meshPath` by invoking `FileReader::readFromText()`. \
+#### shared_ptr\<TriangulatedMesh> create3DAsset(std::string meshPath, std::string materialPath, std::string texturePath)
+Finds and reads a wavefront (obj) file located at `meshPath`. \
 Creates a new instance of a `TriangulatedMesh`, initialises the values of its properties and returns it. \
 Invokes the `MaterialLoader::loadMaterial()` function and passes on the `materialPath`.
 
-Returns a shared pointer to the mesh object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the mesh object.
 
 Params:
 > **meshPath:** *The relative path to the wavefront mesh asset you wish to render.* 
 > **materialPath:** *The relative path to the wavefront material asset you wish to render.*
+> **texturePath:** *The relative path to the texture image. (optional)*
+
+#### shared_ptr\<TriangulatedMesh> createQuad(float width, float height, std::string texturePath)
+Creates a quad (2D plane) to the size of the specified height and width. \
+Textures loaded into a quad have their fragments discarded where the texture opacity is 0.0 - used for sprites.
+
+Returns a shared pointer to the mesh object.
+
+Params:
+> **width:** *The relative path to the wavefront mesh asset you wish to render.* 
+> **height:** *The relative path to the wavefront material asset you wish to render.*
+> **texturePath:** *The relative path to the texture image. (optional)*
 
 #### shared_ptr\<TriangulatedMesh> initialiseMesh(shared_ptr\<TriangulatedMesh> meshData)
 Generates a new vertex array object and binds it to the current OpenGL context. \
@@ -215,7 +227,7 @@ Generates and binds a vertex buffer object to the array object for each of the m
 - vertex normals
 - diffuse colours
 
-Returns a shared pointer to the mesh object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the mesh object.
 
 Params:
 > **meshData:** *A pointer to the mesh object who's data you wish to write to buffers.*
@@ -235,8 +247,8 @@ Be sure to bring the back buffer forward to see the draw result.
 
 ### Members:
 > **TriangulatedMesh:** *A collection of properties which make up a mesh object. (type: `struct`)* 
->	- **id:** *The unique id of the mesh object. (type: `int`)* 
->	- **id:** *The serialised id of the mesh objects texture. The layer depth of the texture. (type: `int`)* 
+>	- **textureId:** *The serialised id of the mesh objects texture. The layer depth of the texture. (type: `int`)* 
+>   - **is3D:** *Literal 0 (false) or 1 (true). Flags the shader to treat the mesh as a sprite, discarding fragments with an alpha value higher than 0.1 (type: `int`)*
 >	- **numOfFaces:** *The number of faces that make up the mesh. (type: `int`)* 
 >	- **numOfVertices:** *The number of vertices that make up the mesh. (type: `int`)* 
 >	- **meshFilepath:** *The absolute path (from system root) to the wavefront file containing this mesh's vertex data. (type: `std::string`)*
@@ -261,7 +273,7 @@ A simple loader class for loading wavefront (obj) files and marshalling their co
 Default-initialises this classes members.
 
 ### Functions:
-#### bool loadMesh(const char* path, std::vector\<glm::vec3> &outAttributes, std::vector\<glm::vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char *meshPath, const char *materialPath, const char *texturePath = "")
+#### bool parseWavefrontObj(const char* path, std::vector\<glm::vec3> &outAttributes, std::vector\<glm::vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char *meshPath, const char *materialPath, const char *texturePath = "")
 Parses a wavefront (obj) file.
 
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
@@ -343,7 +355,7 @@ Params:
 #### shared_ptr\<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ)
 Creates a new instance of a `FixedCamera`, initialises the values of its properties and returns it.
 
-Returns a shared pointer to the camera object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the camera object.
 
 Params:
 > **arX:** *The x-axis aspect ratio / width of the viewport.* \
@@ -361,7 +373,7 @@ Params:
 #### shared_ptr\<FixedCamera> loadCamera(shared_ptr\<FixedCamera> cameraData)
 Passes the camera's projection matrix and view matrix into the shader program's corresponding uniform locations.
 
-Returns a shared pointer to the camera object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the camera object.
 
 Params:
 > **cameraData:** *A pointer to the camera asset you would like to render.*
@@ -394,7 +406,7 @@ Params:
 #### shared_ptr\<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b)
 Creates a new instance of an `AmbientLight`, initialises the values of its properties and returns it.
 
-Returns a shared pointer to the light object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the light object.
 
 Params:
 > **x:** *The x-axis starting coordinate of the light in world-space.* \
@@ -434,7 +446,7 @@ Initialises `FMOD` core and instantiates a new system for interfacing with up to
 #### shared_ptr\<Audio> createAudio(string filepath, bool is3D, int loopCount)
 Creates a new instance of `SoundManager::Audio`, initialises the values of its properties and returns it.
 
-Returns a shared pointer to the audio object. It is recommended you use `std::move()` to reclaim ownership of the returned object to improve performance by reducing the number of registered owners.
+Returns a shared pointer to the audio object.
 
 Params:
 > **filepath:** *The relative path to the audio (mp3 / wav) asset.* \
