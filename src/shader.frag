@@ -13,8 +13,8 @@ uniform float xyTexLayerIndex;
 
 uniform int spriteAsset;
 
-layout ( location = 1 ) uniform sampler2DArray xyzAssetTextures;
-layout ( location = 2 ) uniform sampler2DArray xyAssetTextures;
+uniform sampler2DArray xyzAssetTextures;
+uniform sampler2DArray xyAssetTextures;
 
 out vec4 outFragment;
 
