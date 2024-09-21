@@ -34,10 +34,6 @@
 #include "meshLoader.h"
 #include "textureLoader.h"
 
-#define GREEN_TEXT "\x1b[32m"
-#define RESET_TEXT "\x1b[37m"
-#define RED_TEXT  "\x1b[31m"
-
 using std::unique_ptr;
 using std::shared_ptr;
 using std::string;
@@ -87,7 +83,7 @@ class Mesh
 		Mesh(GLuint shader);
 		
         //  Enables a new VAO, binds it to the GLContext, loads vertex data into VBO's and creates a matrice
-        shared_ptr<TriangulatedMesh> createTriangulatedMesh(string meshPath, string materialPath, string texturePath = "");
+        shared_ptr<TriangulatedMesh> create3DAsset(string meshPath, string materialPath, string texturePath = "");
         shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "");
         //  Passes the modelview-matrice into the shader program at the appropriate uniform index position
         shared_ptr<TriangulatedMesh> initialiseMesh(shared_ptr<TriangulatedMesh> meshData);
@@ -106,14 +102,15 @@ class Mesh
 
         vector<vec3> vertexAttributes;
         vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
-        GLuint textureId;
+
+        GLuint xyzTextureId;
+        GLuint xyTextureId;
 		
         FileReader::Image texStore;
 
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
         GLuint VBO;
-
 
         unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> meshLoader;

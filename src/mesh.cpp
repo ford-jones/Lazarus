@@ -27,21 +27,22 @@ Mesh::Mesh(GLuint shader)
 	this->finder = nullptr;
 	this->meshLoader = nullptr;
     this->texLoader = std::make_unique<TextureLoader>();
-	this->triangulatedMesh = nullptr;
-    this->quad = nullptr;
+	triangulatedMesh = nullptr;
+    quad = nullptr;
 
     this->vertexAttributes = {};
     this->diffuseColors = {};
     
-    this->textureId = 0;
+    this->xyTextureId = 0;
+    this->xyzTextureId = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string meshPath, string materialPath, string texturePath)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
     this->meshLoader = std::make_unique<MeshLoader>();
-    this->triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
+    triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
 
     triangulatedMesh->is3D = 1;
 
@@ -50,12 +51,14 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
     meshLoader->parseWavefrontObj(
         this->vertexAttributes,
         this->diffuseColors,
-        this->textureId,
+        this->xyzTextureId,
         this->texStore,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
     );
+
+    triangulatedMesh->textureId = this->xyzTextureId;
 
     this->setInherentProperties(triangulatedMesh);
     this->lookupUniforms(triangulatedMesh);
@@ -65,7 +68,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createTriangulatedMesh(string mesh
 
 std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float height, string texturePath)
 {
-    this->quad = std::make_shared<TriangulatedMesh>();
+    quad = std::make_shared<TriangulatedMesh>();
 
     quad->is3D = 0;
 
@@ -94,8 +97,10 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
 
     if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-        texLoader->storeTexture(quad->textureFilepath, this->textureId, this->texStore);
+        texLoader->storeTexture(quad->textureFilepath, this->xyTextureId, this->texStore);
     }
+
+    quad->textureId = this->xyTextureId;
 
     this->setInherentProperties(quad);
     this->lookupUniforms(quad);
@@ -138,7 +143,6 @@ void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 {
     asset->attributes = this->vertexAttributes;
 
-    asset->textureId = this->textureId;
     asset->textureData.width = this->texStore.width;
     asset->textureData.height = this->texStore.height;
     asset->textureData.pixelData = this->texStore.pixelData;
@@ -226,6 +230,14 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::loadMesh(shared_ptr<TriangulatedMe
         glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
         glUniform1f(triangulatedMesh->textureLayerUniformLocation, (triangulatedMesh->textureId - 1));
     }
+
+    // if(triangulatedMesh->is3D == 1) {
+    //     glUniform1i(triangulatedMesh->samplerUniformLocation, 0);
+    // }
+    // else if (triangulatedMesh->is3D == 0)
+    // {
+    //     glUniform1i(triangulatedMesh->samplerUniformLocation, 1);   
+    // }
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
