@@ -67,6 +67,8 @@ FileReader::Image FileReader::readFromImage(string filename)
 {
 	const char *img = filename.c_str();
 	
+    stbi_set_flip_vertically_on_load(true);
+    
 	this->imageData = stbi_load(img, &x, &y, &n, 0);
 
 	//	TODO:
