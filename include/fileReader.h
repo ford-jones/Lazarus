@@ -37,8 +37,8 @@ using std::ifstream;
 using std::string;
 using std::vector;
 
-#ifndef PATHFINDER_H
-#define PATHFINDER_H
+#ifndef LAZARUS_FILE_READER_H
+#define LAZARUS_FILE_READER_H
 
 class FileReader 
 {
@@ -59,13 +59,14 @@ class FileReader
         
 		int x, y, n;
         virtual ~FileReader();
-
         
 	private:
 		unsigned char *imageData;
-        // unsigned char *outResize;
         unsigned char *outResize;
+        
 		const char *textData;
+
+        int resizeStatus;
 		
         std::stringstream stringstream;
         fs::path path;

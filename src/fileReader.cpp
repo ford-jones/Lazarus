@@ -23,6 +23,8 @@ FileReader::FileReader()
 {
 	this->imageData = 0;
     this->outResize = 0;
+    this->resizeStatus = 0;
+
     this->outImage = {};
 	this->x = 0;
 	this->y = 0;
@@ -97,13 +99,12 @@ FileReader::Image FileReader::readFromImage(string filename)
 
         outResize = (unsigned char *) malloc(500 * 500 * n);
 
-        stbir_resize_uint8(imageData, x, y, 0, outResize, 500, 500, 0, n);
+        resizeStatus = stbir_resize_uint8(imageData, x, y, 0, outResize, 500, 500, 0, n);
 
         //  TODO:
         //  Allow user to determine rescale size for scenes, otherwise dont rescale
-        //  correctly check for errors, stbir_resize_uint8 returns an int errorcode
         
-        if(outResize)
+        if(resizeStatus == 1)
         {
             outImage.pixelData = outResize;
             outImage.height = 500;
@@ -114,7 +115,7 @@ FileReader::Image FileReader::readFromImage(string filename)
             outImage.pixelData = imageData;
             outImage.height = y;
             outImage.width = x;
-            std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << "Failed to rescale image." << RESET_TEXT << std::endl;    
+            std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << LAZARUS_IMAGE_RESIZE_FAILURE << RESET_TEXT << std::endl;    
         }
 
     }
