@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <stb_image.h>
+#include <stb_image_resize.h>
 
 namespace fs = std::filesystem;
 
@@ -62,6 +63,8 @@ class FileReader
         
 	private:
 		unsigned char *imageData;
+        // unsigned char *outResize;
+        unsigned char *outResize;
 		const char *textData;
 		
         std::stringstream stringstream;

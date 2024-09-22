@@ -22,6 +22,7 @@
 FileReader::FileReader()
 {
 	this->imageData = 0;
+    this->outResize = 0;
     this->outImage = {};
 	this->x = 0;
 	this->y = 0;
@@ -65,20 +66,54 @@ const char *FileReader::readFromText(string filepath)
 
 FileReader::Image FileReader::readFromImage(string filename)
 {
+    //  TODO:
+    //  Implement stb_image_resize.h
 	const char *img = filename.c_str();
 	
+    /* ====================================================
+        Images should be flipped on load due to the fact that 
+        most file formats store the (x: 0.0, y: 0.0) coordinate
+        at the top left (first pixel of first row), while 
+        OpenGL's texture coordinate system stores it as the
+        inverse - i.e. bottom left (first pixel, last row).
+    ======================================================= */
     stbi_set_flip_vertically_on_load(true);
-    
-	this->imageData = stbi_load(img, &x, &y, &n, 0);
 
-	//	TODO:
-	//	Add this to the error checker class
+	this->imageData = stbi_load(img, &x, &y, &n, 0);
 
     if(imageData != NULL) 
     {
-        outImage.pixelData = imageData;
-        outImage.height = y;
-        outImage.width = x;
+        /* ================================================= 
+            Evil solution (the correct way):
+
+            The return value of stbir_resize_uint8, unlike 
+            stbi_load is reserved for error codes. This means 
+            that to pass data into lazarus' tightly-packed byte 
+            array (unsigned char *) it has to do so as a side-
+            effect. To do so the memory has to be allocated 
+            manually so that we can pass stbir a pointer to the 
+            actual byte array pointer.
+
+            See: https://stackoverflow.com/a/65873156/23636614
+        ==================================================== */
+        
+        outResize = (unsigned char *) malloc(500 * 500 * n);
+        stbir_resize_uint8(imageData, x, y, 0, outResize, 500, 500, 0, n);
+
+        if(outResize)
+        {
+            outImage.pixelData = outResize;
+            outImage.height = 500;
+            outImage.width = 500;
+        }
+        else 
+        {
+            outImage.pixelData = imageData;
+            outImage.height = y;
+            outImage.width = x;
+            std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << "Failed to rescale image." << RESET_TEXT << std::endl;    
+        }
+
     }
 	else
 	{
