@@ -66,8 +66,6 @@ const char *FileReader::readFromText(string filepath)
 
 FileReader::Image FileReader::readFromImage(string filename)
 {
-    //  TODO:
-    //  Implement stb_image_resize.h
 	const char *img = filename.c_str();
 	
     /* ====================================================
@@ -96,10 +94,15 @@ FileReader::Image FileReader::readFromImage(string filename)
 
             See: https://stackoverflow.com/a/65873156/23636614
         ==================================================== */
-        
+
         outResize = (unsigned char *) malloc(500 * 500 * n);
+
         stbir_resize_uint8(imageData, x, y, 0, outResize, 500, 500, 0, n);
 
+        //  TODO:
+        //  Allow user to determine rescale size for scenes, otherwise dont rescale
+        //  correctly check for errors, stbir_resize_uint8 returns an int errorcode
+        
         if(outResize)
         {
             outImage.pixelData = outResize;
@@ -130,4 +133,5 @@ FileReader::Image FileReader::readFromImage(string filename)
 FileReader::~FileReader()
 {
 	stbi_image_free(this->imageData);
+    free(outResize);
 };
