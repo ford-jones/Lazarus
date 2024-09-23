@@ -19,6 +19,9 @@ ifeq ($(shell uname),Linux)
 	CXX += -lstdc++fs
 endif
 
+run: build
+	$(shell mv src/*.o build/)
+
 build: $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o lib/liblazarus.so $(OBJECTS) $(LDFLAGS)
 
@@ -39,4 +42,4 @@ imageLoader.o := /usr/local/include/stb_image.h
 imageResize.o := /usr/local/include/stb_image_resize.h
 
 clean : 
-		rm lib/liblazarus.so $(OBJECTS)
+		rm lib/liblazarus.so && rm build/*.o
