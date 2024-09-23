@@ -4,7 +4,6 @@ Thank you for expressing interest and helping with this project! Here is a guide
 ## Git Commit guidlines:
 - feat: The new feature you're adding to a particular application
 - fix: A bug fix
-- style: Feature and updates related to styling
 - update | refactor: Refactoring or updating a specific section of the codebase
 - test: Everything related to testing
 - docs: Everything related to documentation
