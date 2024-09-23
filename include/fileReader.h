@@ -29,6 +29,7 @@
 #include <vector>
 
 #include <stb_image.h>
+#include <stb_image_resize.h>
 
 namespace fs = std::filesystem;
 
@@ -36,8 +37,8 @@ using std::ifstream;
 using std::string;
 using std::vector;
 
-#ifndef PATHFINDER_H
-#define PATHFINDER_H
+#ifndef LAZARUS_FILE_READER_H
+#define LAZARUS_FILE_READER_H
 
 class FileReader 
 {
@@ -55,14 +56,20 @@ class FileReader
 		string relativePathToAbsolute(string filepath);
         Image readFromImage(string filepath);
         const char *readFromText(string filepath);
+
+        void resizeImagesOnLoad(bool shouldResize);
+        void setMaxImageSize(int width, int height);
         
 		int x, y, n;
         virtual ~FileReader();
-
         
 	private:
 		unsigned char *imageData;
+        unsigned char *outResize;
+        
 		const char *textData;
+
+        int resizeStatus;
 		
         std::stringstream stringstream;
         fs::path path;

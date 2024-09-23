@@ -21,8 +21,9 @@ Downloads: https://www.glfw.org/download.html
 4. GLM resources: \
 Official Documentation: https://glm.g-truc.net/0.9.9/api/index.html
 
-5. stb_image: \
-Github source (RAW): https://raw.githubusercontent.com/nothings/stb/master/stb_image.h 
+5. nothings stb: \
+stb_image source (RAW): https://raw.githubusercontent.com/nothings/stb/master/stb_image.h 
+stb_image_resize source (RAW): https://raw.githubusercontent.com/nothings/obbg/refs/heads/master/stb/stb_image_resize.h
 
 6. FMOD: \
 Audio engine documentation: https://www.fmod.com/docs/2.03/api/welcome.html \

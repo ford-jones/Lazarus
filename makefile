@@ -9,7 +9,7 @@ OBJECTS = src/shader.o src/light.o src/camera.o \
 					src/mesh.o src/transforms.o \
 					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
 					src/WindowManager.o src/fileReader.o src/eventManager.o \
-					src/fpsCounter.o src/imageLoader.o src/soundManager.o 
+					src/fpsCounter.o src/imageLoader.o src/imageResize.o src/soundManager.o 
 
 CXX = g++
 
@@ -36,6 +36,7 @@ fpsCounter.o := include/fpsCounter.h
 soundManager.o := include/soundManager.h
 textureLoader.o := include/texture.h
 imageLoader.o := /usr/local/include/stb_image.h
+imageResize.o := /usr/local/include/stb_image_resize.h
 
 clean : 
 		rm lib/liblazarus.so $(OBJECTS)
