@@ -122,6 +122,19 @@ Returns the image data in the form of an `unsigned char*`.
 Params:
 > **filename**: The relative path to the file you would like to read from.
 
+#### void resizeImagesOnLoad(bool shouldResize)
+Updates the `LAZARUS_ENFORCE_IMAGE_SANITY` global flag *(default: `false`)*. Informs the image loader that it should resize all images to the dimensions of `LAZARUS_MAX_IMAGE_WIDTH`x`LAZARUS_MAX_IMAGE_HEIGHT` prior to adding the image to the texture stack.
+
+Params:
+>**shouldResize:** *If true use max image height & width global values, otherwise use image raw size.*
+
+#### void setMaxImageSize(int width, int height)
+Sets values for the global `LAZARUS_MAX_IMAGE_WIDTH` and `LAZARUS_MAX_IMAGE_HEIGHT` flags.
+
+Params:
+>**height:** *The desired height to enforce accross all images, must be higher than 0 when `LAZARUS_ENFORCE_IMAGE_SANITY` is set. Cant be set beyond 2048.* \
+>**width:** *The desired width to enforce accross all images, must be higher than 0 when `LAZARUS_ENFORCE_IMAGE_SANITY` is set. Cant be set beyond 2048.*
+
 ### Members:
 > **Image:** *The properties of an image returned from stb_image. (type: `struct`)* 
 >	- **width:** *The images pixel-width.. (type: `int`)* 
