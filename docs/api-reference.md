@@ -1,6 +1,6 @@
 # API Reference:
-This API reference contains brief descriptions of each of the Lazarus classes; their contructors, functions and members. \
-Destructors, as well as private functions and members have been omitted from this guide.
+This API reference contains brief descriptions of each of the Lazarus classes; their contructors, functions and members and \
+destructors. Private functions and members are currently omitted from this guide.
 
 For a comprehensive usage guide, visit [Lazarus by Example](./lazarus-by-example.md)
 
