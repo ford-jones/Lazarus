@@ -19,10 +19,12 @@ ifeq ($(shell uname),Linux)
 	CXX += -lstdc++fs
 endif
 
+
 run : build
 	$(shell mv src/*.o build/)
 
 build : $(OBJECTS)
+	$(shell mkdir build && mkdir lib)
 	$(CXX) $(CXXFLAGS) -o lib/liblazarus.so $(OBJECTS) $(LDFLAGS)
 
 shader.o := include/shader.h
@@ -42,4 +44,4 @@ imageLoader.o := /usr/local/include/stb_image.h
 imageResize.o := /usr/local/include/stb_image_resize.h
 
 clean : 
-	rm lib/liblazarus.so && rm build/*.o
+	rm -R lib/ && rm -R build/
