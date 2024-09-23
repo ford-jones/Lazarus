@@ -83,6 +83,13 @@ FileReader::Image FileReader::readFromImage(string filename)
 
     if(imageData != NULL) 
     {
+        if((LAZARUS_ENFORCE_IMAGE_SANITY == true))
+        {
+            if(( LAZARUS_MAX_IMAGE_WIDTH <= 0 ) || ( LAZARUS_MAX_IMAGE_HEIGHT <= 0 ))
+            {
+                std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << "Width and height must both have values higher than zero." << RESET_TEXT << std::endl;    
+            }
+
         /* ================================================= 
             Evil solution (the correct way):
 
@@ -96,28 +103,31 @@ FileReader::Image FileReader::readFromImage(string filename)
 
             See: https://stackoverflow.com/a/65873156/23636614
         ==================================================== */
+            outResize = (unsigned char *) malloc(LAZARUS_MAX_IMAGE_WIDTH * LAZARUS_MAX_IMAGE_HEIGHT * n);
 
-        outResize = (unsigned char *) malloc(500 * 500 * n);
+            resizeStatus = stbir_resize_uint8(imageData, x, y, 0, outResize, LAZARUS_MAX_IMAGE_WIDTH, LAZARUS_MAX_IMAGE_HEIGHT, 0, n);
 
-        resizeStatus = stbir_resize_uint8(imageData, x, y, 0, outResize, 500, 500, 0, n);
+            if(resizeStatus == 1)
+            {
+                outImage.pixelData = outResize;
+                outImage.height = LAZARUS_MAX_IMAGE_WIDTH;
+                outImage.width = LAZARUS_MAX_IMAGE_HEIGHT;
+            }
+            else 
+            {
+                outImage.pixelData = imageData;
+                outImage.height = y;
+                outImage.width = x;
+                std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << LAZARUS_IMAGE_RESIZE_FAILURE << RESET_TEXT << std::endl;    
+            }
 
-        //  TODO:
-        //  Allow user to determine rescale size for scenes, otherwise dont rescale
-        
-        if(resizeStatus == 1)
-        {
-            outImage.pixelData = outResize;
-            outImage.height = 500;
-            outImage.width = 500;
         }
-        else 
+        else
         {
             outImage.pixelData = imageData;
             outImage.height = y;
             outImage.width = x;
-            std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << LAZARUS_IMAGE_RESIZE_FAILURE << RESET_TEXT << std::endl;    
         }
-
     }
 	else
 	{
@@ -129,6 +139,21 @@ FileReader::Image FileReader::readFromImage(string filename)
 	};
 	
 	return outImage;
+};
+
+void FileReader::resizeImagesOnLoad(bool shouldResize)
+{
+    LAZARUS_ENFORCE_IMAGE_SANITY = shouldResize;
+
+    return;
+};
+
+void FileReader::setMaxImageSize(int width, int height)
+{
+    LAZARUS_MAX_IMAGE_WIDTH = width;
+    LAZARUS_MAX_IMAGE_HEIGHT = height;
+
+    return;
 };
 
 FileReader::~FileReader()

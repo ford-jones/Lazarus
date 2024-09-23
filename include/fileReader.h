@@ -56,6 +56,9 @@ class FileReader
 		string relativePathToAbsolute(string filepath);
         Image readFromImage(string filepath);
         const char *readFromText(string filepath);
+
+        void resizeImagesOnLoad(bool shouldResize);
+        void setMaxImageSize(int width, int height);
         
 		int x, y, n;
         virtual ~FileReader();
