@@ -24,9 +24,9 @@
 	#include "constants.h"
 #endif
 
-// #ifndef LAZARUS_GLOBALS_MANAGER_H
+#ifndef LAZARUS_GLOBALS_MANAGER_H
     #include "globalsManager.h"
-// #endif
+#endif
 
 #include <iostream>
 #include <vector>
@@ -123,7 +123,7 @@ class Mesh
         shared_ptr<TriangulatedMesh> triangulatedMesh;
         shared_ptr<TriangulatedMesh> quad;
 
-        // GlobalsManager globals;
+        GlobalsManager globals;
 
 };
 

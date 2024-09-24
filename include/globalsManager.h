@@ -39,6 +39,6 @@ class GlobalsManager
         int getExecutionState();
 };
 
-static GlobalsManager globals;
+// static GlobalsManager globals;
 
 #endif

@@ -24,9 +24,9 @@
 	#include "constants.h"
 #endif
 
-// #ifndef LAZARUS_GLOBALS_MANAGER_H
+#ifndef LAZARUS_GLOBALS_MANAGER_H
     #include "globalsManager.h"
-// #endif
+#endif
 
 #include <iostream>
 #include <string.h>
@@ -73,6 +73,6 @@ class WindowManager
 		int initialiseGLEW();
         int checkErrors();
 
-        // GlobalsManager globals;
+        GlobalsManager globals;
 };
 #endif

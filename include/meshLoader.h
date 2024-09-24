@@ -24,9 +24,9 @@
 	#include "constants.h"
 #endif
 
-// #ifndef LAZARUS_GLOBALS_MANAGER_H
+#ifndef LAZARUS_GLOBALS_MANAGER_H
     #include "globalsManager.h"
-// #endif
+#endif
 
 #include <iostream>
 #include <vector>
@@ -98,7 +98,7 @@ class MeshLoader
 		unique_ptr<FileReader> matFinder;
 		unique_ptr<MaterialLoader> matLoader;
 
-        // GlobalsManager globals;
+        GlobalsManager globals;
 };
 
 #endif

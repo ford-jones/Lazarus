@@ -21,9 +21,9 @@
 	#include "constants.h"
 #endif
 
-// #ifndef LAZARUS_GLOBALS_H
+#ifndef LAZARUS_GLOBALS_MANAGER_H
     #include "globalsManager.h"
-// #endif
+#endif
 
 #include <iostream>
 #include <sstream>
@@ -86,7 +86,7 @@ class FileReader
         int maxWidth;
         int maxHeight;
 
-        // GlobalsManager globals;
+        GlobalsManager globals;
 };
 
 #endif
