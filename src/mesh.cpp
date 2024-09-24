@@ -265,11 +265,11 @@ void Mesh::checkErrors(const char *invoker)
         // LAZARUS_EXECUTION_STATUS = LAZARUS_OPENGL_ERROR;
         globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     }
-    else
-    {
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-        globals.setExecutionState(LAZARUS_OK);
-    }
+    // else
+    // {
+    //     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+    //     globals.setExecutionState(LAZARUS_OK);
+    // }
 
 };
 

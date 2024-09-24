@@ -74,20 +74,22 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 		imageData.pixelData = this->image.pixelData;
 
 		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-		globals.setExecutionState(LAZARUS_OK);
+		// globals.setExecutionState(LAZARUS_OK);
 	}
 	else
 	{
 		// LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_NOT_FOUND;
 		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
 		std::cout << RED_TEXT << "LAZARUS::ERROR::TEXTURE_LOADER" << std::endl;
-		std::cout << "Status: " << LAZARUS_EXECUTION_STATUS << RESET_TEXT << std::endl;
+		std::cout << "Status: " << globals.getExecutionState() << RESET_TEXT << std::endl;
 
 		textureLayer = 0;
 
 		imageData.width = 0;
         imageData.height = 0;
         imageData.pixelData = NULL;
+
+		return;
 	};
 
 	/* ======================================
@@ -101,6 +103,8 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 	this->textures.push_back(textureLayer);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
+
+	return;
 };
 
 void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
@@ -132,7 +136,6 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 
 		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-		globals.setExecutionState(LAZARUS_OK);
 	}
 
 	this->checkErrors(__PRETTY_FUNCTION__);
@@ -150,7 +153,13 @@ void TextureLoader::checkErrors(const char *invoker)
 
 		// LAZARUS_EXECUTION_STATUS = LAZARUS_OPENGL_ERROR;
 		globals.setExecutionState(LAZARUS_OPENGL_ERROR);
-    };
+    } 
+	// else 
+	// {
+	// 	globals.setExecutionState(LAZARUS_OK);
+	// }
+
+	return;
 };
 
 

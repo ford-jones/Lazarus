@@ -153,7 +153,7 @@ int WindowManager::checkErrors()
     else 
     {
         // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-        globals.setExecutionState(LAZARUS_OK);
+        // globals.setExecutionState(LAZARUS_OK);
 
     	return GLFW_NO_ERROR;
     }
@@ -165,7 +165,7 @@ int WindowManager::initialiseGLEW()
     glewInit();
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return GLEW_NO_ERROR;
 };

@@ -98,7 +98,7 @@ GLuint Shader::initialiseShader()
     }
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return shaderProgram;
 };

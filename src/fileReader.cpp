@@ -56,7 +56,7 @@ const char *FileReader::readFromText(string filepath)
             this->contents = stringstream.str();
             this->textData = this->contents.c_str();
 
-            globals.setExecutionState(LAZARUS_OK);
+            // globals.setExecutionState(LAZARUS_OK);
 
             return textData;
         } 
@@ -133,7 +133,7 @@ FileReader::Image FileReader::readFromImage(string filename)
                 outImage.height = this->maxWidth;
                 outImage.width = this->maxHeight;
 
-                globals.setExecutionState(LAZARUS_OK);
+                // globals.setExecutionState(LAZARUS_OK);
             }
             else 
             {
@@ -152,7 +152,7 @@ FileReader::Image FileReader::readFromImage(string filename)
             outImage.height = y;
             outImage.width = x;
 
-            globals.setExecutionState(LAZARUS_OK);
+            // globals.setExecutionState(LAZARUS_OK);
         }
     }
 	else

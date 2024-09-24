@@ -154,7 +154,7 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
     this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size());
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return true;
 };
@@ -173,7 +173,7 @@ vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char d
     }
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return tokenStore;
 }
@@ -208,7 +208,7 @@ void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> 
     }
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return;
 }
@@ -246,7 +246,7 @@ void MeshLoader::constructTriangle()
     attributeIndexes.clear();
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
 
     return;
 }

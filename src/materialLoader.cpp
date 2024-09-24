@@ -125,7 +125,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     }
 
     // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    globals.setExecutionState(LAZARUS_OK);
+    // globals.setExecutionState(LAZARUS_OK);
     return true;
 };
 

@@ -101,7 +101,7 @@ shared_ptr<SoundManager::Audio> SoundManager::loadAudio(shared_ptr<SoundManager:
 		
 		audioData.channel->setPaused(true);
 
-		LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 	}
 	else
 	{
@@ -139,7 +139,7 @@ shared_ptr<SoundManager::Audio> SoundManager::playAudio(shared_ptr<SoundManager:
 		audioOut->isPaused = false;
 	}
 
-	LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 
 	this->checkErrors(this->result);
 
@@ -163,7 +163,7 @@ shared_ptr<SoundManager::Audio> SoundManager::pauseAudio(shared_ptr<SoundManager
 		audioOut->isPaused = true;
 	}
 
-	LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 
 	this->checkErrors(this->result);
 
@@ -192,7 +192,7 @@ shared_ptr<SoundManager::Audio> SoundManager::updateSourceLocation(shared_ptr<So
 	this->result = targetAudio.channel->set3DAttributes(&targetAudio.currentSourcePosition, &targetAudio.sourceVelocity);
 
 	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-	globals.setExecutionState(LAZARUS_OK);
+	// globals.setExecutionState(LAZARUS_OK);
 
 	this->checkErrors(this->result);
 
@@ -230,7 +230,7 @@ void SoundManager::updateListenerLocation(float x, float y, float z)
 	);
 
 	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-	globals.setExecutionState(LAZARUS_OK);
+	// globals.setExecutionState(LAZARUS_OK);
 	
 	this->checkErrors(this->result);
 
