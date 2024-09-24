@@ -100,12 +100,10 @@ shared_ptr<SoundManager::Audio> SoundManager::loadAudio(shared_ptr<SoundManager:
 		};
 		
 		audioData.channel->setPaused(true);
-
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 	}
 	else
 	{
-		LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_NOT_FOUND;
+		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
 		std::cout << RED_TEXT << "LAZARUS::ERROR::SOUND_MANAGER" << std::endl;	
 		std::cout << "Status: " << LAZARUS_FILE_NOT_FOUND << RESET_TEXT << std::endl;	
 	}
@@ -139,8 +137,6 @@ shared_ptr<SoundManager::Audio> SoundManager::playAudio(shared_ptr<SoundManager:
 		audioOut->isPaused = false;
 	}
 
-	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-
 	this->checkErrors(this->result);
 
 	return audioOut;
@@ -162,8 +158,6 @@ shared_ptr<SoundManager::Audio> SoundManager::pauseAudio(shared_ptr<SoundManager
 		this->result = this->audioData.channel->setPaused(true);
 		audioOut->isPaused = true;
 	}
-
-	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 
 	this->checkErrors(this->result);
 
@@ -191,9 +185,6 @@ shared_ptr<SoundManager::Audio> SoundManager::updateSourceLocation(shared_ptr<So
 
 	this->result = targetAudio.channel->set3DAttributes(&targetAudio.currentSourcePosition, &targetAudio.sourceVelocity);
 
-	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-	// globals.setExecutionState(LAZARUS_OK);
-
 	this->checkErrors(this->result);
 
 	this->result = system->update();
@@ -212,8 +203,10 @@ void SoundManager::updateListenerLocation(float x, float y, float z)
 {
 	this->currentListenerPosition = {x, y, z};
 
-	//	TODO:
-	//	Change (1000 / 60) to FpsCounter::durationTillRendered
+	/* =====================================
+		TODO:
+		Change (1000 / 60) to FpsCounter::durationTillRendered
+	======================================== */
 
 	this->listenerVelocity = {
 		((this->currentListenerPosition.x - this->prevListenerPosition.x) * (1000 / 60)),
@@ -228,9 +221,6 @@ void SoundManager::updateListenerLocation(float x, float y, float z)
 		&this->listenerForward,
 		&this->listenerUp
 	);
-
-	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-	// globals.setExecutionState(LAZARUS_OK);
 	
 	this->checkErrors(this->result);
 
@@ -248,7 +238,6 @@ void SoundManager::checkErrors(FMOD_RESULT res)
 {
 	if(res != FMOD_OK)
 	{
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_AUDIO_ERROR;
 		globals.setExecutionState(LAZARUS_AUDIO_ERROR);
 		std::cout << RED_TEXT << "LAZARUS::ERROR::SOUND_MANAGER" << std::endl;
 		std::cout << "Status: " << LAZARUS_EXECUTION_STATUS << RESET_TEXT << std::endl;

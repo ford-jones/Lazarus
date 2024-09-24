@@ -41,7 +41,6 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
     if( !file.is_open() )
     {
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_UNREADABLE;
         globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
         
         return false;
@@ -153,9 +152,6 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
     this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size());
 
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
-
     return true;
 };
 
@@ -171,9 +167,6 @@ vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char d
     {
         tokenStore.push_back(token);
     }
-
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
 
     return tokenStore;
 }
@@ -207,9 +200,6 @@ void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> 
         outAttributes.push_back(uv);
     }
 
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
-
     return;
 }
 
@@ -227,7 +217,6 @@ void MeshLoader::constructTriangle()
         std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER " << std::endl;
         std::cout << "Status: " << LAZARUS_FILE_UNREADABLE << RESET_TEXT << std::endl;
 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_UNREADABLE;
         globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
 
         return;
@@ -244,9 +233,6 @@ void MeshLoader::constructTriangle()
     this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
 
     attributeIndexes.clear();
-
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
 
     return;
 }

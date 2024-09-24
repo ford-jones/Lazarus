@@ -53,8 +53,6 @@ GLuint Shader::initialiseShader()
         glGetShaderInfoLog(this->vertShader, 512, NULL, this->infoLog);                                                             //   Retrieve the OpenGL shader logs if there are any and print them to the console
         std::cout << RED_TEXT << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << RESET_TEXT << infoLog << std::endl;
 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_SHADER_ERROR;
-        // return LAZARUS_EXECUTION_STATUS;
         globals.setExecutionState(LAZARUS_SHADER_ERROR);
         return globals.getExecutionState();
     };
@@ -67,8 +65,6 @@ GLuint Shader::initialiseShader()
         glGetShaderInfoLog(this->fragShader, 512, NULL, this->infoLog);                                                             //   Retrieve the OpenGL shader logs if there are any and print them to the console
         std::cout << RED_TEXT << "ERROR::SHADER::FRAG::COMPILATION_FAILED\n" << RESET_TEXT << this->infoLog << std::endl;
 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_SHADER_ERROR;
-        // return LAZARUS_EXECUTION_STATUS;
         globals.setExecutionState(LAZARUS_SHADER_ERROR);
         return globals.getExecutionState();
     };
@@ -82,8 +78,6 @@ GLuint Shader::initialiseShader()
         glGetProgramInfoLog(this->shaderProgram, 512, NULL, this->infoLog);                                                         //   Retrieve the OpenGL shader logs if there are any and print them to the console
         std::cout << RED_TEXT << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << RESET_TEXT << infoLog << std::endl;
 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_SHADER_ERROR;
-        // return LAZARUS_EXECUTION_STATUS;
         globals.setExecutionState(LAZARUS_SHADER_ERROR);
         return globals.getExecutionState();
     }
@@ -92,13 +86,9 @@ GLuint Shader::initialiseShader()
     {
         std::cout << RED_TEXT << "ERROR::SHADER::PROGRAM::NOT_FOUND" << RESET_TEXT << std::endl;
 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_SHADER_ERROR;
         globals.setExecutionState(LAZARUS_SHADER_ERROR);
         return globals.getExecutionState();
     }
-
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
 
     return shaderProgram;
 };

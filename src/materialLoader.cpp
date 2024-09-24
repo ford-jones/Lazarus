@@ -38,7 +38,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     
     if( !file.is_open() )
     {                                                                                                               //  If, the file has a null value                                 
-        // LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_UNREADABLE;
         globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
         return false;                                                                                               //  Return from the function, exit the thread
     }   
@@ -124,8 +123,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         file.close();
     }
 
-    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-    // globals.setExecutionState(LAZARUS_OK);
     return true;
 };
 

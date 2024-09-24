@@ -72,13 +72,9 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 		imageData.width = this->image.width;
 		imageData.height = this->image.height;
 		imageData.pixelData = this->image.pixelData;
-
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-		// globals.setExecutionState(LAZARUS_OK);
 	}
 	else
 	{
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_NOT_FOUND;
 		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
 		std::cout << RED_TEXT << "LAZARUS::ERROR::TEXTURE_LOADER" << std::endl;
 		std::cout << "Status: " << globals.getExecutionState() << RESET_TEXT << std::endl;
@@ -134,8 +130,6 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 	
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
-
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
 	}
 
 	this->checkErrors(__PRETTY_FUNCTION__);
@@ -151,17 +145,11 @@ void TextureLoader::checkErrors(const char *invoker)
         std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
         std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
 
-		// LAZARUS_EXECUTION_STATUS = LAZARUS_OPENGL_ERROR;
 		globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     } 
-	// else 
-	// {
-	// 	globals.setExecutionState(LAZARUS_OK);
-	// }
 
 	return;
 };
-
 
 int TextureLoader::calculateMipLevels(int width, int height)
 {
@@ -193,9 +181,6 @@ int TextureLoader::calculateMipLevels(int width, int height)
 			break;
 		}
 	}
-
-	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
-	globals.setExecutionState(LAZARUS_OK);
 
 	return this->loopCount;
 }
