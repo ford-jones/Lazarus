@@ -21,6 +21,10 @@
 	#include "constants.h"
 #endif
 
+// #ifndef LAZARUS_GLOBALS_H
+    #include "globalsManager.h"
+// #endif
+
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -57,8 +61,8 @@ class FileReader
         Image readFromImage(string filepath);
         const char *readFromText(string filepath);
 
-        void resizeImagesOnLoad(bool shouldResize);
-        void setMaxImageSize(int width, int height);
+        // void resizeImagesOnLoad(bool shouldResize);
+        // void setMaxImageSize(int width, int height);
         
 		int x, y, n;
         virtual ~FileReader();
@@ -80,6 +84,12 @@ class FileReader
         string filenameString;
 
         Image outImage;
+
+        bool enforceResize;
+        int maxWidth;
+        int maxHeight;
+
+        // GlobalsManager globals;
 };
 
 #endif

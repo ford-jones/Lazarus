@@ -24,6 +24,10 @@
 	#include "constants.h"
 #endif
 
+// #ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+// #endif
+
 #include <iostream>
 #include <string.h>
 
@@ -68,5 +72,7 @@ class WindowManager
         GLFWimage image;
 		int initialiseGLEW();
         int checkErrors();
+
+        // GlobalsManager globals;
 };
 #endif

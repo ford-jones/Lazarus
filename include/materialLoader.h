@@ -24,6 +24,10 @@
 	#include "constants.h"
 #endif
 
+// #ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+// #endif
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -59,6 +63,8 @@ class MaterialLoader
         char currentLine[256];
         int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
         int texCount;
+
+        // GlobalsManager globals;
 };
 
 #endif

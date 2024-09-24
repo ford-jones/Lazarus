@@ -35,7 +35,10 @@ class GlobalsManager
         void setEnforceImageSanity(bool shouldEnforce);
         bool getEnforceImageSanity();
 
-        int getLazarusState();
+        void setExecutionState(int state);
+        int getExecutionState();
 };
+
+static GlobalsManager globals;
 
 #endif

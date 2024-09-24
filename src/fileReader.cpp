@@ -24,6 +24,10 @@ FileReader::FileReader()
 	this->imageData = 0;
     this->outResize = 0;
     this->resizeStatus = 0;
+    
+    this->enforceResize = false;
+    this->maxWidth = 0;
+    this->maxHeight = 0;
 
     this->outImage = {};
 	this->x = 0;
@@ -51,18 +55,23 @@ const char *FileReader::readFromText(string filepath)
 
             this->contents = stringstream.str();
             this->textData = this->contents.c_str();
+
+            globals.setExecutionState(LAZARUS_OK);
+
             return textData;
         } 
         else 
         {
             std::cout << RED_TEXT << "fileStream is not open" << RESET_TEXT << std::endl;
-            return LAZARUS_FILESTREAM_CLOSED;
+            // return LAZARUS_FILESTREAM_CLOSED;
+            globals.setExecutionState(LAZARUS_FILESTREAM_CLOSED);
         };
     }
     else 
     {
         std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
-        return LAZARUS_FILE_NOT_FOUND;
+        // return LAZARUS_FILE_NOT_FOUND;
+        globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
     };
 };
 
@@ -83,11 +92,22 @@ FileReader::Image FileReader::readFromImage(string filename)
 
     if(imageData != NULL) 
     {
-        if((LAZARUS_ENFORCE_IMAGE_SANITY == true))
+        this->enforceResize = globals.getEnforceImageSanity();
+        this->maxWidth = globals.getMaxImageWidth();
+        this->maxHeight = globals.getMaxImageHeight();
+
+        if((enforceResize == true))
         {
-            if(( LAZARUS_MAX_IMAGE_WIDTH <= 0 ) || ( LAZARUS_MAX_IMAGE_HEIGHT <= 0 ))
+            if(( this->maxWidth <= 0 ) || ( this->maxHeight <= 0 ))
             {
                 std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << "Width and height must both have values higher than zero." << RESET_TEXT << std::endl;    
+                globals.setExecutionState(LAZARUS_IMAGE_RESIZE_FAILURE);
+
+                outImage.pixelData = NULL;
+                outImage.height = 0;
+                outImage.width = 0;
+
+                return outImage;
             }
 
         /* ================================================= 
@@ -103,22 +123,26 @@ FileReader::Image FileReader::readFromImage(string filename)
 
             See: https://stackoverflow.com/a/65873156/23636614
         ==================================================== */
-            outResize = (unsigned char *) malloc(LAZARUS_MAX_IMAGE_WIDTH * LAZARUS_MAX_IMAGE_HEIGHT * n);
+            outResize = (unsigned char *) malloc(this->maxWidth * this->maxHeight * n);
 
-            resizeStatus = stbir_resize_uint8(imageData, x, y, 0, outResize, LAZARUS_MAX_IMAGE_WIDTH, LAZARUS_MAX_IMAGE_HEIGHT, 0, n);
+            resizeStatus = stbir_resize_uint8(imageData, x, y, 0, outResize, this->maxWidth, this->maxHeight, 0, n);
 
             if(resizeStatus == 1)
             {
                 outImage.pixelData = outResize;
-                outImage.height = LAZARUS_MAX_IMAGE_WIDTH;
-                outImage.width = LAZARUS_MAX_IMAGE_HEIGHT;
+                outImage.height = this->maxWidth;
+                outImage.width = this->maxHeight;
+
+                globals.setExecutionState(LAZARUS_OK);
             }
             else 
             {
                 outImage.pixelData = imageData;
                 outImage.height = y;
                 outImage.width = x;
+
                 std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << LAZARUS_IMAGE_RESIZE_FAILURE << RESET_TEXT << std::endl;    
+                globals.setExecutionState(LAZARUS_IMAGE_RESIZE_FAILURE);
             }
 
         }
@@ -127,6 +151,8 @@ FileReader::Image FileReader::readFromImage(string filename)
             outImage.pixelData = imageData;
             outImage.height = y;
             outImage.width = x;
+
+            globals.setExecutionState(LAZARUS_OK);
         }
     }
 	else
@@ -136,25 +162,26 @@ FileReader::Image FileReader::readFromImage(string filename)
         outImage.width = 0;
 
 		std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << stbi_failure_reason() << RESET_TEXT << std::endl;
+        globals.setExecutionState(LAZARUS_IMAGE_LOAD_FAILURE);
 	};
 	
 	return outImage;
 };
 
-void FileReader::resizeImagesOnLoad(bool shouldResize)
-{
-    LAZARUS_ENFORCE_IMAGE_SANITY = shouldResize;
+// void FileReader::resizeImagesOnLoad(bool shouldResize)
+// {
+//     LAZARUS_ENFORCE_IMAGE_SANITY = shouldResize;
 
-    return;
-};
+//     return;
+// };
 
-void FileReader::setMaxImageSize(int width, int height)
-{
-    LAZARUS_MAX_IMAGE_WIDTH = width;
-    LAZARUS_MAX_IMAGE_HEIGHT = height;
+// void FileReader::setMaxImageSize(int width, int height)
+// {
+//     LAZARUS_MAX_IMAGE_WIDTH = width;
+//     LAZARUS_MAX_IMAGE_HEIGHT = height;
 
-    return;
-};
+//     return;
+// };
 
 FileReader::~FileReader()
 {

@@ -24,6 +24,10 @@
 	#include "constants.h"
 #endif
 
+// #ifndef LAZARUS_GLOBALS_MANAGER_H
+	#include "globalsManager.h"
+// #endif
+
 #include <iostream>
 #include <string>
 #include <memory>
@@ -61,6 +65,8 @@ class TextureLoader
 		int mipCount;
 		int loopCount;
 		int x, y;
+
+		// GlobalsManager globals;
 };
 
 #endif

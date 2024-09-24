@@ -97,6 +97,9 @@ int WindowManager::initialise()
     if(!glfwInit())
     {
         std::cout << "ERROR::GLFW::NOT_FOUND" << std::endl;
+        // LAZARUS_EXECUTION_STATUS = LAZARUS_WINDOW_ERROR;
+        globals.setExecutionState(LAZARUS_WINDOW_ERROR);
+        
         glfwTerminate();
         return -1;
     };
@@ -143,10 +146,15 @@ int WindowManager::checkErrors()
         std::cout << "ERROR::GLFW::WINDOW" << std::endl;
         std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
 
+        // LAZARUS_EXECUTION_STATUS = LAZARUS_WINDOW_ERROR;
+        globals.setExecutionState(LAZARUS_WINDOW_ERROR);
         return errorCode;
     }
     else 
     {
+        // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+        globals.setExecutionState(LAZARUS_OK);
+
     	return GLFW_NO_ERROR;
     }
 };
@@ -155,6 +163,9 @@ int WindowManager::initialiseGLEW()
 {
     glewExperimental = GL_TRUE;
     glewInit();
+
+    // LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+    globals.setExecutionState(LAZARUS_OK);
 
     return GLEW_NO_ERROR;
 };

@@ -5,7 +5,7 @@ else ifeq ($(shell uname),Darwin)
 	LDFLAGS += -framework OpenGL
 endif
 
-OBJECTS = src/shader.o src/light.o src/camera.o \
+OBJECTS = src/globalsManager.o src/shader.o src/light.o src/camera.o \
 					src/mesh.o src/transforms.o \
 					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
 					src/WindowManager.o src/fileReader.o src/eventManager.o \
@@ -27,6 +27,7 @@ build : $(OBJECTS)
 	$(shell mkdir build && mkdir lib)
 	$(CXX) $(CXXFLAGS) -o lib/liblazarus.so $(OBJECTS) $(LDFLAGS)
 
+globalsManager.o := include/globalsManager.h
 shader.o := include/shader.h
 light.o := include/light.h
 camera.o := include/camera.h

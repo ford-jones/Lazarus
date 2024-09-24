@@ -72,10 +72,17 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 		imageData.width = this->image.width;
 		imageData.height = this->image.height;
 		imageData.pixelData = this->image.pixelData;
+
+		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+		globals.setExecutionState(LAZARUS_OK);
 	}
 	else
 	{
-		std::cerr << LAZARUS_FILE_NOT_FOUND << std::endl;
+		// LAZARUS_EXECUTION_STATUS = LAZARUS_FILE_NOT_FOUND;
+		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
+		std::cout << RED_TEXT << "LAZARUS::ERROR::TEXTURE_LOADER" << std::endl;
+		std::cout << "Status: " << LAZARUS_EXECUTION_STATUS << RESET_TEXT << std::endl;
+
 		textureLayer = 0;
 
 		imageData.width = 0;
@@ -104,10 +111,6 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 		this->image.height = imageData.height;
 		this->image.pixelData = imageData.pixelData;
 
-		std::cout << "TexLayer: " << textureLayer << std::endl;
-		std::cout << "width: " << image.width << std::endl;
-		std::cout << "height: " << image.height << std::endl;
-
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY, 
 			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
@@ -127,6 +130,9 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 	
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+
+		// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+		globals.setExecutionState(LAZARUS_OK);
 	}
 
 	this->checkErrors(__PRETTY_FUNCTION__);
@@ -141,6 +147,9 @@ void TextureLoader::checkErrors(const char *invoker)
     {
         std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
         std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
+
+		// LAZARUS_EXECUTION_STATUS = LAZARUS_OPENGL_ERROR;
+		globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     };
 };
 
@@ -175,6 +184,9 @@ int TextureLoader::calculateMipLevels(int width, int height)
 			break;
 		}
 	}
+
+	// LAZARUS_EXECUTION_STATUS = LAZARUS_OK;
+	globals.setExecutionState(LAZARUS_OK);
 
 	return this->loopCount;
 }
