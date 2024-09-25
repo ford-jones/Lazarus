@@ -45,11 +45,8 @@ shared_ptr<Light::AmbientLight> Light::createAmbientLight(double x, double y, do
     return ambientLight;
 };
 
-shared_ptr<Light::AmbientLight> Light::initialiseLight(shared_ptr<Light::AmbientLight> lightData)
+void Light::loadLightSource(shared_ptr<Light::AmbientLight> &lightData)
 {
-	this->ambientLight = std::move(lightData);
-    glUniform3fv        (ambientLight->lightPositionUniformLocation, 1, &ambientLight->lightPosition[0]);
-    glUniform3fv        (ambientLight->lightColorUniformLocation, 1, &ambientLight->lightColor[0]);
-    
-    return ambientLight;
+    glUniform3fv        (lightData->lightPositionUniformLocation, 1, &lightData->lightPosition[0]);
+    glUniform3fv        (lightData->lightColorUniformLocation, 1, &lightData->lightColor[0]);
 };

@@ -505,11 +505,11 @@ Params:
 > **g:** *This light's green colour value.* \
 > **b:** *This light's blue colour value.* 
 
-#### shared_ptr\<AmbientLight> initialiseLight(shared_ptr\<AmbientLight> lightData)
+#### void loadLightSource(shared_ptr\<AmbientLight> &lightData)
 Passes the light object's locative (x,y,z) values into the vertex shader and its' colour (r,g,b) values into the fragment shader.
 
 Params:
-> **lightData:** *A pointer to the light asset you would like to render.*
+> **lightData:** *A reference to the light asset you would like to render.*
 
 ### Members:
 > **AmbientLight:** *A collection of properties which make up a light asset. (type: `struct`)*
