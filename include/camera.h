@@ -62,7 +62,7 @@ class Camera
 		//	Rename the existing creation function to createPerspectiveCamera()
 		
         shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
-        shared_ptr<FixedCamera> loadCamera(shared_ptr<FixedCamera> cameraData);
+        void loadCamera(shared_ptr<FixedCamera> &cameraData);
 
     private:
         GLuint shader;
