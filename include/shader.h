@@ -25,6 +25,10 @@
 	#include "constants.h"
 #endif
 
+#ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+#endif
+
 #include <iostream>
 #include <memory>
 
@@ -55,6 +59,8 @@ class Shader
 
         char infoLog[512];                                                                  //  Handler passed to OpenGL to store any logs
         int accepted;                                                                       //  Handler passed to OpenGL to store the status of an attempt to locate the shader
+
+        GlobalsManager globals;
         
 };
 

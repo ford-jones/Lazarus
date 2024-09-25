@@ -75,12 +75,17 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 	}
 	else
 	{
-		std::cerr << LAZARUS_FILE_NOT_FOUND << std::endl;
+		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
+		std::cout << RED_TEXT << "LAZARUS::ERROR::TEXTURE_LOADER" << std::endl;
+		std::cout << "Status: " << globals.getExecutionState() << RESET_TEXT << std::endl;
+
 		textureLayer = 0;
 
 		imageData.width = 0;
         imageData.height = 0;
         imageData.pixelData = NULL;
+
+		return;
 	};
 
 	/* ======================================
@@ -94,6 +99,8 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 	this->textures.push_back(textureLayer);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
+
+	return;
 };
 
 void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
@@ -103,10 +110,6 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 		this->image.width = imageData.width;
 		this->image.height = imageData.height;
 		this->image.pixelData = imageData.pixelData;
-
-		std::cout << "TexLayer: " << textureLayer << std::endl;
-		std::cout << "width: " << image.width << std::endl;
-		std::cout << "height: " << image.height << std::endl;
 
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY, 
@@ -141,9 +144,12 @@ void TextureLoader::checkErrors(const char *invoker)
     {
         std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
         std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
-    };
-};
 
+		globals.setExecutionState(LAZARUS_OPENGL_ERROR);
+    } 
+
+	return;
+};
 
 int TextureLoader::calculateMipLevels(int width, int height)
 {

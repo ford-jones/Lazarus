@@ -2,6 +2,10 @@
     #include "gl_includes.h"
 #endif
 
+// #ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+// #endif
+
 #include "WindowManager.h"
 #include "eventManager.h"
 #include "mesh.h"
@@ -18,6 +22,7 @@
 
 namespace Lazarus
 {
+    using ::GlobalsManager;
     using ::WindowManager;
     using ::EventManager;
     using ::Mesh;

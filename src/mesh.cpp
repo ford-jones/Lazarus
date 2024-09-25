@@ -243,7 +243,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::drawMesh(shared_ptr<TriangulatedMe
 	};
 	
 	triangulatedMesh = std::move(meshData);
-	
+
     glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
 
     this->checkErrors(__PRETTY_FUNCTION__);
@@ -261,8 +261,9 @@ void Mesh::checkErrors(const char *invoker)
     {
         std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
         std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
-    };
 
+        globals.setExecutionState(LAZARUS_OPENGL_ERROR);
+    }
 };
 
 void Mesh::releaseMesh()

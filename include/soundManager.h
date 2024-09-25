@@ -20,6 +20,10 @@
 	#include "constants.h"
 #endif
 
+#ifndef LAZARUS_GLOBALS_MANAGER_H
+	#include "globalsManager.h"
+#endif
+
 #include <iostream>
 #include <fmod.h>
 #include <fmod.hpp>
@@ -108,6 +112,8 @@ class SoundManager
 		AudioData audioData;
 
 		shared_ptr<Audio> audioOut;
+
+		GlobalsManager globals;
 };
 
 #endif

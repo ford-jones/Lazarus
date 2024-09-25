@@ -41,6 +41,8 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
     if( !file.is_open() )
     {
+        globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
+        
         return false;
     }
 
@@ -197,6 +199,8 @@ void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> 
         outAttributes.push_back(normal);
         outAttributes.push_back(uv);
     }
+
+    return;
 }
 
 void MeshLoader::constructTriangle()
@@ -210,8 +214,12 @@ void MeshLoader::constructTriangle()
     ========================================================== */
     if ( this->attributeIndexes.size() !=  9)
     {
-        std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER" << RESET_TEXT << std::endl;
-        std::cout << LAZARUS_FILE_UNREADABLE << std::endl;
+        std::cout << RED_TEXT << "ERROR::MESH::MESH_LOADER " << std::endl;
+        std::cout << "Status: " << LAZARUS_FILE_UNREADABLE << RESET_TEXT << std::endl;
+
+        globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
+
+        return;
     }
 
     this->vertexIndices.push_back(stoi(this->attributeIndexes[0]));
@@ -225,6 +233,8 @@ void MeshLoader::constructTriangle()
     this->normalIndices.push_back(stoi(this->attributeIndexes[8]));
 
     attributeIndexes.clear();
+
+    return;
 }
 
 MeshLoader::~MeshLoader()
