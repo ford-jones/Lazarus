@@ -35,14 +35,17 @@ static const char*  LAZARUS_MESH_NOTEX                  = "Textureless mesh.";
 /* Status Codes */
 
 static const int    LAZARUS_OK                          = 0;
-static const int    LAZARUS_FILE_NOT_FOUND              = 1;
-static const int    LAZARUS_FILE_UNREADABLE             = 2;
-static const int    LAZARUS_IMAGE_LOAD_FAILURE          = 3;
-static const int    LAZARUS_IMAGE_RESIZE_FAILURE        = 4;
-static const int    LAZARUS_FILESTREAM_CLOSED           = 5;
-static const int    LAZARUS_AUDIO_ERROR                 = 6;
-static const int    LAZARUS_OPENGL_ERROR                = 7;
-static const int    LAZARUS_SHADER_ERROR                = 8;
-static const int    LAZARUS_WINDOW_ERROR                = 9;
+static const int    LAZARUS_FILE_NOT_FOUND              = 101;
+static const int    LAZARUS_FILE_UNREADABLE             = 102;
+static const int    LAZARUS_FILESTREAM_CLOSED           = 103;
+static const int    LAZARUS_SHADER_ERROR                = 201;
+static const int    LAZARUS_VSHADER_COMPILE_FAILURE     = 202;
+static const int    LAZARUS_FSHADER_COMPILE_FAILURE     = 203;
+static const int    LAZARUS_SHADER_LINKING_FAILURE      = 204;
+static const int    LAZARUS_OPENGL_ERROR                = 301;
+static const int    LAZARUS_AUDIO_ERROR                 = 302;
+static const int    LAZARUS_WINDOW_ERROR                = 303;
+static const int    LAZARUS_IMAGE_LOAD_FAILURE          = 401;
+static const int    LAZARUS_IMAGE_RESIZE_FAILURE        = 402;
 
 #endif
