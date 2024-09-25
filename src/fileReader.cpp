@@ -62,12 +62,16 @@ const char *FileReader::readFromText(string filepath)
         {
             std::cout << RED_TEXT << "fileStream is not open" << RESET_TEXT << std::endl;
             globals.setExecutionState(LAZARUS_FILESTREAM_CLOSED);
+
+            return std::to_string(LAZARUS_FILESTREAM_CLOSED).c_str();
         };
     }
     else 
     {
         std::cout << RED_TEXT << "File doesn't exist" << RESET_TEXT << std::endl;
         globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
+
+        return std::to_string(LAZARUS_FILE_NOT_FOUND).c_str();
     };
 };
 
