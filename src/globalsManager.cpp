@@ -60,3 +60,39 @@ int GlobalsManager::getExecutionState()
 {
     return LAZARUS_EXECUTION_STATUS;
 }
+
+void GlobalsManager::setCursorHidden(bool shouldHide)
+{
+    LAZARUS_DISABLE_CURSOR_VISIBILITY = shouldHide;
+
+    return;
+}
+
+bool GlobalsManager::getCursorHidden()
+{
+    return LAZARUS_DISABLE_CURSOR_VISIBILITY;
+}
+
+void GlobalsManager::setBackFaceCulling(bool shouldCull)
+{
+    LAZARUS_CULL_BACK_FACES = shouldCull;
+
+    return;
+}
+
+bool GlobalsManager::getBackFaceCulling()
+{
+    return LAZARUS_CULL_BACK_FACES;
+}
+
+void GlobalsManager::setDepthTest(bool shouldTest)
+{
+    LAZARUS_DEPTH_TEST_FRAGS = shouldTest;
+
+    return;
+}
+
+bool GlobalsManager::getDepthTest()
+{
+    return LAZARUS_DEPTH_TEST_FRAGS;
+}

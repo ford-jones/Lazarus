@@ -13,6 +13,9 @@ static int          LAZARUS_EXECUTION_STATUS            = 0;
 /* User Settings */
 
 static bool         LAZARUS_ENFORCE_IMAGE_SANITY        = false;
+static bool         LAZARUS_DISABLE_CURSOR_VISIBILITY   = false;
+static bool         LAZARUS_CULL_BACK_FACES             = true;
+static bool         LAZARUS_DEPTH_TEST_FRAGS            = true;
 static int          LAZARUS_MAX_IMAGE_WIDTH             = 0;
 static int          LAZARUS_MAX_IMAGE_HEIGHT            = 0;
 
