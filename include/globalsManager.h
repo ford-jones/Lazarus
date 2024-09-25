@@ -35,10 +35,17 @@ class GlobalsManager
         void setEnforceImageSanity(bool shouldEnforce);
         bool getEnforceImageSanity();
 
+        void setCursorHidden(bool shouldHide);
+        bool getCursorHidden();
+
+        void setBackFaceCulling(bool shouldCull);
+        bool getBackFaceCulling();
+
+        void setDepthTest(bool shouldTest);
+        bool getDepthTest();
+
         void setExecutionState(int state);
         int getExecutionState();
 };
-
-// static GlobalsManager globals;
 
 #endif

@@ -20,7 +20,6 @@
 #include "../include/WindowManager.h"
 /* =======================================
 	TODO: 
-	- Make monitor and window optional
 	- Rename arguments
     - Enable fullscreen 
     - Handle resizing
@@ -35,15 +34,22 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.height = h;
     this->frame.width = w;
     this->frame.title = t;
+
+    this->enableCursor = globals.getCursorHidden();
+    this->cullFaces = globals.getBackFaceCulling();
+    this->testDepth = globals.getDepthTest();
+    /* ==================
+        Optional
+    ===================== */
     this->frame.monitor = m;
     this->frame.fullscreen = win;
 
     this->cursor = NULL;
 };
 
-int WindowManager::loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth)
+int WindowManager::loadConfig(GLuint shader)
 {	
-	if(enableCursor == false)
+	if(enableCursor == true)
 	{
 		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	};

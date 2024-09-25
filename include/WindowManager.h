@@ -37,17 +37,17 @@
 class WindowManager
 {
     public:
-        WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win);
+        WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL);
 
 
-		    int loadConfig(GLuint shader = 0, bool enableCursor = true, bool cullFaces = true, bool testDepth = true);
+		int loadConfig(GLuint shader);
         //  TODO:
         //  Create a class for the cursor
         //	Locate what is being clicked
         //	Call glReadPixels() to retrieve all of the rasterised pixels loaded onto the cpu
 		//	I imagine these can then be iterated through and checked for matches against mouseX & mouseY
 
-		    int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
+		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
         int initialise();
         int handleBuffers();
 
@@ -61,6 +61,10 @@ class WindowManager
             GLFWmonitor *monitor;
             GLFWwindow *fullscreen;
         };
+
+        bool enableCursor;
+        bool cullFaces;
+        bool testDepth;
 
         Window frame;
         
