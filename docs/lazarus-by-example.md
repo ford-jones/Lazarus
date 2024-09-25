@@ -6,7 +6,7 @@
 
 int main()
 {
-    Lazarus::WindowManager window = Lazarus::WindowManager(800, 600, "Game Window", nullptr, nullptr);
+    Lazarus::WindowManager window = Lazarus::WindowManager(800, 600, "Game Window");
     window.initialise();
 
     return 0;

@@ -8,24 +8,21 @@ For a comprehensive usage guide, visit [Lazarus by Example](./lazarus-by-example
 A class for making and managing the program's window(s). 
 
 ### Constructor:
-#### WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
+#### WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL)
 
 Params:
 > **h**: *The height of the window* \
 > **w**: *The width of the window* \
 > **t**: *The window's title* \
-> **m**: *A pointer to which monitor this window should popup in.* \
-> **win**: *A pointer to another window used when the user enters fullscreen.*
+> **m**: *A pointer to which monitor this window should popup in. (optional)* \
+> **win**: *A pointer to another window used when the user enters fullscreen. (optional)*
 
 ### Functions:
-#### int loadConfig(GLuint shader, bool enableCursor, bool cullFaces, bool testDepth)
-Creates a configuration for the window's render pipeline.
+#### int loadConfig(GLuint shader)
+Binds a shader program to the current active window's OpenGL Context and loads a render configuration based on values set in the global scope (see: `GlobalsManager`).
 
 Params:
-> **shader:** *The id of the engine's shader program. This can be acquired from a call to `Shader::initialiseShader()` or by compiling your own shader program. (default: `0`)* \
-> **enableCursor:** *Whether or not the cursor should be visible on the screen or disabled. (deafult: `true`)* \
-> **cullFaces:** *Enables face culling. When active; faces which are not currently in eyespace are not rendered. (default: `true`)* \
-> **testDepth:** *Enables depth testing. Renders fragments in order of perspective rather than the order they're drawn in. (default `true`)* \
+> **shader:** *The id of the engine's shader program. This can be acquired from a call to `Shader::initialiseShader()` or by compiling your own shader program. (default: `0`)* 
 
 #### int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
 Builds a unique cursor for the window from an image loaded in by the user.
