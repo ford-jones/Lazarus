@@ -2,7 +2,86 @@
 This API reference contains brief descriptions of each of the Lazarus classes; their contructors, functions and members and \
 destructors. Private functions and members are currently omitted from this guide.
 
+All of the Lazarus status codes can be found at the bottom of this document.
+
 For a comprehensive usage guide, visit [Lazarus by Example](./lazarus-by-example.md)
+
+## GlobalsManager:
+
+### Functions:
+#### void setMaxImageSize(int width, int height)
+Sets the value of `LAZARUS_MAX_IMAGE_WIDTH` and `LAZARUS_MAX_IMAGE_HEIGHT`. Used to determine the rescale size for all images loaded with `FileReader::readFromImage()` from hereafter.
+
+*Notes:* 
+- *Has no effect if the value returned by `GlobalsManager::getEnforceImageSanity()`* is `true`.
+- *The `width` and `height` parameters must have values higher than 0 and no higher that 2048.*
+- *Also effects the cursor image. Load your cursors first!*
+
+Params:
+>**width:** *The width in pixels to be used for image resizing.*
+>**height:** *The height in pixels to be used for image resizing.*
+
+#### int getMaxImageWidth()
+Returns the current value of `LAZARUS_MAX_IMAGE_WIDTH`.
+
+#### int getMaxImageHeight()
+Returns the current value of `LAZARUS_MAX_IMAGE_HEIGHT`.
+
+#### void setEnforceImageSanity(bool shouldEnforce)
+Sets the value of `LAZARUS_ENFORCE_IMAGE_SANITY` and allows calls to `GlobalsManager::setMaxImageSize()` to take effect. Also ensures all images are flipped vertically on load.
+
+Params:
+>**shouldEnforce:** *Whether or not vertical flipping and image resizing is enforced on all images.*
+
+#### bool getEnforceImageSanity()
+Returns the current value of `LAZARUS_ENFORCE_IMAGE_SANITY`.
+
+#### void setCursorHidden(bool shouldHide)
+Sets the value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`. When `true` the cursor pointer will become transparent when hovered over the active game window.
+
+*Notes:*
+- *Must be set prior to creation of a window with `WindowManager::initialise()`*
+- *Cursor X and Y coordinates continue to update following a call to `EventManager::monitorEvents()` as if it were opaque.*
+
+params:
+>**shouldHide:** *Whether or not cursor opacity should be set to 0.*
+
+#### bool getCursorHidden()
+Returns the current value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`.
+
+#### void setBackFaceCulling(bool shouldCull)
+Sets the value of `LAZARUS_CULL_BACK_FACES`. I don't reccomend disabling this optimisation but if you want to you can... Ensures that faces opposite to the camera aren't rendered. Front face culling is currently unsupported through lazarus but you can enable it yourself using OpenGL (prior to window creation) like so:
+
+```cpp
+glEnable(GL_CULL_FACE);
+glCullFace(GL_FRONT);
+```
+
+params:
+>**shouldCull:** *Whether or not to disable the rendering of faces that are currently out of sight.*
+
+#### bool getBackFaceCulling()
+Returns the current value of `LAZARUS_CULL_BACK_FACES`.
+
+#### void setDepthTest(bool shouldTest)
+Sets the value of `LAZARUS_DEPTH_TEST_FRAGS`. Again, I don't reccomend disabling this setting. Informs OpenGL that we want it to perform a depth test on the current fragment that is being drawn against the rest of the frame buffers contents. Determines what is in-front or behind. Turning this off can have a disastrous effect on the render result.
+
+params:
+>**shouldTest:** *Whether or not OpenGL should should check which fragments are in-front or behind of eachother.*
+
+#### getDepthTest()
+Returns the current value of `LAZARUS_DEPTH_TEST_FRAGS`.
+
+#### void setExecutionState(int state)
+This will eventually be made private but right now it isn't which is why I'm documenting it here. Sets the value of `LAZARUS_EXECUTION_STATUS` which; in an error-free program should always(!) be 0.
+
+*(Note: Seriously, no point in touching this. you're just shooting yourself in the foot).*
+
+params:
+>**state:** *The desired execution-status (status code).*
+
+#### int getExecutionState()
+Returns the current value of `LAZARUS_EXECUTION_STATUS`. Any errors that occur inside the engine should update this value to be one of any lazarus status code.
 
 ## WindowManager:
 A class for making and managing the program's window(s). 
@@ -513,3 +592,18 @@ Params:
 > **listenerLocationX:** *The audio listener's location on the x-axis.* \
 > **listenerLocationY:** *The audio listener's location on the y-axis.* \
 > **listenerLocationZ:** *The audio listener's location on the z-axis.*
+
+## Status Codes:
+- **LAZARUS_OK** *The engines default state. No problems. (Code: 0)* 
+- **LAZARUS_FILE_NOT_FOUND** *The specified asset couldn't be found (Code: 101)* 
+- **LAZARUS_FILE_UNREADABLE** *The located file cannot be read. (Code: 102)* 
+- **LAZARUS_FILESTREAM_CLOSED** *The filestream input closed unexpectedly. (Code: 103)* 
+- **LAZARUS_SHADER_ERROR** *OpenGL does not regard the output from shader compilation to be a valid shader program. (Code: 201)* 
+- **LAZARUS_VSHADER_COMPILE_FAILURE** *The vertex shader failed to compile. (Code: 202)*
+- **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
+- **LAZARUS_SHADER_LINKING_FAILURE** *OpenGL failed to link the shaders. (Code: 204)*
+- **LAZARUS_OPENGL_ERROR** *An error occured in the OpenGL graphics pipeline. (Code: 301)*
+- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 302)*
+- **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
+- **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 401)*
+- **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 402)*
