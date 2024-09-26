@@ -32,12 +32,14 @@ using std::shared_ptr;
 #ifndef LAZARUS_TRANSFORMS_H
 #define LAZARUS_TRANSFORMS_H
 
-//	TODO:
-//	Create scale transformations
+/* =====================================================
+	TODO:
+	1. Scaling transforms
+	2. Light rotation (For use with directional lights)
+======================================================== */
 
 class Transform
-{
-	
+{	
     public:
 		void translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);
     	void rotateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);

@@ -69,12 +69,12 @@ class SoundManager
 
 		void initialise();
 		shared_ptr<Audio> createAudio(string filepath, bool is3D = false, int loopCount = 0);
-		shared_ptr<Audio> loadAudio(shared_ptr<Audio> audioIn);
+		void loadAudio(shared_ptr<Audio> &audioIn);
 
-		shared_ptr<Audio> playAudio(shared_ptr<Audio> audioIn);
-		shared_ptr<Audio> pauseAudio(shared_ptr<Audio> audioIn);
+		void playAudio(shared_ptr<Audio> &audioIn);
+		void pauseAudio(shared_ptr<Audio> &audioIn);
 
-		shared_ptr<Audio> updateSourceLocation(shared_ptr<Audio> audioIn, float x, float y, float z);
+		void updateSourceLocation(shared_ptr<Audio> &audioIn, float x, float y, float z);
 		void updateListenerLocation(float x, float y, float z);
 
 		virtual ~SoundManager();
