@@ -96,3 +96,15 @@ bool GlobalsManager::getDepthTest()
 {
     return LAZARUS_DEPTH_TEST_FRAGS;
 }
+
+void GlobalsManager::setContextWindowOpen(bool isOpen)
+{
+    LAZARUS_MAIN_WIN_OPEN = isOpen;
+
+    return;
+}
+
+bool GlobalsManager::getContextWindowOpen()
+{
+    return LAZARUS_MAIN_WIN_OPEN;
+}

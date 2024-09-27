@@ -46,6 +46,9 @@ class GlobalsManager
 
         void setExecutionState(int state);
         int getExecutionState();
+
+        void setContextWindowOpen(bool isOpen);
+        bool getContextWindowOpen();
 };
 
 #endif

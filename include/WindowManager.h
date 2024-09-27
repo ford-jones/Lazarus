@@ -39,6 +39,7 @@ class WindowManager
     public:
         WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL);
 
+        int initialise();
 		int loadConfig(GLuint shader);
         /* =======================================================================
             TODO:
@@ -46,10 +47,13 @@ class WindowManager
             2. Resizing
         	3. Locate what is being clicked (see: glReadPixels())
         ========================================================================== */
+        int open();
+        int close();
 
 		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
-        int initialise();
         int handleBuffers();
+
+        bool isOpen;
 
         virtual ~WindowManager();
         
@@ -81,4 +85,5 @@ class WindowManager
 
         GlobalsManager globals;
 };
+
 #endif

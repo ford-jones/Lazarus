@@ -44,6 +44,8 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     this->frame.monitor = m;
     this->frame.fullscreen = win;
 
+    this->isOpen = false;
+
     this->cursor = NULL;
 };
 
@@ -65,7 +67,7 @@ int WindowManager::loadConfig(GLuint shader)
 	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 0.0, 0.0);
+    glClearColor        (0.0, 0.0, 0.0, 0.0);    // glfwDestroyWindow(this->window);
 
     /* ===============================================
         TODO:
@@ -129,10 +131,46 @@ int WindowManager::initialise()
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
+    /* ========================================================================== 
+        Note that alot of the GL ecosystem uses C-style callbacks. The repercussion
+        being that pointers such as "this" cannot be used because of the required
+        function signature being a static constant. 
+
+        The solution here is to set the glfw user pointer value to "this" (i.e. 
+        this class) and then perform a get on the user pointer inside of the actual 
+        callback, which; is declared inline as a non-capturing lambda function.
+    ============================================================================= */
+    glfwSetWindowUserPointer(this->window, this);
+
+    glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
+        WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
+        window->close();
+    });
+
 	this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };
+
+int WindowManager::open()
+{
+    glfwSetWindowShouldClose(this->window, GLFW_FALSE);    // glfwDestroyWindow(this->window);
+    this->isOpen = true;
+
+    globals.setContextWindowOpen(this->isOpen);
+
+    return GLFW_NO_ERROR;
+}
+
+int WindowManager::close()
+{
+    glfwSetWindowShouldClose(this->window, GLFW_TRUE);
+    this->isOpen = false;
+
+    globals.setContextWindowOpen(this->isOpen);
+
+    return GLFW_NO_ERROR;
+}
 
 int WindowManager::handleBuffers()
 {
