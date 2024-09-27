@@ -97,11 +97,21 @@ Params:
 > **win**: *A pointer to another window used when the user enters fullscreen. (optional)*
 
 ### Functions:
+#### int initialise()
+Creates a new instance of a window, initialises OpenGL and creates a GL context.
+
 #### int loadConfig(GLuint shader)
 Binds a shader program to the current active window's OpenGL Context and loads a render configuration based on values set in the global scope (see: `GlobalsManager`).
 
 Params:
 > **shader:** *The id of the engine's shader program. This can be acquired from a call to `Shader::initialiseShader()` or by compiling your own shader program. (default: `0`)* 
+
+
+#### int open()
+Opens the active window.
+
+#### int close()
+Closes the active window.
 
 #### int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
 Builds a unique cursor for the window from an image loaded in by the user.
@@ -113,12 +123,12 @@ Params:
 > **hotY:** *The y-axis cursor hotspot.* \
 > **cursorImage:** *The encoded image with the following properties: 32bit-depth, RGBA color, 32x32 resolution, png file format. Can be acquired from a call to `FileReader::readFromImage()`.* 
 
-#### int initialise()
-Creates a new instance of a window, initialises OpenGL and creates a GL context.
-
 #### int handleBuffers()
 Bring the back buffer to the front (into user view) and moves the front buffer to the back. \
 Clears the back buffer's depth and color bits so that they can be given new values for the next draw.
+
+### Members:
+> **isOpen:** *Whether or not the active window is open. See also: `GlobalsManager::getContextWindowOpen()`. (type: `bool`, default: `false`)* \
 
 ## EventManager
 A class for tracking, storing and managing window events as well as their values.

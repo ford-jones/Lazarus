@@ -12,7 +12,6 @@ static int          LAZARUS_EXECUTION_STATUS            = 0;
 
 /* User Settings */
 
-static bool         LAZARUS_MAIN_WIN_OPEN               = false;
 static bool         LAZARUS_ENFORCE_IMAGE_SANITY        = false;
 static bool         LAZARUS_DISABLE_CURSOR_VISIBILITY   = false;
 static bool         LAZARUS_CULL_BACK_FACES             = true;

@@ -157,8 +157,6 @@ int WindowManager::open()
     glfwSetWindowShouldClose(this->window, GLFW_FALSE);    // glfwDestroyWindow(this->window);
     this->isOpen = true;
 
-    globals.setContextWindowOpen(this->isOpen);
-
     return GLFW_NO_ERROR;
 }
 
@@ -166,8 +164,6 @@ int WindowManager::close()
 {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     this->isOpen = false;
-
-    globals.setContextWindowOpen(this->isOpen);
 
     return GLFW_NO_ERROR;
 }
