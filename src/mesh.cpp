@@ -174,22 +174,15 @@ void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
     }
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> meshData)
-{
-	if(triangulatedMesh != nullptr)
-	{
-		triangulatedMesh.reset();
-	};
-
-	triangulatedMesh = std::move(meshData);
-	
+void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
+{	
     glGenVertexArrays(1, &this->VAO);
 	glBindVertexArray(this->VAO);
 
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, triangulatedMesh->attributes.size() * sizeof(vec3), &triangulatedMesh->attributes[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, asset->attributes.size() * sizeof(vec3), &asset->attributes[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
     glEnableVertexAttribArray(0);
@@ -205,52 +198,38 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::initialiseMesh(std::shared_ptr<Tri
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
-    if(triangulatedMesh->textureFilepath != LAZARUS_MESH_NOTEX)
+    if(asset->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-        texLoader->loadTexture(triangulatedMesh->textureData, triangulatedMesh->textureId);
+        texLoader->loadTexture(asset->textureData, asset->textureId);
     }
 	
-    return triangulatedMesh;
+    return;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::loadMesh(shared_ptr<TriangulatedMesh> meshData)
+void Mesh::loadMesh(shared_ptr<TriangulatedMesh> &asset)
 {
-	if(triangulatedMesh != nullptr)
-	{
-		triangulatedMesh.reset();
-	};
-	
-	triangulatedMesh = std::move(meshData);
+    glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
+    glUniform1i(asset->is3DUniformLocation, asset->is3D);
 
-    glUniformMatrix4fv(triangulatedMesh->modelviewUniformLocation, 1, GL_FALSE, &triangulatedMesh->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
-    glUniform1i(triangulatedMesh->is3DUniformLocation, triangulatedMesh->is3D);
-
-    if(triangulatedMesh->textureId != 0)
+    if(asset->textureId != 0)
     {
-        glUniform1f(triangulatedMesh->textureLayerUniformLocation, (triangulatedMesh->textureId - 1));
+        glUniform1f(asset->textureLayerUniformLocation, (asset->textureId - 1));
     }
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
-    return triangulatedMesh;
+    return;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::drawMesh(shared_ptr<TriangulatedMesh> meshData)
+void Mesh::drawMesh(shared_ptr<TriangulatedMesh> &asset)
 {
-	if(triangulatedMesh != nullptr)
-	{
-		triangulatedMesh.reset();
-	};
-	
-	triangulatedMesh = std::move(meshData);
-
-    glDrawArrays(GL_TRIANGLES, 0, triangulatedMesh->attributes.size());
+    glDrawArrays(GL_TRIANGLES, 0, asset->attributes.size());
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
     this->releaseMesh();
 
-    return triangulatedMesh;
+    return;
 };
 
 void Mesh::checkErrors(const char *invoker)

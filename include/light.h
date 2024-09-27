@@ -57,7 +57,7 @@ class Light
         Light(GLuint shader);
 
         shared_ptr<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b);
-        shared_ptr<AmbientLight> initialiseLight(shared_ptr<AmbientLight> lightData);
+        void loadLightSource(shared_ptr<AmbientLight> &lightData);
 
     private:
     	GLuint shaderProgram;

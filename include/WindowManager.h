@@ -39,13 +39,13 @@ class WindowManager
     public:
         WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL);
 
-
 		int loadConfig(GLuint shader);
-        //  TODO:
-        //  Create a class for the cursor
-        //	Locate what is being clicked
-        //	Call glReadPixels() to retrieve all of the rasterised pixels loaded onto the cpu
-		//	I imagine these can then be iterated through and checked for matches against mouseX & mouseY
+        /* =======================================================================
+            TODO:
+            1. Fullscreen
+            2. Resizing
+        	3. Locate what is being clicked (see: glReadPixels())
+        ========================================================================== */
 
 		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
         int initialise();
@@ -54,6 +54,10 @@ class WindowManager
         virtual ~WindowManager();
         
 	private:
+		int initialiseGLEW();
+        int checkErrors();
+
+        //  Dont know why I made this private
         struct Window
         {
             int height, width;
@@ -62,20 +66,18 @@ class WindowManager
             GLFWwindow *fullscreen;
         };
 
+        Window frame;
+
         bool enableCursor;
         bool cullFaces;
         bool testDepth;
 
-        Window frame;
-        
         int errorCode;
         const char** errorMessage;
         
         GLFWwindow *window;
         GLFWcursor *cursor;
         GLFWimage image;
-		int initialiseGLEW();
-        int checkErrors();
 
         GlobalsManager globals;
 };

@@ -51,11 +51,8 @@ shared_ptr<Camera::FixedCamera> Camera::createFixedCamera(int arX, int arY, doub
     return fixedCamera;                                                                                                                             //  Return the newly created camera struct
 };
 
-shared_ptr<Camera::FixedCamera> Camera::loadCamera(shared_ptr<Camera::FixedCamera> cameraData)
+void Camera::loadCamera(shared_ptr<Camera::FixedCamera> &cameraData)
 {
-	this->fixedCamera = std::move(cameraData);
-    glUniformMatrix4fv     (fixedCamera->viewLocation, 1, GL_FALSE, &fixedCamera->viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
-    glUniformMatrix4fv     (fixedCamera->projectionLocation, 1, GL_FALSE, &fixedCamera->projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
-    
-    return fixedCamera;
+    glUniformMatrix4fv     (cameraData->viewLocation, 1, GL_FALSE, &cameraData->viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
+    glUniformMatrix4fv     (cameraData->projectionLocation, 1, GL_FALSE, &cameraData->projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
 };
