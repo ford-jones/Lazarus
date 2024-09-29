@@ -37,14 +37,16 @@ GLuint Shader::initialiseShader()
 {
     this->vertReader = std::make_unique<FileReader>();
     this->fragReader = std::make_unique<FileReader>();
-
+    std::cout << "Reading files" << std::endl;
     this->vertShaderProgram   =   vertReader->readFromText("shader.vert");                                                      //  Retrieve the vertex shader file contents through stringstream
     this->fragShaderProgram   =   fragReader->readFromText("shader.frag");                                                      //  Retrieve the fragment shader file contents through stringstream
 
+    std::cout << "Creating shaders" << std::endl;
     this->vertShader      =   glCreateShader(GL_VERTEX_SHADER);                                                               //   Create a new instance of a vertex shader program in openGL
     this->fragShader      =   glCreateShader(GL_FRAGMENT_SHADER);                                                             //   Create a new instance of a fragment shader program in openGL
     this->shaderProgram   =   glCreateProgram();                                                                              //   Instantiate a new shader program
 
+    std::cout << "Compiling vert" << std::endl;
     glShaderSource      (this->vertShader, 1, &this->vertShaderProgram, NULL);                                                      //   Link the shader.vert file contents to the newly created OpenGL vertex shader instance
     glCompileShader     (this->vertShader);                                                                                   //   Compile the shader
     glGetShaderiv(this->vertShader, GL_COMPILE_STATUS, &this->accepted);                                                            //   Check the compilation status
@@ -57,6 +59,7 @@ GLuint Shader::initialiseShader()
         return globals.getExecutionState();
     };
 
+std::cout << "Compililing frag" << std::endl;
     glShaderSource      (this->fragShader, 1, &this->fragShaderProgram, NULL);                                                      //   Link the shader.frag file contents to the newly created OpenGL fragment shader instance
     glCompileShader     (this->fragShader);                                                                                   //   Compile the shader
     glGetShaderiv(this->fragShader, GL_COMPILE_STATUS, &this->accepted);                                                            //   Check the compilation status
@@ -68,7 +71,7 @@ GLuint Shader::initialiseShader()
         globals.setExecutionState(LAZARUS_FSHADER_COMPILE_FAILURE);
         return globals.getExecutionState();
     };
-
+std::cout << "linking" << std::endl;
     glAttachShader      (this->shaderProgram, this->vertShader);                                                                    //   Attatch the compiled vert shader to the shader program
     glAttachShader      (this->shaderProgram, this->fragShader);                                                                    //   Attatch the compiled frag shader to the shader program
     glLinkProgram       (this->shaderProgram);                                                                                //   Link the shader program to this OpenGL context

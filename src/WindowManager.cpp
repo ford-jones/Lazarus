@@ -53,20 +53,23 @@ int WindowManager::loadConfig(GLuint shader)
 {	
 	if(enableCursor == true)
 	{
+    std::cout << "Disabling cursor" << std::endl;
 		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	};
 	
 	if(cullFaces == true)
 	{
+    std::cout << "Enabling face culling" << std::endl;
 		glEnable            (GL_CULL_FACE);
         glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
 	{
+    std::cout << "Enabling depth tests" << std::endl;
 	    glEnable            (GL_DEPTH_TEST);
 	};
-
+std::cout << "Setting bg color" << std::endl;
     glClearColor        (0.0, 0.0, 0.0, 0.0);    // glfwDestroyWindow(this->window);
 
     /* ===============================================
@@ -78,7 +81,7 @@ int WindowManager::loadConfig(GLuint shader)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBlendEquation(GL_FUNC_ADD);
     ================================================== */
-
+std::cout << "Setting program" << std::endl;
 	glUseProgram(shader);
 	
 	this->checkErrors();
@@ -102,6 +105,7 @@ int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsign
 
 int WindowManager::initialise()
 {
+  std::cout << "Initialising" << std::endl;
     if(!glfwInit())
     {
         std::cout << "ERROR::WINDOW_MANAGER::GLFW_MISSING" << std::endl;
@@ -112,6 +116,7 @@ int WindowManager::initialise()
         return -1;
     };
 
+    std::cout << "Setting hints" << std::endl;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 
@@ -119,6 +124,7 @@ int WindowManager::initialise()
 
     this->checkErrors();
 
+    std::cout << "Creating window" << std::endl;
     this->window = glfwCreateWindow
     (
         this->frame.height, 
@@ -128,6 +134,7 @@ int WindowManager::initialise()
         this->frame.fullscreen
     );
 
+    std::cout << "Configuring context" << std::endl;
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
 
@@ -140,12 +147,13 @@ int WindowManager::initialise()
         this class) and then perform a get on the user pointer inside of the actual 
         callback, which; is declared inline as a non-capturing lambda function.
     ============================================================================= */
-    glfwSetWindowUserPointer(this->window, this);
+        std::cout << "Configuring user settings" << std::endl;
+    // glfwSetWindowUserPointer(this->window, this);
 
-    glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
-        WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
-        window->close();
-    });
+    // glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
+    //     WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
+    //     window->close();
+    // });
 
 	this->initialiseGLEW();
     
@@ -180,6 +188,7 @@ int WindowManager::handleBuffers()
 
 int WindowManager::checkErrors()
 {
+  std::cout << "Checking errors" << std::endl;
     errorCode = glfwGetError(errorMessage); 
     if(errorCode != GLFW_NO_ERROR)
     {
@@ -197,6 +206,7 @@ int WindowManager::checkErrors()
 
 int WindowManager::initialiseGLEW()
 {
+      std::cout << "Initialising GLEW" << std::endl;
     glewExperimental = GL_TRUE;
     glewInit();
 
