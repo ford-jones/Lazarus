@@ -4,14 +4,16 @@ LDFLAGS := -lGLEW -lglfw -lfmod
 
 CXX = g++
 
-CXXFLAGS = -std=gnu++17 -fPIC -shared
+CXXFLAGS = -std=c++17 -fPIC
 
 # OS-specifics
 ifeq ($(shell uname),Linux)
 	CXX += -lstdc++fs
+	CXXFLAGS += -shared
 	LDFLAGS += -lGL 
 	TARGET += liblazarus.so
 else ifeq ($(shell uname),Darwin)
+	CXXFLAGS += -dynamiclib
 	LDFLAGS += -framework OpenGL
 	TARGET += liblazarus.dylib
 endif
