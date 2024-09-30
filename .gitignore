@@ -1,4 +1,9 @@
+# User settings
 .vscode
 
+# Compiler output
 lib
 build
+
+# Debugging symbols
+run.dSYM

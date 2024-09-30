@@ -53,13 +53,13 @@ int WindowManager::loadConfig(GLuint shader)
 {	
 	if(enableCursor == true)
 	{
-		glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	};
 	
 	if(cullFaces == true)
 	{
-		glEnable            (GL_CULL_FACE);
-        glCullFace          (GL_BACK);
+		  glEnable            (GL_CULL_FACE);
+      glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
@@ -78,7 +78,6 @@ int WindowManager::loadConfig(GLuint shader)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glBlendEquation(GL_FUNC_ADD);
     ================================================== */
-
 	glUseProgram(shader);
 	
 	this->checkErrors();
@@ -112,9 +111,20 @@ int WindowManager::initialise()
         return -1;
     };
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    /* ==================================================
+      MacOS support:
+      Can't use latest version of the OpenGL context (4.6).
+      Based on what I've read online - Apple deprecated 
+      support for OpenGL past version 4.1 in favour of their 
+      Metal API which they want to encourage people to use.
 
+      The only way I've been able to get it working is to 
+      explicitly request this older version of the GL context
+      with GLEW experimental features also turned on.
+    ===================================================== */
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     this->checkErrors();
@@ -147,7 +157,7 @@ int WindowManager::initialise()
         window->close();
     });
 
-	this->initialiseGLEW();
+	  this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };

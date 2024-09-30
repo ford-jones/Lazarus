@@ -1,4 +1,4 @@
-#version 460 core
+#version 410 core
 
 in vec3 fragPosition;
 in vec3 diffuseColor;
