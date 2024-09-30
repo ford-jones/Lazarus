@@ -10,12 +10,6 @@
 
 static int          LAZARUS_EXECUTION_STATUS            = 0;
 
-#ifdef __APPLE__
-  static const bool LAZARUS_RUNNING_ON_DARWIN           = true;
-#else
-  static const bool LAZARUS_RUNNING_ON_DARWIN           = false;
-#endif
-
 /* User Settings */
 
 static bool         LAZARUS_ENFORCE_IMAGE_SANITY        = false;

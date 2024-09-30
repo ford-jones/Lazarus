@@ -112,27 +112,19 @@ int WindowManager::initialise()
     };
 
     /* ==================================================
-      Unsure about what to do here. Based on what I've 
-      observed on *my* 2014 (-_-) mac-mini and what I've 
-      read online - Apple suggests you force the use of a
-      4.1.0 context.... with experimental GLEW features.
-      They don't want anyone using OpenGL - they would 
-      prefer everyone to use their METAL api.
+      MacOS support:
+      Can't use latest version of the OpenGL context (4.6).
+      Based on what I've read online - Apple deprecated 
+      support for OpenGL past version 4.1 in favour of their 
+      Metal API which they want to encourage people to use.
 
-      Either mac needs to have it's own shaders OR there
-      needs to be METAL support.
+      The only way I've been able to get it working is to 
+      explicitly request this older version of the GL context
+      with GLEW experimental features also turned on.
     ===================================================== */
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-
-    if(LAZARUS_RUNNING_ON_DARWIN == true)
-    {
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    }
-    else
-    {
-      glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    }
-
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     this->checkErrors();
