@@ -1,4 +1,4 @@
-TARGET := lib/
+TARGET :=
 
 LDFLAGS := -lGLEW -lglfw -lfmod
 
@@ -19,10 +19,7 @@ else ifeq ($(shell uname),Darwin)
 endif
 
 # Remove whitespace from "lib/ liblazarus.*"
-SPACE :=
-SPACE +=
-
-OUT := $(subst $(SPACE),,$(TARGET))
+OUT := $(addprefix lib/,$(TARGET))
 
 OBJECTS = src/globalsManager.o src/shader.o src/light.o src/camera.o \
 					src/mesh.o src/transforms.o \
