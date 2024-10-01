@@ -46,9 +46,11 @@ static const int    LAZARUS_VSHADER_COMPILE_FAILURE     = 202;
 static const int    LAZARUS_FSHADER_COMPILE_FAILURE     = 203;
 static const int    LAZARUS_SHADER_LINKING_FAILURE      = 204;
 static const int    LAZARUS_OPENGL_ERROR                = 301;
-static const int    LAZARUS_AUDIO_ERROR                 = 302;
+static const int    LAZARUS_NO_CONTEXT                  = 302;
 static const int    LAZARUS_WINDOW_ERROR                = 303;
+static const int    LAZARUS_GLFW_NOINIT                 = 304;
 static const int    LAZARUS_IMAGE_LOAD_FAILURE          = 401;
 static const int    LAZARUS_IMAGE_RESIZE_FAILURE        = 402;
+static const int    LAZARUS_AUDIO_ERROR                 = 501;
 
 #endif

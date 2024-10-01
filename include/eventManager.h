@@ -24,6 +24,10 @@
 	#include "constants.h"
 #endif
 
+#ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+#endif
+
 #include <iostream>
 #include <string>
 
@@ -37,8 +41,8 @@ class EventManager
     public:
     	//	TODO:
     	//	Create a constructor / destructor
-    	
-        void monitorEvents();
+    	void initialise();
+        void listen();
 
         string keyString;
         int keyCode;
@@ -51,15 +55,12 @@ class EventManager
 		int scrollCode;
 		
     private:
-    	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods);
-    	static void mouseDownCallback(GLFWwindow *win, int button, int action, int mods);
-    	static void mouseMoveCallback(GLFWwindow *win, double xpos, double ypos);
-    	static void scrollCallback(GLFWwindow *win, double xoffset, double yoffset);
-    	
         void updateKeyboardState();
         void updateMouseState();
 
         GLFWwindow *win;
+
+		GlobalsManager globals;
 };
 
 #endif

@@ -58,8 +58,8 @@ int WindowManager::loadConfig(GLuint shader)
 	
 	if(cullFaces == true)
 	{
-		  glEnable            (GL_CULL_FACE);
-      glCullFace          (GL_BACK);
+		glEnable            (GL_CULL_FACE);
+        glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
@@ -105,7 +105,7 @@ int WindowManager::initialise()
     {
         std::cout << "ERROR::WINDOW_MANAGER::GLFW_MISSING" << std::endl;
 
-        globals.setExecutionState(LAZARUS_WINDOW_ERROR);
+        globals.setExecutionState(LAZARUS_GLFW_NOINIT);
         
         glfwTerminate();
         return -1;
@@ -155,9 +155,10 @@ int WindowManager::initialise()
     glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
         WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
         window->close();
+        return;
     });
 
-	  this->initialiseGLEW();
+	this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };
@@ -195,6 +196,7 @@ int WindowManager::checkErrors()
     {
         std::cout << "ERROR::GLFW::WINDOW" << std::endl;
         std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
+        std::cout << "STATUS: " << globals.getExecutionState() << std::endl;
 
         globals.setExecutionState(LAZARUS_WINDOW_ERROR);
         return errorCode;

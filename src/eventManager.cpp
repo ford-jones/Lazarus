@@ -18,16 +18,65 @@
 /*  LAZARUS ENGINE */
 #include "../include/eventManager.h"
 
-void EventManager::monitorEvents()
-{	
+void EventManager::initialise()
+{
+	win = glfwGetCurrentContext();
 
+	if(win != NULL)
+	{
+		glfwSetKeyCallback(win, [](GLFWwindow *win, int key, int scancode, int action, int mods){
+			switch(action)
+			{
+				case GLFW_PRESS :
+					LAZARUS_LISTENER_KEYCODE = key;
+					LAZARUS_LISTENER_SCANCODE = scancode;
+					break;
+				case GLFW_RELEASE :
+					LAZARUS_LISTENER_KEYCODE = 0;
+					LAZARUS_LISTENER_SCANCODE = 0;
+					break;
+				default:
+					break;
+			};
+			return;
+		});
+
+		glfwSetCursorPosCallback(win, [](GLFWwindow *win, double xpos, double ypos){
+			LAZARUS_LISTENER_MOUSEX = xpos;
+			LAZARUS_LISTENER_MOUSEY = ypos;
+			return;
+		});
+
+		glfwSetMouseButtonCallback(win, [](GLFWwindow *win, int button, int action, int mods){
+			switch(action)
+			{
+				case GLFW_PRESS :
+					LAZARUS_LISTENER_MOUSECODE = button;
+					break;
+				case GLFW_RELEASE :
+					LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
+					break;
+				default :
+					break;
+			};
+			return;
+		});
+
+		glfwSetScrollCallback(win, [](GLFWwindow *win, double xoffset, double yoffset){
+			LAZARUS_LISTENER_SCROLLCODE = yoffset;
+			return;
+		});
+
+	}
+	else 
+	{
+		globals.setExecutionState(LAZARUS_NO_CONTEXT);
+	};
+};
+
+void EventManager::listen()
+{	
     glfwPollEvents();
-    win = glfwGetCurrentContext();
-	
-	glfwSetKeyCallback(win, keydownCallback);
-	glfwSetCursorPosCallback(win, mouseMoveCallback);
-	glfwSetMouseButtonCallback(win, mouseDownCallback);
-	glfwSetScrollCallback(win, scrollCallback);
 	
     this->updateKeyboardState();
     this->updateMouseState();
@@ -122,7 +171,6 @@ void EventManager::updateMouseState()
 	this->mouseX = static_cast<int>(LAZARUS_LISTENER_MOUSEX + 0.5);
 	this->mouseY = static_cast<int>(LAZARUS_LISTENER_MOUSEY + 0.5);		
 	
-
 	/* =========================================================
 		TODO: 
 		Right now scroll can only be either 1 (up) || -1 (down)
@@ -130,47 +178,4 @@ void EventManager::updateMouseState()
 		At the very least, it should be reset to 0 when the scrollwheel is not in motion
 	============================================================ */
 	this->scrollCode = static_cast<int>(LAZARUS_LISTENER_SCROLLCODE);
-};
-
-void EventManager::keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods)
-{
-	switch(action)
-	{
-		case GLFW_PRESS :
-			LAZARUS_LISTENER_KEYCODE = key;
-			LAZARUS_LISTENER_SCANCODE = scancode;
-			break;
-		case GLFW_RELEASE :
-			LAZARUS_LISTENER_KEYCODE = 0;
-			LAZARUS_LISTENER_SCANCODE = 0;
-			break;
-		default:
-			break;
-	};
-};
-
-void EventManager::mouseDownCallback(GLFWwindow *win, int button, int action, int mods)
-{
-	switch(action)
-	{
-		case GLFW_PRESS :
-			LAZARUS_LISTENER_MOUSECODE = button;
-			break;
-		case GLFW_RELEASE :
-			LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
-			break;
-		default :
-			break;
-	};
-};
-
-void EventManager::mouseMoveCallback(GLFWwindow *win, double xpos, double ypos)
-{
-	LAZARUS_LISTENER_MOUSEX = xpos;
-	LAZARUS_LISTENER_MOUSEY = ypos;
-};
-
-void EventManager::scrollCallback(GLFWwindow *win, double xoffset, double yoffset)
-{
-	LAZARUS_LISTENER_SCROLLCODE = yoffset;
 };
