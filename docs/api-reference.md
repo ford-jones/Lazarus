@@ -134,7 +134,6 @@ Clears the back buffer's depth and color bits so that they can be given new valu
 A class for tracking, storing and managing window events as well as their values.
 
 ### Functions:
-
 #### void initialise()
 Locates the programs active window and loads the following event-handler callbacks into it's context's event loop: 
 - keydown 

@@ -105,7 +105,7 @@ int WindowManager::initialise()
     {
         std::cout << "ERROR::WINDOW_MANAGER::GLFW_MISSING" << std::endl;
 
-        globals.setExecutionState(LAZARUS_WINDOW_ERROR);
+        globals.setExecutionState(LAZARUS_GLFW_NOINIT);
         
         glfwTerminate();
         return -1;
@@ -196,6 +196,7 @@ int WindowManager::checkErrors()
     {
         std::cout << "ERROR::GLFW::WINDOW" << std::endl;
         std::cout << "GL_MESSAGE: " << errorMessage << std::endl;
+        std::cout << "STATUS: " << globals.getExecutionState() << std::endl;
 
         globals.setExecutionState(LAZARUS_WINDOW_ERROR);
         return errorCode;

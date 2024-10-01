@@ -22,49 +22,56 @@ void EventManager::initialise()
 {
 	win = glfwGetCurrentContext();
 
-	glfwSetKeyCallback(win, [](GLFWwindow *win, int key, int scancode, int action, int mods){
-		switch(action)
-		{
-			case GLFW_PRESS :
-				LAZARUS_LISTENER_KEYCODE = key;
-				LAZARUS_LISTENER_SCANCODE = scancode;
-				break;
-			case GLFW_RELEASE :
-				LAZARUS_LISTENER_KEYCODE = 0;
-				LAZARUS_LISTENER_SCANCODE = 0;
-				break;
-			default:
-				break;
-		};
-		return;
-	});
+	if(win != NULL)
+	{
+		glfwSetKeyCallback(win, [](GLFWwindow *win, int key, int scancode, int action, int mods){
+			switch(action)
+			{
+				case GLFW_PRESS :
+					LAZARUS_LISTENER_KEYCODE = key;
+					LAZARUS_LISTENER_SCANCODE = scancode;
+					break;
+				case GLFW_RELEASE :
+					LAZARUS_LISTENER_KEYCODE = 0;
+					LAZARUS_LISTENER_SCANCODE = 0;
+					break;
+				default:
+					break;
+			};
+			return;
+		});
 
-	glfwSetCursorPosCallback(win, [](GLFWwindow *win, double xpos, double ypos){
-		LAZARUS_LISTENER_MOUSEX = xpos;
-		LAZARUS_LISTENER_MOUSEY = ypos;
-		return;
-	});
+		glfwSetCursorPosCallback(win, [](GLFWwindow *win, double xpos, double ypos){
+			LAZARUS_LISTENER_MOUSEX = xpos;
+			LAZARUS_LISTENER_MOUSEY = ypos;
+			return;
+		});
 
-	glfwSetMouseButtonCallback(win, [](GLFWwindow *win, int button, int action, int mods){
-		switch(action)
-		{
-			case GLFW_PRESS :
-				LAZARUS_LISTENER_MOUSECODE = button;
-				break;
-			case GLFW_RELEASE :
-				LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
-				break;
-			default :
-				break;
-		};
-		return;
-	});
+		glfwSetMouseButtonCallback(win, [](GLFWwindow *win, int button, int action, int mods){
+			switch(action)
+			{
+				case GLFW_PRESS :
+					LAZARUS_LISTENER_MOUSECODE = button;
+					break;
+				case GLFW_RELEASE :
+					LAZARUS_LISTENER_MOUSECODE = LAZARUS_MOUSE_NOCLICK;
+					break;
+				default :
+					break;
+			};
+			return;
+		});
 
-	glfwSetScrollCallback(win, [](GLFWwindow *win, double xoffset, double yoffset){
-		LAZARUS_LISTENER_SCROLLCODE = yoffset;
-		return;
-	});
+		glfwSetScrollCallback(win, [](GLFWwindow *win, double xoffset, double yoffset){
+			LAZARUS_LISTENER_SCROLLCODE = yoffset;
+			return;
+		});
 
+	}
+	else 
+	{
+		globals.setExecutionState(LAZARUS_NO_CONTEXT);
+	};
 };
 
 void EventManager::listen()
