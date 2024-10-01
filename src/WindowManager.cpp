@@ -58,8 +58,8 @@ int WindowManager::loadConfig(GLuint shader)
 	
 	if(cullFaces == true)
 	{
-		  glEnable            (GL_CULL_FACE);
-      glCullFace          (GL_BACK);
+		glEnable            (GL_CULL_FACE);
+        glCullFace          (GL_BACK);
 	};
 	
 	if(testDepth == true)
@@ -155,9 +155,10 @@ int WindowManager::initialise()
     glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
         WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
         window->close();
+        return;
     });
 
-	  this->initialiseGLEW();
+	this->initialiseGLEW();
     
     return GLFW_NO_ERROR;
 };

@@ -37,8 +37,8 @@ class EventManager
     public:
     	//	TODO:
     	//	Create a constructor / destructor
-    	
-        void monitorEvents();
+    	void initialise();
+        void listen();
 
         string keyString;
         int keyCode;
@@ -51,11 +51,6 @@ class EventManager
 		int scrollCode;
 		
     private:
-    	static void keydownCallback(GLFWwindow *win, int key, int scancode, int action, int mods);
-    	static void mouseDownCallback(GLFWwindow *win, int button, int action, int mods);
-    	static void mouseMoveCallback(GLFWwindow *win, double xpos, double ypos);
-    	static void scrollCallback(GLFWwindow *win, double xoffset, double yoffset);
-    	
         void updateKeyboardState();
         void updateMouseState();
 
