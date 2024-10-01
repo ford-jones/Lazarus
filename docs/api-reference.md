@@ -134,15 +134,16 @@ Clears the back buffer's depth and color bits so that they can be given new valu
 A class for tracking, storing and managing window events as well as their values.
 
 ### Functions:
-#### void monitorEvents()
-Sets up the following input-event handlers and loads them into the current window: 
+
+#### void initialise()
+Locates the programs active window and loads the following event-handler callbacks into it's context's event loop: 
 - keydown 
 - mousedown 
 - mousemove 
 - scroll
 
-Each of these handlers are passed into the window's event loop as a callback. 
-Upon calling this function, members of this class will begin being updated in real time.
+#### void listen()
+Polls GLFW for the head of the active window's event queue and then updates the values of the event managers members.
 
 ### Members:
 > **keyString:** *The key currently being pressed, expressed as a string. (type: `std::string`)* \
