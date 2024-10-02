@@ -31,8 +31,8 @@
 #include <iostream>
 #include <string.h>
 
-#ifndef WINDOW_MANAGER_H
-#define WINDOW_MANAGER_H
+#ifndef LAZARUS_WINDOW_MANAGER_H
+#define LAZARUS_WINDOW_MANAGER_H
 
 class WindowManager
 {
@@ -79,6 +79,7 @@ class WindowManager
         int errorCode;
         const char** errorMessage;
         
+        const GLFWvidmode *videoMode;
         GLFWwindow *window;
         GLFWcursor *cursor;
         GLFWimage image;

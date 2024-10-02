@@ -613,7 +613,9 @@ Params:
 - **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
 - **LAZARUS_SHADER_LINKING_FAILURE** *OpenGL failed to link the shaders. (Code: 204)*
 - **LAZARUS_OPENGL_ERROR** *An error occured in the OpenGL graphics pipeline. (Code: 301)*
-- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 302)*
+- **LAZARUS_NO_CONTEXT** *Unable to find a window with an active OpenGL context. (Code: 302)*
 - **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
+- **LAZARUS_GLFW_NOINIT** *GL framework wrangler failed to initialise. (Code: 304)*
 - **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 401)*
 - **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 402)*
+- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 501)*
