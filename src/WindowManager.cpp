@@ -88,6 +88,7 @@ int WindowManager::initialise()
     if((this->frame.width > videoMode->width) || (this->frame.height > videoMode->height))
     {
         globals.setExecutionState(LAZARUS_WIN_EXCEEDS_MAX);
+        return -1;
     };
 
     this->window = launchFullscreen
