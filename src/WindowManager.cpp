@@ -20,20 +20,19 @@
 #include "../include/WindowManager.h"
 /* =======================================
 	TODO: 
-	- Rename arguments
-    - Enable fullscreen 
+    - Initialise image
+    - Return window / make public
     - Handle resizing
-	- Update docs
 ========================================== */
-WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
+WindowManager::WindowManager(int width, int height, const char *title)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
 	this->errorMessage = NULL;
 	
-    this->frame.height = h;
-    this->frame.width = w;
-    this->frame.title = t;
+    this->frame.width = width;
+    this->frame.height = height;
+    this->frame.title = title;
 
     this->enableCursor = globals.getCursorHidden();
     this->cullFaces = globals.getBackFaceCulling();
@@ -41,14 +40,13 @@ WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwi
     /* ==================
         Optional
     ===================== */
-    this->frame.monitor = m;
-    this->frame.fullscreen = win;
+    this->monitor = NULL;
 
     this->videoMode = NULL;
+    this->cursor = NULL;
 
     this->isOpen = false;
 
-    this->cursor = NULL;
 };
 
 int WindowManager::initialise()
@@ -81,11 +79,11 @@ int WindowManager::initialise()
 
     this->checkErrors();
 
-    this->frame.monitor = glfwGetPrimaryMonitor();
-    this->videoMode = glfwGetVideoMode(this->frame.monitor);
+    this->monitor = glfwGetPrimaryMonitor();
+    this->videoMode = glfwGetVideoMode(this->monitor);
     // int height = 0;
     // int width = 0;
-    // glfwGetMonitorWorkarea(this->frame.monitor, NULL, NULL, &width, &height);
+    // glfwGetMonitorWorkarea(this->monitor, NULL, NULL, &width, &height);
     // glfwWindowHint(GLFW_RED_BITS, videoMode->redBits);
     // glfwWindowHint(GLFW_GREEN_BITS, videoMode->greenBits);
     // glfwWindowHint(GLFW_BLUE_BITS, videoMode->blueBits);
@@ -96,14 +94,14 @@ int WindowManager::initialise()
 
     this->window = glfwCreateWindow
     (
-        // videoMode->height, 
-        // videoMode->width, 
-        this->frame.width,
-        this->frame.height,
+        videoMode->width, 
+        videoMode->height, 
+        // this->frame.width,
+        // this->frame.height,
         this->frame.title, 
-        // this->frame.monitor, 
-        NULL,
-        this->frame.fullscreen
+        this->monitor, 
+        // NULL,
+        NULL
     );
 
     glfwSetWindowPos(this->window, (videoMode->width - this->frame.width) / 2, (videoMode->height - this->frame.height) / 2);

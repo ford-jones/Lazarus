@@ -87,14 +87,12 @@ Returns the current value of `LAZARUS_EXECUTION_STATUS`. Any errors that occur i
 A class for making and managing the program's window(s). 
 
 ### Constructor:
-#### WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL)
+#### WindowManager(int width, int height, const char *title)
 
 Params:
-> **h**: *The height of the window* \
-> **w**: *The width of the window* \
-> **t**: *The window's title* \
-> **m**: *A pointer to which monitor this window should popup in. (optional)* \
-> **win**: *A pointer to another window used when the user enters fullscreen. (optional)*
+> **width**: *The width of the window* \
+> **height**: *The height of the window* \
+> **title**: *The window's title* \
 
 ### Functions:
 #### int initialise()

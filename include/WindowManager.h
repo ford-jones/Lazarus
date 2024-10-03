@@ -37,7 +37,7 @@
 class WindowManager
 {
     public:
-        WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL);
+        WindowManager(int width, int height, const char *title);
 
         int initialise();
 		int loadConfig(GLuint shader);
@@ -66,8 +66,6 @@ class WindowManager
         {
             int height, width;
             const char *title;
-            GLFWmonitor *monitor;
-            GLFWwindow *fullscreen;
         };
 
         Window frame;
@@ -80,6 +78,7 @@ class WindowManager
         const char** errorMessage;
         
         const GLFWvidmode *videoMode;
+        GLFWmonitor *monitor;
         GLFWwindow *window;
         GLFWcursor *cursor;
         GLFWimage image;
