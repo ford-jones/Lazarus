@@ -44,6 +44,9 @@ class GlobalsManager
         void setDepthTest(bool shouldTest);
         bool getDepthTest();
 
+        void setLaunchInFullscreen(bool shouldEnlarge);
+        bool getLaunchInFullscreen();
+
         void setExecutionState(int state);
         int getExecutionState();
 };

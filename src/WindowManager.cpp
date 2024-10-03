@@ -23,6 +23,7 @@
     - Initialise image
     - Return window / make public
     - Handle resizing
+    - Click location (see: glReadPixels())
 ========================================== */
 WindowManager::WindowManager(int width, int height, const char *title)
 {
@@ -34,6 +35,7 @@ WindowManager::WindowManager(int width, int height, const char *title)
     this->frame.height = height;
     this->frame.title = title;
 
+    this->launchFullscreen = globals.getLaunchInFullscreen();
     this->enableCursor = globals.getCursorHidden();
     this->cullFaces = globals.getBackFaceCulling();
     this->testDepth = globals.getDepthTest();
@@ -46,6 +48,7 @@ WindowManager::WindowManager(int width, int height, const char *title)
     this->cursor = NULL;
 
     this->isOpen = false;
+
 
 };
 
@@ -81,30 +84,31 @@ int WindowManager::initialise()
 
     this->monitor = glfwGetPrimaryMonitor();
     this->videoMode = glfwGetVideoMode(this->monitor);
-    // int height = 0;
-    // int width = 0;
-    // glfwGetMonitorWorkarea(this->monitor, NULL, NULL, &width, &height);
-    // glfwWindowHint(GLFW_RED_BITS, videoMode->redBits);
-    // glfwWindowHint(GLFW_GREEN_BITS, videoMode->greenBits);
-    // glfwWindowHint(GLFW_BLUE_BITS, videoMode->blueBits);
-    // glfwWindowHint(GLFW_REFRESH_RATE, videoMode->refreshRate);
+    
+    if((this->frame.width > videoMode->width) || (this->frame.height > videoMode->height))
+    {
+        globals.setExecutionState(LAZARUS_WIN_EXCEEDS_MAX);
+    };
 
-    // glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-
-    this->window = glfwCreateWindow
+    this->window = launchFullscreen
+    ? glfwCreateWindow
     (
         videoMode->width, 
         videoMode->height, 
-        // this->frame.width,
-        // this->frame.height,
         this->frame.title, 
         this->monitor, 
-        // NULL,
+        NULL
+    )
+    : glfwCreateWindow
+    (
+        this->frame.width,
+        this->frame.height,
+        this->frame.title, 
+        NULL,
         NULL
     );
 
-    glfwSetWindowPos(this->window, (videoMode->width - this->frame.width) / 2, (videoMode->height - this->frame.height) / 2);
+    glfwSetWindowPos(this->window, floor((videoMode->width - this->frame.width) / 2), floor((videoMode->height - this->frame.height) / 2));
 
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);

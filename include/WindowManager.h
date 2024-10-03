@@ -41,12 +41,7 @@ class WindowManager
 
         int initialise();
 		int loadConfig(GLuint shader);
-        /* =======================================================================
-            TODO:
-            1. Fullscreen
-            2. Resizing
-        	3. Locate what is being clicked (see: glReadPixels())
-        ========================================================================== */
+
         int open();
         int close();
 
@@ -70,6 +65,7 @@ class WindowManager
 
         Window frame;
 
+        bool launchFullscreen;
         bool enableCursor;
         bool cullFaces;
         bool testDepth;

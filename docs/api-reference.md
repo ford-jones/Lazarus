@@ -606,6 +606,8 @@ Params:
 - **LAZARUS_FILE_NOT_FOUND** *The specified asset couldn't be found (Code: 101)* 
 - **LAZARUS_FILE_UNREADABLE** *The located file cannot be read. (Code: 102)* 
 - **LAZARUS_FILESTREAM_CLOSED** *The filestream input closed unexpectedly. (Code: 103)* 
+- **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 104)*
+- **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 105)*
 - **LAZARUS_SHADER_ERROR** *OpenGL does not regard the output from shader compilation to be a valid shader program. (Code: 201)* 
 - **LAZARUS_VSHADER_COMPILE_FAILURE** *The vertex shader failed to compile. (Code: 202)*
 - **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
@@ -614,6 +616,4 @@ Params:
 - **LAZARUS_NO_CONTEXT** *Unable to find a window with an active OpenGL context. (Code: 302)*
 - **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
 - **LAZARUS_GLFW_NOINIT** *GL framework wrangler failed to initialise. (Code: 304)*
-- **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 401)*
-- **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 402)*
-- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 501)*
+- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 401)*
