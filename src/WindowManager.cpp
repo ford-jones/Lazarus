@@ -82,22 +82,31 @@ int WindowManager::initialise()
     this->checkErrors();
 
     this->frame.monitor = glfwGetPrimaryMonitor();
-
     this->videoMode = glfwGetVideoMode(this->frame.monitor);
+    // int height = 0;
+    // int width = 0;
+    // glfwGetMonitorWorkarea(this->frame.monitor, NULL, NULL, &width, &height);
+    // glfwWindowHint(GLFW_RED_BITS, videoMode->redBits);
+    // glfwWindowHint(GLFW_GREEN_BITS, videoMode->greenBits);
+    // glfwWindowHint(GLFW_BLUE_BITS, videoMode->blueBits);
+    // glfwWindowHint(GLFW_REFRESH_RATE, videoMode->refreshRate);
 
-    glfwWindowHint(GLFW_RED_BITS, videoMode->redBits);
-    glfwWindowHint(GLFW_GREEN_BITS, videoMode->greenBits);
-    glfwWindowHint(GLFW_BLUE_BITS, videoMode->blueBits);
-    glfwWindowHint(GLFW_REFRESH_RATE, videoMode->refreshRate);
+    // glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
 
     this->window = glfwCreateWindow
     (
-        videoMode->height, 
-        videoMode->width, 
+        // videoMode->height, 
+        // videoMode->width, 
+        this->frame.width,
+        this->frame.height,
         this->frame.title, 
-        this->frame.monitor, 
+        // this->frame.monitor, 
+        NULL,
         this->frame.fullscreen
     );
+
+    glfwSetWindowPos(this->window, (videoMode->width - this->frame.width) / 2, (videoMode->height - this->frame.height) / 2);
 
     glfwMakeContextCurrent(this->window);
     glfwSwapInterval(1);
