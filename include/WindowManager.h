@@ -37,7 +37,7 @@
 class WindowManager
 {
     public:
-        WindowManager(int width, int height, const char *title);
+        WindowManager(const char *title, int width = 800, int height = 600);
 
         int initialise();
 		int loadConfig(GLuint shader);

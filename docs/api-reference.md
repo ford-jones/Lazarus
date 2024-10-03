@@ -49,6 +49,15 @@ params:
 #### bool getCursorHidden()
 Returns the current value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`.
 
+#### void setLaunchInFullScreen(bool shouldEnlarge)
+Sets the value of `LAZARUS_LAUNCH_IN_FULLSCREEN`. When `true` the application will launch at the maximum height and width values of the primary monitor.
+
+parms:
+>**shouldEnlarge** *Whether or not the application should launch in fullscreen by default.*
+
+#### bool getLaunchInFullScreen()
+Returns the current value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`.
+
 #### void setBackFaceCulling(bool shouldCull)
 Sets the value of `LAZARUS_CULL_BACK_FACES`. I don't reccomend disabling this optimisation but if you want to you can... Ensures that faces opposite to the camera aren't rendered. Front face culling is currently unsupported through lazarus but you can enable it yourself using OpenGL (prior to window creation) like so:
 
@@ -87,12 +96,12 @@ Returns the current value of `LAZARUS_EXECUTION_STATUS`. Any errors that occur i
 A class for making and managing the program's window(s). 
 
 ### Constructor:
-#### WindowManager(int width, int height, const char *title)
+#### WindowManager(const char *title, int width, int height)
 
 Params:
-> **width**: *The width of the window* \
-> **height**: *The height of the window* \
 > **title**: *The window's title* \
+> **width**: *The width of the window. (default: `800`)* \
+> **height**: *The height of the window. (default: `600`)* \
 
 ### Functions:
 #### int initialise()

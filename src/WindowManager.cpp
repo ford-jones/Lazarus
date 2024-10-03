@@ -25,7 +25,7 @@
     - Handle resizing
     - Click location (see: glReadPixels())
 ========================================== */
-WindowManager::WindowManager(int width, int height, const char *title)
+WindowManager::WindowManager(const char *title, int width, int height)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
