@@ -20,33 +20,120 @@
 #include "../include/WindowManager.h"
 /* =======================================
 	TODO: 
-	- Rename arguments
-    - Enable fullscreen 
+    - Initialise image
+    - Return window / make public
     - Handle resizing
-	- Update docs
+    - Click location (see: glReadPixels())
 ========================================== */
-WindowManager::WindowManager(int h, int w, const char *t, GLFWmonitor *m, GLFWwindow *win)
+WindowManager::WindowManager(const char *title, int width, int height)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
 	this->errorMessage = NULL;
 	
-    this->frame.height = h;
-    this->frame.width = w;
-    this->frame.title = t;
+    this->frame.width = width;
+    this->frame.height = height;
+    this->frame.title = title;
 
+    this->launchFullscreen = globals.getLaunchInFullscreen();
     this->enableCursor = globals.getCursorHidden();
     this->cullFaces = globals.getBackFaceCulling();
     this->testDepth = globals.getDepthTest();
     /* ==================
         Optional
     ===================== */
-    this->frame.monitor = m;
-    this->frame.fullscreen = win;
+    this->monitor = NULL;
+
+    this->videoMode = NULL;
+    this->cursor = NULL;
 
     this->isOpen = false;
 
-    this->cursor = NULL;
+
+};
+
+int WindowManager::initialise()
+{
+    if(!glfwInit())
+    {
+        std::cout << "ERROR::WINDOW_MANAGER::GLFW_MISSING" << std::endl;
+
+        globals.setExecutionState(LAZARUS_GLFW_NOINIT);
+        
+        glfwTerminate();
+        return -1;
+    };
+
+    /* ==================================================
+      MacOS support:
+      Can't use latest version of the OpenGL context (4.6).
+      Based on what I've read online - Apple deprecated 
+      support for OpenGL past version 4.1 in favour of their 
+      Metal API which they want to encourage people to use.
+
+      The only way I've been able to get it working is to 
+      explicitly request this older version of the GL context
+      with GLEW experimental features also turned on.
+    ===================================================== */
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+    
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    this->checkErrors();
+
+    this->monitor = glfwGetPrimaryMonitor();
+    this->videoMode = glfwGetVideoMode(this->monitor);
+    
+    if((this->frame.width > videoMode->width) || (this->frame.height > videoMode->height))
+    {
+        globals.setExecutionState(LAZARUS_WIN_EXCEEDS_MAX);
+        return -1;
+    };
+
+    this->window = launchFullscreen
+    ? glfwCreateWindow
+    (
+        videoMode->width, 
+        videoMode->height, 
+        this->frame.title, 
+        this->monitor, 
+        NULL
+    )
+    : glfwCreateWindow
+    (
+        this->frame.width,
+        this->frame.height,
+        this->frame.title, 
+        NULL,
+        NULL
+    );
+
+    glfwSetWindowPos(this->window, floor((videoMode->width - this->frame.width) / 2), floor((videoMode->height - this->frame.height) / 2));
+
+    glfwMakeContextCurrent(this->window);
+    glfwSwapInterval(1);
+
+    /* ========================================================================== 
+        Note that alot of the GL ecosystem uses C-style callbacks. The repercussion
+        being that pointers such as "this" cannot be used because of the required
+        function signature being a static constant. 
+
+        The solution here is to set the glfw user pointer value to "this" (i.e. 
+        this class) and then perform a get on the user pointer inside of the actual 
+        callback, which; is declared inline as a non-capturing lambda function.
+    ============================================================================= */
+    glfwSetWindowUserPointer(this->window, this);
+
+    glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
+        WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
+        window->close();
+        return;
+    });
+
+	this->initialiseGLEW();
+    
+    return GLFW_NO_ERROR;
 };
 
 int WindowManager::loadConfig(GLuint shader)
@@ -85,84 +172,6 @@ int WindowManager::loadConfig(GLuint shader)
 	return GLFW_NO_ERROR;
 };
 
-int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
-{		
-	this->image.width = sizeX;
-	this->image.height = sizeY;
-	this->image.pixels = cursorImage;
-	
-	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
-	glfwSetCursor(this->window, this->cursor);
-	
-	this->checkErrors();
-	
-	return GLFW_NO_ERROR;
-};
-
-int WindowManager::initialise()
-{
-    if(!glfwInit())
-    {
-        std::cout << "ERROR::WINDOW_MANAGER::GLFW_MISSING" << std::endl;
-
-        globals.setExecutionState(LAZARUS_GLFW_NOINIT);
-        
-        glfwTerminate();
-        return -1;
-    };
-
-    /* ==================================================
-      MacOS support:
-      Can't use latest version of the OpenGL context (4.6).
-      Based on what I've read online - Apple deprecated 
-      support for OpenGL past version 4.1 in favour of their 
-      Metal API which they want to encourage people to use.
-
-      The only way I've been able to get it working is to 
-      explicitly request this older version of the GL context
-      with GLEW experimental features also turned on.
-    ===================================================== */
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
-    
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    this->checkErrors();
-
-    this->window = glfwCreateWindow
-    (
-        this->frame.height, 
-        this->frame.width, 
-        this->frame.title, 
-        this->frame.monitor, 
-        this->frame.fullscreen
-    );
-
-    glfwMakeContextCurrent(this->window);
-    glfwSwapInterval(1);
-
-    /* ========================================================================== 
-        Note that alot of the GL ecosystem uses C-style callbacks. The repercussion
-        being that pointers such as "this" cannot be used because of the required
-        function signature being a static constant. 
-
-        The solution here is to set the glfw user pointer value to "this" (i.e. 
-        this class) and then perform a get on the user pointer inside of the actual 
-        callback, which; is declared inline as a non-capturing lambda function.
-    ============================================================================= */
-    glfwSetWindowUserPointer(this->window, this);
-
-    glfwSetWindowCloseCallback(this->window, [](GLFWwindow *win){
-        WindowManager *window = (WindowManager *) glfwGetWindowUserPointer(win);
-        window->close();
-        return;
-    });
-
-	this->initialiseGLEW();
-    
-    return GLFW_NO_ERROR;
-};
-
 int WindowManager::open()
 {
     glfwSetWindowShouldClose(this->window, GLFW_FALSE);    // glfwDestroyWindow(this->window);
@@ -178,6 +187,20 @@ int WindowManager::close()
 
     return GLFW_NO_ERROR;
 }
+
+int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
+{		
+	this->image.width = sizeX;
+	this->image.height = sizeY;
+	this->image.pixels = cursorImage;
+	
+	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
+	glfwSetCursor(this->window, this->cursor);
+	
+	this->checkErrors();
+	
+	return GLFW_NO_ERROR;
+};
 
 int WindowManager::handleBuffers()
 {

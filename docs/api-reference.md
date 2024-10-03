@@ -49,6 +49,15 @@ params:
 #### bool getCursorHidden()
 Returns the current value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`.
 
+#### void setLaunchInFullScreen(bool shouldEnlarge)
+Sets the value of `LAZARUS_LAUNCH_IN_FULLSCREEN`. When `true` the application will launch at the maximum height and width values of the primary monitor.
+
+parms:
+>**shouldEnlarge** *Whether or not the application should launch in fullscreen by default.*
+
+#### bool getLaunchInFullScreen()
+Returns the current value of `LAZARUS_DISABLE_CURSOR_VISIBILITY`.
+
 #### void setBackFaceCulling(bool shouldCull)
 Sets the value of `LAZARUS_CULL_BACK_FACES`. I don't reccomend disabling this optimisation but if you want to you can... Ensures that faces opposite to the camera aren't rendered. Front face culling is currently unsupported through lazarus but you can enable it yourself using OpenGL (prior to window creation) like so:
 
@@ -87,14 +96,12 @@ Returns the current value of `LAZARUS_EXECUTION_STATUS`. Any errors that occur i
 A class for making and managing the program's window(s). 
 
 ### Constructor:
-#### WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL)
+#### WindowManager(const char *title, int width, int height)
 
 Params:
-> **h**: *The height of the window* \
-> **w**: *The width of the window* \
-> **t**: *The window's title* \
-> **m**: *A pointer to which monitor this window should popup in. (optional)* \
-> **win**: *A pointer to another window used when the user enters fullscreen. (optional)*
+> **title**: *The window's title* \
+> **width**: *The width of the window. (default: `800`)* \
+> **height**: *The height of the window. (default: `600`)* \
 
 ### Functions:
 #### int initialise()
@@ -608,12 +615,14 @@ Params:
 - **LAZARUS_FILE_NOT_FOUND** *The specified asset couldn't be found (Code: 101)* 
 - **LAZARUS_FILE_UNREADABLE** *The located file cannot be read. (Code: 102)* 
 - **LAZARUS_FILESTREAM_CLOSED** *The filestream input closed unexpectedly. (Code: 103)* 
+- **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 104)*
+- **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 105)*
 - **LAZARUS_SHADER_ERROR** *OpenGL does not regard the output from shader compilation to be a valid shader program. (Code: 201)* 
 - **LAZARUS_VSHADER_COMPILE_FAILURE** *The vertex shader failed to compile. (Code: 202)*
 - **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
 - **LAZARUS_SHADER_LINKING_FAILURE** *OpenGL failed to link the shaders. (Code: 204)*
 - **LAZARUS_OPENGL_ERROR** *An error occured in the OpenGL graphics pipeline. (Code: 301)*
-- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 302)*
+- **LAZARUS_NO_CONTEXT** *Unable to find a window with an active OpenGL context. (Code: 302)*
 - **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
-- **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 401)*
-- **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 402)*
+- **LAZARUS_GLFW_NOINIT** *GL framework wrangler failed to initialise. (Code: 304)*
+- **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 401)*

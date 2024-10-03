@@ -31,22 +31,17 @@
 #include <iostream>
 #include <string.h>
 
-#ifndef WINDOW_MANAGER_H
-#define WINDOW_MANAGER_H
+#ifndef LAZARUS_WINDOW_MANAGER_H
+#define LAZARUS_WINDOW_MANAGER_H
 
 class WindowManager
 {
     public:
-        WindowManager(int h, int w, const char *t, GLFWmonitor *m = NULL, GLFWwindow *win = NULL);
+        WindowManager(const char *title, int width = 800, int height = 600);
 
         int initialise();
 		int loadConfig(GLuint shader);
-        /* =======================================================================
-            TODO:
-            1. Fullscreen
-            2. Resizing
-        	3. Locate what is being clicked (see: glReadPixels())
-        ========================================================================== */
+
         int open();
         int close();
 
@@ -66,12 +61,11 @@ class WindowManager
         {
             int height, width;
             const char *title;
-            GLFWmonitor *monitor;
-            GLFWwindow *fullscreen;
         };
 
         Window frame;
 
+        bool launchFullscreen;
         bool enableCursor;
         bool cullFaces;
         bool testDepth;
@@ -79,6 +73,8 @@ class WindowManager
         int errorCode;
         const char** errorMessage;
         
+        const GLFWvidmode *videoMode;
+        GLFWmonitor *monitor;
         GLFWwindow *window;
         GLFWcursor *cursor;
         GLFWimage image;

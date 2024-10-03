@@ -96,3 +96,15 @@ bool GlobalsManager::getDepthTest()
 {
     return LAZARUS_DEPTH_TEST_FRAGS;
 }
+
+void GlobalsManager::setLaunchInFullscreen(bool shouldEnlarge)
+{
+    LAZARUS_LAUNCH_IN_FULLSCREEN = shouldEnlarge;
+
+    return;
+}
+
+bool GlobalsManager::getLaunchInFullscreen()
+{
+    return LAZARUS_LAUNCH_IN_FULLSCREEN;
+}
