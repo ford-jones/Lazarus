@@ -27,6 +27,11 @@
 
 #include <iostream>
 #include <ft2build.h>
+#include <vector>
+#include <string>
+#include <memory>
+
+#include "fileReader.h"
 
 #include FT_FREETYPE_H
 
@@ -37,13 +42,29 @@ class FontLoader
 {
     public:
         FontLoader();
+
+        void initialise();
+        int loadFont(std::string filepath, int charHeight, int charWidth);
+        FileReader::Image loadCharacter(char character, int fontIndex);
+
         virtual ~FontLoader();
 
     private:
         GlobalsManager globals;
+        FileReader::Image image;
+        std::vector<FT_Face> fontStack;
+
+        int keyCode;
 
         FT_Library lib;
         FT_Face fontFace;
+
+        unsigned int glyphIndex;
+
+        FT_Error status;
+
+        std::unique_ptr<FileReader> fileReader;
+        const char *absolutePath;
 };
 
 #endif
