@@ -120,7 +120,7 @@ Opens the active window.
 #### int close()
 Closes the active window.
 
-#### int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
+#### int createCursor(int sizeX, int sizeY, int hotX, int hotY, std::string filepath)
 Builds a unique cursor for the window from an image loaded in by the user.
 
 Params:
@@ -128,7 +128,7 @@ Params:
 > **sizeY:** *Cursor image height.* \
 > **hotX:** *The x-axis cursor hotspot.* \
 > **hotY:** *The y-axis cursor hotspot.* \
-> **cursorImage:** *The encoded image with the following properties: 32bit-depth, RGBA color, 32x32 resolution, png file format. Can be acquired from a call to `FileReader::readFromImage()`.* 
+> **filepath:** *The relative path to the desired cursor image. Ideally the image should be of 32x32 resolution.* 
 
 #### int handleBuffers()
 Bring the back buffer to the front (into user view) and moves the front buffer to the back. \

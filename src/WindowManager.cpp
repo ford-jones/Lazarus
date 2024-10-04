@@ -188,13 +188,16 @@ int WindowManager::close()
     return GLFW_NO_ERROR;
 }
 
-int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage)
+int WindowManager::createCursor(int sizeX, int sizeY, int hotX, int hotY, std::string filepath)
 {		
-	this->image.width = sizeX;
-	this->image.height = sizeY;
-	this->image.pixels = cursorImage;
+    fileReader = std::make_unique<FileReader>();
+    this->image = fileReader->readFromImage(filepath);
+
+	this->glfwImage.width = sizeX;
+	this->glfwImage.height = sizeY;
+	this->glfwImage.pixels = this->image.pixelData;
 	
-	this->cursor = glfwCreateCursor(&this->image, hotX, hotY);
+	this->cursor = glfwCreateCursor(&this->glfwImage, hotX, hotY);
 	glfwSetCursor(this->window, this->cursor);
 	
 	this->checkErrors();

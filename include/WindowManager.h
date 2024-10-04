@@ -29,7 +29,10 @@
 #endif
 
 #include <iostream>
-#include <string.h>
+#include <string>
+#include <memory>
+
+#include "fileReader.h"
 
 #ifndef LAZARUS_WINDOW_MANAGER_H
 #define LAZARUS_WINDOW_MANAGER_H
@@ -45,7 +48,7 @@ class WindowManager
         int open();
         int close();
 
-		int createCursor(int sizeX, int sizeY, int hotX, int hotY, unsigned char *cursorImage);
+		int createCursor(int sizeX, int sizeY, int hotX, int hotY, std::string filepath);
         int handleBuffers();
 
         bool isOpen;
@@ -63,6 +66,9 @@ class WindowManager
             const char *title;
         };
 
+        std::unique_ptr<FileReader> fileReader;
+        FileReader::Image image;
+
         Window frame;
 
         bool launchFullscreen;
@@ -77,7 +83,7 @@ class WindowManager
         GLFWmonitor *monitor;
         GLFWwindow *window;
         GLFWcursor *cursor;
-        GLFWimage image;
+        GLFWimage glfwImage;
 
         GlobalsManager globals;
 };
