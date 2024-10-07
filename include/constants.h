@@ -32,6 +32,7 @@ static const int    LAZARUS_MOUSE_NOCLICK               = 999;
 
 /* Entity placeholders */
 
+static const char*  LAZARUS_MESH_ISTEXT                 = "This mesh is used to display a glyph.";
 static const char*  LAZARUS_MESH_NOOBJ                  = "Non-wavefront mesh.";
 static const char*  LAZARUS_MESH_NOMTL                  = "Colourless mesh.";
 static const char*  LAZARUS_MESH_NOTEX                  = "Textureless mesh.";

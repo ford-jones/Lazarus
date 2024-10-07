@@ -64,7 +64,7 @@ class FontLoader
         FT_Error status;
 
         std::unique_ptr<FileReader> fileReader;
-        const char *absolutePath;
+        std::string absolutePath;
 };
 
 #endif

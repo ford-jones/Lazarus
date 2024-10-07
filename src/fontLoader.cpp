@@ -25,11 +25,15 @@ FontLoader::FontLoader()
 
     this->lib = NULL;
     this->fontFace = NULL;
-    this->status = NULL;
+    this->status = 0;
 
     this->fontStack = {};
 
     this->keyCode = 0;
+    
+    this->image.width = 0;
+    this->image.height = 0;
+    this->image.pixelData = NULL;
 };
 
 void FontLoader::initialise()
@@ -38,6 +42,9 @@ void FontLoader::initialise()
 
     if(status != FT_Err_Ok)
     {
+        std::cerr << RED_TEXT << "ERROR::FONTLOADER::INIT" << RESET_TEXT << std::endl;
+        std::cerr << RED_TEXT << "Status: " << status << RESET_TEXT << std::endl;
+
         std::cerr << status << std::endl;
         globals.setExecutionState(LAZARUS_FT_NO_INIT);
     }
@@ -46,14 +53,17 @@ void FontLoader::initialise()
 int FontLoader::loadFont(std::string filepath, int charHeight, int charWidth)
 {
     fileReader = std::make_unique<FileReader>();
-    absolutePath = (fileReader->relativePathToAbsolute(filepath)).c_str();
+    absolutePath = fileReader->relativePathToAbsolute(filepath);
 
-    status = FT_New_Face(lib, absolutePath, 0, &fontFace);
+    status = FT_New_Face(lib, absolutePath.c_str(), 0, &fontFace);
 
     if(status != FT_Err_Ok)
     {
-        std::cerr << status << std::endl;
+        std::cerr << RED_TEXT << "ERROR::FONTLOADER::LOADFONT" << RESET_TEXT << std::endl;
+        std::cerr << RED_TEXT << "Status: " << status << RESET_TEXT << std::endl;
+
         globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
+
         return -1;
     } 
     else 
@@ -76,7 +86,11 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
 
     if(status != FT_Err_Ok)
     {
+        std::cerr << RED_TEXT << "ERROR::FONTLOADER::LOADCHAR" << RESET_TEXT << std::endl;
+        std::cerr << RED_TEXT << "Status: " << status << RESET_TEXT << std::endl;
+
         globals.setExecutionState(LAZARUS_IMAGE_LOAD_FAILURE);
+
         this->image.width = 0;
         this->image.height = 0;
         this->image.pixelData = NULL;

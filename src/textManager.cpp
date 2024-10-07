@@ -14,60 +14,80 @@
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
-//                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+//                                        
 /*  LAZARUS ENGINE */
-#ifndef LAZARUS_GL_INCLUDES_H
-    #include "gl_includes.h"
-#endif
 
-#ifndef LAZARUS_CONSTANTS_H
-	#include "constants.h"
-#endif
+#include "../include/textManager.h"
 
-#ifndef LAZARUS_GLOBALS_MANAGER_H
-    #include "globalsManager.h"
-#endif
-
-#include <iostream>
-#include <vector>
-#include <string>
-#include <fstream>
-#include <sstream>
-#include <memory>
-
-#include "fileReader.h"
-#include "textureLoader.h"
-
-using std::unique_ptr;
-using std::vector;
-using std::string;
-using glm::vec3;
-using glm::vec2;
-using std::ifstream;
-using std::stringstream;
-
-#ifndef MATERIAL_LOADER_H
-#define MATERIAL_LOADER_H
-
-class MaterialLoader
+TextManager::TextManager(GLuint shader)
 {
-    public:        
-        MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath = "");
-        virtual ~MaterialLoader();
+    this->shaderProgram = shader;
+    this->meshLoader = nullptr;
+    this->textureLoader = nullptr;
+    this->fontLoader = nullptr;
+    this->quad = nullptr;
+    this->word = {};
 
-    private:
-    	unique_ptr<TextureLoader> textureLoader;
-        vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
-        ifstream file;
-        char currentLine[256];
-        int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
-        int texCount;
-
-        unique_ptr<FileReader> fileReader;
-        FileReader::Image imageData;
-
-        GlobalsManager globals;
+    this->fontIndex = 0;
 };
 
-#endif
+int TextManager::extendFontStack(std::string filepath, int width, int height)
+{
+    this->textureLoader = std::make_unique<TextureLoader>();
+    this->fontLoader = std::make_unique<FontLoader>();
+    
+    fontLoader->initialise();
+
+    this->fontIndex = fontLoader->loadFont(filepath, width, height);
+
+    for(int i = 33; i < 128; i++)
+    {
+        std::cout << "Keycode: " << char(i) << std::endl;
+        this->glyph = fontLoader->loadCharacter(char(i), fontIndex);
+        std::cout << "Glyph width: " << glyph.width << std::endl;
+        textureLoader->storeTexture(glyph, this->textureId);
+    };
+
+    return fontIndex;
+};
+
+//  Needs font index?
+void TextManager::loadText(std::string targetText)
+{
+    // std::cout << GREEN_TEXT << "targetText @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << targetText << std::endl;
+    for(char i: targetText)
+    {   
+        this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
+        this->quad = std::make_shared<Mesh::TriangulatedMesh>();
+
+        quad = meshLoader->createQuad(1.0, 1.0, LAZARUS_MESH_ISTEXT);
+
+        // std::cout << GREEN_TEXT << "Filepath @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << quad->textureFilepath << std::endl;
+
+        quad->textureId = int(i);
+
+        word.push_back(quad);
+    };
+
+    return;
+};
+
+void TextManager::drawText()
+{
+    for(auto i: word)
+    {
+        meshLoader.reset();
+        
+        meshLoader->initialiseMesh(i);
+        meshLoader->loadMesh(i);
+        //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
+        meshLoader->drawMesh(i);
+    };
+
+    return;
+};
+
+TextManager::~TextManager()
+{
+    std::cout << "Destroying TextManager" << std::endl;
+};

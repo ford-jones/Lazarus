@@ -14,8 +14,9 @@
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
-//                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+//                                        
 /*  LAZARUS ENGINE */
+
 #ifndef LAZARUS_GL_INCLUDES_H
     #include "gl_includes.h"
 #endif
@@ -29,45 +30,42 @@
 #endif
 
 #include <iostream>
-#include <vector>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <memory>
+#include <vector>
 
-#include "fileReader.h"
+#include "shader.h"
+#include "fontLoader.h"
 #include "textureLoader.h"
+#include "mesh.h"
 
-using std::unique_ptr;
-using std::vector;
-using std::string;
-using glm::vec3;
-using glm::vec2;
-using std::ifstream;
-using std::stringstream;
+#ifndef LAZARUS_TEXT_MANAGER_H
+#define LAZARUS_TEXT_MANAGER_H
 
-#ifndef MATERIAL_LOADER_H
-#define MATERIAL_LOADER_H
-
-class MaterialLoader
+class TextManager
 {
-    public:        
-        MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath = "");
-        virtual ~MaterialLoader();
+    public:
+        TextManager(GLuint shader);
+        int extendFontStack(std::string filepath, int width = 12, int height = 12);
+        void loadText(std::string targetText);
+        void drawText();
+        virtual ~TextManager();
 
-    private:
-    	unique_ptr<TextureLoader> textureLoader;
-        vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
-        ifstream file;
-        char currentLine[256];
-        int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
-        int texCount;
+    private: 
+        std::unique_ptr<Mesh> meshLoader;
+        std::unique_ptr<TextureLoader> textureLoader;
+        std::unique_ptr<FontLoader> fontLoader;
 
-        unique_ptr<FileReader> fileReader;
-        FileReader::Image imageData;
+        unsigned int fontIndex;
 
-        GlobalsManager globals;
+        std::shared_ptr<Mesh::TriangulatedMesh> quad;
+
+        FileReader::Image glyph;
+        GLuint textureId;
+
+        GLuint shaderProgram;
+
+        std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
 };
 
 #endif

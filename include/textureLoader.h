@@ -30,14 +30,12 @@
 
 #include <iostream>
 #include <string>
-#include <memory>
 #include <cmath>
 #include <vector>
 
 #include "fileReader.h"
 
 using std::string;
-using std::shared_ptr;
 using std::vector;
 
 #ifndef LAZARUS_TEXTURE_LOADER_H
@@ -47,15 +45,13 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData);
+		void storeTexture(FileReader::Image &imageData, GLuint &textureLayer);
 		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
 		virtual ~TextureLoader();
 		
 	private:
 		int calculateMipLevels(int width, int height);
 		void checkErrors(const char *invoker);
-
-		shared_ptr<FileReader> loader;
 
 		FileReader::Image image;
 		

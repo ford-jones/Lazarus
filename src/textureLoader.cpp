@@ -23,8 +23,6 @@ TextureLoader::TextureLoader()
 {
 	std::cout << GREEN_TEXT << "Constructing class 'Texture'" << RESET_TEXT << std::endl;
 
-	this->loader = nullptr;	
-
 	this->image = {pixelData: NULL, height: 0, width: 0};
 	this->textures = {};
 
@@ -35,11 +33,10 @@ TextureLoader::TextureLoader()
 	this->errorCode = 0;
 };
 
-void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData)
+void TextureLoader::storeTexture(FileReader::Image &imageData, GLuint &textureLayer)
 {	
-	this->loader = std::make_shared<FileReader>();
-	this->image = loader->readFromImage(texturePath);
-	
+	this->image = imageData;
+
 	if(this->image.pixelData != NULL)
 	{	
 		/* =========================================================================
@@ -80,10 +77,6 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 		std::cout << "Status: " << globals.getExecutionState() << RESET_TEXT << std::endl;
 
 		textureLayer = 0;
-
-		imageData.width = 0;
-        imageData.height = 0;
-        imageData.pixelData = NULL;
 
 		return;
 	};

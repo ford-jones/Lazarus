@@ -23,18 +23,21 @@ Mesh::Mesh(GLuint shader)
 {
 	std::cout << GREEN_TEXT << "Constructing class 'Mesh'." << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
-	
-	this->finder = nullptr;
-	this->meshLoader = nullptr;
-    this->texLoader = std::make_unique<TextureLoader>();
-	triangulatedMesh = nullptr;
-    quad = nullptr;
+	//  dont do this
+    this->meshLoader = nullptr;
+    this->texLoader = nullptr;
+    this->finder = nullptr;
+	this->triangulatedMesh = nullptr;
+    this->quad = nullptr;
 
     this->vertexAttributes = {};
     this->diffuseColors = {};
     
     this->xyTextureId = 0;
     this->xyzTextureId = 0;
+
+    this->VAO = 0;
+    this->VBO = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 };
@@ -71,7 +74,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     quad = std::make_shared<TriangulatedMesh>();
 
     quad->is3D = 0;
-
+    
     this->resolveFilepaths(quad, texturePath);
 
     /* ======================================================================================================
@@ -95,12 +98,23 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
         vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
     };
 
-    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
+    
+    if((quad->textureFilepath != LAZARUS_MESH_ISTEXT) && 
+       (quad->textureFilepath != LAZARUS_MESH_NOTEX))
     {
-        texLoader->storeTexture(quad->textureFilepath, this->xyTextureId, this->texStore);
-    }
+        texLoader = std::make_unique<TextureLoader>();
+        finder = std::make_unique<FileReader>();
 
-    quad->textureId = this->xyTextureId;
+        this->finder.reset();
+        this->texStore = finder->readFromImage(quad->textureFilepath);
+
+        texLoader->storeTexture(this->texStore, this->xyTextureId);
+        quad->textureId = this->xyTextureId;
+    }
+    else
+    {
+        quad->textureId = 0;
+    }
 
     this->setInherentProperties(quad);
     this->lookupUniforms(quad);
@@ -110,7 +124,10 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
 
 void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, string texPath, string mtlPath, string objPath)
 {
-    this->finder = std::make_unique<FileReader>();
+    finder = std::make_unique<FileReader>();
+
+    //  here
+    std::cout << GREEN_TEXT << "Filepath @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << texPath << std::endl;
     if(objPath != "") 
     {
         asset->meshFilepath =  finder->relativePathToAbsolute(objPath);
@@ -128,14 +145,18 @@ void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, stri
     {
         asset->materialFilepath = LAZARUS_MESH_NOMTL;
     }
-    
-    if(texPath != "")
+
+    if(texPath == LAZARUS_MESH_ISTEXT)
+    {
+    	asset->textureFilepath = LAZARUS_MESH_ISTEXT;
+    }
+    else if((texPath != ""))
     {
 	    asset->textureFilepath = finder->relativePathToAbsolute(texPath);
     }
     else
     {
-    	asset->textureFilepath = LAZARUS_MESH_NOTEX;
+        asset->textureFilepath = LAZARUS_MESH_NOTEX;   
     };
 };
 
@@ -200,6 +221,7 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
 
     if(asset->textureFilepath != LAZARUS_MESH_NOTEX)
     {
+        texLoader = std::make_unique<TextureLoader>();
         texLoader->loadTexture(asset->textureData, asset->textureId);
     }
 	
@@ -247,8 +269,15 @@ void Mesh::checkErrors(const char *invoker)
 
 void Mesh::releaseMesh()
 {
-    glDeleteVertexArrays    (1, &this->VAO);
-    glDeleteBuffers         (1, &this->VBO);
+    if(this->VAO > 0)
+    {
+        glDeleteVertexArrays    (1, &this->VAO);
+    }
+    
+    if(this->VBO > 0)
+    {
+        glDeleteBuffers         (1, &this->VBO);
+    }
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };
