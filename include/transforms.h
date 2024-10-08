@@ -47,7 +47,7 @@ class Transform
 		void translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
 		void rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
 
-		void translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z);
+		void translateLightAsset(shared_ptr<Light::LightSource> &light, float x, float y, float z);
 };
 
 #endif

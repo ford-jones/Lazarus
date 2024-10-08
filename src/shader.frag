@@ -5,8 +5,11 @@ in vec3 diffuseColor;
 in vec3 normalCoordinate;
 in vec2 textureCoordinate;
 
+uniform vec3 lightDirection;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
+
+uniform int lightingType;
 
 uniform float xyzTexLayerIndex;
 uniform float xyTexLayerIndex;
@@ -21,11 +24,14 @@ out vec4 outFragment;
 vec3 calculateLambertianDeflection (vec4 colorData) 
 {
     vec3 color = vec3(colorData.r, colorData.g, colorData.b);
+    
+    vec3 direction = (lightingType == 1) ? lightDirection : normalize(lightPosition - fragPosition);
+    float specularHighlight = max(dot(normalCoordinate, direction), 0.0);
 
-    vec3 lightDirection = normalize(lightPosition - fragPosition);
-    float diff = max(dot(normalCoordinate, lightDirection), 0.0);
+    // Shininess, make adjustable
+    specularHighlight = pow(specularHighlight, 0.5);
 
-    vec3 illuminatedFrag = (color * lightColor * diff);
+    vec3 illuminatedFrag = (color * lightColor * specularHighlight);
     
     return illuminatedFrag;
 }

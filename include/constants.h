@@ -35,6 +35,8 @@ static const int    LAZARUS_MOUSE_NOCLICK               = 999;
 static const char*  LAZARUS_MESH_NOOBJ                  = "Non-wavefront mesh.";
 static const char*  LAZARUS_MESH_NOMTL                  = "Colourless mesh.";
 static const char*  LAZARUS_MESH_NOTEX                  = "Textureless mesh.";
+static const int    LAZARUS_DIRECTIONAL_LIGHT           = 1;
+static const int    LAZARUS_POINT_LIGHT                 = 2;
     
 /* Status Codes */
 

@@ -20,6 +20,10 @@
     #include "gl_includes.h"
 #endif
 
+#ifndef LAZARUS_CONSTANTS_H
+    #include "constants.h"
+#endif
+
 #include <iostream>
 #include <stdlib.h>
 #include <memory>
@@ -39,29 +43,32 @@ using glm::vec3;
 class Light
 {
     public:
-        struct AmbientLight
+        struct LightSource
         {
             int id;
-            
-            float locationX;
-            float locationY;
-            float locationZ;
 
+            int lightType;
+
+            vec3 lightDirection;
             vec3 lightPosition;                     //  The (x,y,z) location of the light source
             vec3 lightColor;                        //  The (r,g,b) color of the light
 
+            GLuint lightTypeUniformLocation;
+            GLuint lightDirectionUniformLocation;    //  The location / index of the light position uniform inside the frag shader
             GLuint lightPositionUniformLocation;    //  The location / index of the light position uniform inside the frag shader
             GLuint lightColorUniformLocation;       //  The location / index of the light color uniform inside the frag shader
         };
         
         Light(GLuint shader);
 
-        shared_ptr<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b);
-        void loadLightSource(shared_ptr<AmbientLight> &lightData);
+        shared_ptr<LightSource> createPointLight(double x, double y, double z, double r, double g, double b);
+        shared_ptr<LightSource> createDirectionalLight(double x, double y, double z, double r, double g, double b);
+        void loadLightSource(shared_ptr<LightSource> &lightData);
 
     private:
+        void loadUniforms(shared_ptr<LightSource> &light);
     	GLuint shaderProgram;
-        shared_ptr<AmbientLight> ambientLight;
+        shared_ptr<LightSource> light;
         
 };
 
