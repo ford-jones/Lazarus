@@ -109,8 +109,6 @@ class Mesh
 
         GLuint xyzTextureId;
         GLuint xyTextureId;
-		
-        FileReader::Image texStore;
 
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object

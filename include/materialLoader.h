@@ -57,7 +57,9 @@ class MaterialLoader
         virtual ~MaterialLoader();
 
     private:
+        unique_ptr<FileReader> fileReader;
     	unique_ptr<TextureLoader> textureLoader;
+        
         vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
         ifstream file;
         char currentLine[256];

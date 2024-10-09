@@ -52,7 +52,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
         this->vertexAttributes,
         this->diffuseColors,
         this->xyzTextureId,
-        this->texStore,
+        triangulatedMesh->textureData,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
@@ -97,7 +97,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
 
     if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-        texLoader->storeTexture(quad->textureFilepath, this->xyTextureId, this->texStore);
+        quad->textureData = finder->readFromImage(quad->textureFilepath);
+        texLoader->storeTexture(quad->textureData, this->xyTextureId);
     }
 
     quad->textureId = this->xyTextureId;
@@ -142,10 +143,6 @@ void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, stri
 void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 {
     asset->attributes = this->vertexAttributes;
-
-    asset->textureData.width = this->texStore.width;
-    asset->textureData.height = this->texStore.height;
-    asset->textureData.pixelData = this->texStore.pixelData;
 
     asset->locationX = 0;
     asset->locationY = 0;

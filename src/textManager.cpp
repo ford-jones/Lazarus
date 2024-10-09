@@ -45,7 +45,7 @@ int TextManager::extendFontStack(std::string filepath, int width, int height)
         std::cout << "Keycode: " << char(i) << std::endl;
         this->glyph = fontLoader->loadCharacter(char(i), fontIndex);
         std::cout << "Glyph width: " << glyph.width << std::endl;
-        // textureLoader->storeTexture(glyph, this->textureId);
+        textureLoader->storeTexture(glyph, this->textureId);
     };
 
     return fontIndex;
