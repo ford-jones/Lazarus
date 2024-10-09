@@ -95,13 +95,13 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
         vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
     };
 
-    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
+    if((quad->textureFilepath != LAZARUS_MESH_NOTEX) && (quad->textureFilepath != LAZARUS_MESH_ISTEXT))
     {
         quad->textureData = finder->readFromImage(quad->textureFilepath);
-        texLoader->storeTexture(quad->textureData, this->xyTextureId);
-    }
 
-    quad->textureId = this->xyTextureId;
+        texLoader->storeTexture(quad->textureData, this->xyTextureId);
+        quad->textureId = this->xyTextureId;
+    };
 
     this->setInherentProperties(quad);
     this->lookupUniforms(quad);
@@ -130,7 +130,11 @@ void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, stri
         asset->materialFilepath = LAZARUS_MESH_NOMTL;
     }
     
-    if(texPath != "")
+    if(texPath == LAZARUS_MESH_ISTEXT)
+    {
+        asset->textureFilepath = LAZARUS_MESH_ISTEXT;
+    }
+    else if(texPath != "")
     {
 	    asset->textureFilepath = finder->relativePathToAbsolute(texPath);
     }

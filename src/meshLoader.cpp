@@ -140,7 +140,7 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         		
         matFinder.reset();
 
-        if(texturePath != LAZARUS_MESH_NOTEX)
+        if((texturePath != LAZARUS_MESH_NOTEX) && ((texturePath != LAZARUS_MESH_ISTEXT)))
         {
 	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData, texturePath);
         } 

@@ -103,7 +103,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         }
     };
 
-    if(texturePath != LAZARUS_MESH_NOTEX)
+    if((texturePath != LAZARUS_MESH_NOTEX) && (texturePath != LAZARUS_MESH_ISTEXT))
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
         this->fileReader = std::make_unique<FileReader>();
