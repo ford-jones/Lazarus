@@ -17,40 +17,54 @@
 //                                        
 /*  LAZARUS ENGINE */
 
-#ifndef LAZARUS_GL_INCLUDES_H
-    #include "gl_includes.h"
+#ifndef LAZARUS_CONSTANTS_H
+	#include "constants.h"
 #endif
 
-#include "globalsManager.h"
-#include "WindowManager.h"
-#include "eventManager.h"
-#include "mesh.h"
-#include "transforms.h"
-#include "shader.h"
-#include "light.h"
-#include "camera.h"
-#include "fpsCounter.h"
+#ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+#endif
+
+#include <iostream>
+#include <ft2build.h>
+#include <vector>
+#include <string>
+#include <memory>
+
 #include "fileReader.h"
-#include "soundManager.h"
-#include "textManager.h"
 
-#ifndef LAZARUS_H
-#define LAZARUS_H
+#include FT_FREETYPE_H
 
-namespace Lazarus
+#ifndef LAZARUS_FONT_LOADER_H
+#define LAZARUS_FONT_LOADER_H
+
+class FontLoader
 {
-    using ::TextManager;
-    using ::GlobalsManager;
-    using ::WindowManager;
-    using ::EventManager;
-    using ::Mesh;
-    using ::Transform;
-    using ::Shader;
-    using ::Light;
-    using ::Camera;
-    using ::FpsCounter;
-    using ::FileReader;
-    using ::SoundManager;
-}
+    public:
+        FontLoader();
+
+        void initialise();
+        int loadFont(std::string filepath, int charHeight, int charWidth);
+        FileReader::Image loadCharacter(char character, int fontIndex);
+
+        virtual ~FontLoader();
+
+    private:
+        GlobalsManager globals;
+        FileReader::Image image;
+        std::vector<FT_Face> fontStack;
+
+        int keyCode;
+
+        FT_Library lib;
+        FT_Face fontFace;
+
+        unsigned int glyphIndex;
+
+        FT_Error status;
+
+        std::unique_ptr<FileReader> fileReader;
+        std::string absolutePath;
+};
 
 #endif

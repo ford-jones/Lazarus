@@ -25,7 +25,8 @@ OBJECTS = src/globalsManager.o src/shader.o src/light.o src/camera.o \
 					src/mesh.o src/transforms.o \
 					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
 					src/WindowManager.o src/fileReader.o src/eventManager.o \
-					src/fpsCounter.o src/imageLoader.o src/imageResize.o src/soundManager.o 
+					src/fpsCounter.o src/imageLoader.o src/imageResize.o src/soundManager.o \
+					src/textManager.o src/fontLoader.o
 
 run : build
 	$(shell mv src/*.o build/)
@@ -50,6 +51,8 @@ soundManager.o := include/soundManager.h
 textureLoader.o := include/texture.h
 imageLoader.o := /usr/local/include/stb_image.h
 imageResize.o := /usr/local/include/stb_image_resize.h
+textManager.o := include/textManager.h
+fontLoader.o := include/fontLoader.h
 
 clean : 
 	rm -R lib/ && rm -R build/

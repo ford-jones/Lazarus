@@ -21,36 +21,53 @@
     #include "gl_includes.h"
 #endif
 
-#include "globalsManager.h"
-#include "WindowManager.h"
-#include "eventManager.h"
-#include "mesh.h"
-#include "transforms.h"
+#ifndef LAZARUS_CONSTANTS_H
+	#include "constants.h"
+#endif
+
+#ifndef LAZARUS_GLOBALS_MANAGER_H
+    #include "globalsManager.h"
+#endif
+
+#include <iostream>
+#include <string>
+#include <memory>
+#include <vector>
+
 #include "shader.h"
-#include "light.h"
-#include "camera.h"
-#include "fpsCounter.h"
-#include "fileReader.h"
-#include "soundManager.h"
-#include "textManager.h"
+#include "fontLoader.h"
+#include "textureLoader.h"
+#include "mesh.h"
 
-#ifndef LAZARUS_H
-#define LAZARUS_H
+#ifndef LAZARUS_TEXT_MANAGER_H
+#define LAZARUS_TEXT_MANAGER_H
 
-namespace Lazarus
+class TextManager
 {
-    using ::TextManager;
-    using ::GlobalsManager;
-    using ::WindowManager;
-    using ::EventManager;
-    using ::Mesh;
-    using ::Transform;
-    using ::Shader;
-    using ::Light;
-    using ::Camera;
-    using ::FpsCounter;
-    using ::FileReader;
-    using ::SoundManager;
-}
+    public:
+        TextManager(GLuint shader);
+        int extendFontStack(std::string filepath, int width = 12, int height = 12);
+        void loadText(std::string targetText);
+        void drawText();
+        virtual ~TextManager();
+
+    private: 
+        GlobalsManager globals;
+        std::unique_ptr<Mesh> meshLoader;
+        std::unique_ptr<TextureLoader> textureLoader;
+        std::unique_ptr<FontLoader> fontLoader;
+
+        unsigned int fontIndex;
+
+        std::shared_ptr<Mesh::TriangulatedMesh> quad;
+
+        FileReader::Image glyph;
+        GLuint textureId;
+
+        GLuint shaderProgram;
+
+        std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+
+};
 
 #endif
