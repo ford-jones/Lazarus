@@ -35,9 +35,6 @@ Mesh::Mesh(GLuint shader)
     
     this->xyTextureId = 0;
     this->xyzTextureId = 0;
-
-    this->VAO = 0;
-    this->VBO = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 };
@@ -54,14 +51,12 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
     meshLoader->parseWavefrontObj(
         this->vertexAttributes,
         this->diffuseColors,
-        this->xyzTextureId,
-        this->texStore,
+        triangulatedMesh->textureId,
+        triangulatedMesh->textureData,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
     );
-
-    triangulatedMesh->textureId = this->xyzTextureId;
 
     this->setInherentProperties(triangulatedMesh);
     this->lookupUniforms(triangulatedMesh);
@@ -106,10 +101,10 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
         finder = std::make_unique<FileReader>();
 
         this->finder.reset();
-        this->texStore = finder->readFromImage(quad->textureFilepath);
+        std::cout << GREEN_TEXT << "Filepath @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << quad->textureFilepath << std::endl;
+        quad->textureData = finder->readFromImage(quad->textureFilepath);
 
-        texLoader->storeTexture(this->texStore, this->xyTextureId);
-        quad->textureId = this->xyTextureId;
+        texLoader->storeTexture(quad->textureData, quad->textureId);
     }
     else
     {
@@ -163,10 +158,6 @@ void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, stri
 void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 {
     asset->attributes = this->vertexAttributes;
-
-    asset->textureData.width = this->texStore.width;
-    asset->textureData.height = this->texStore.height;
-    asset->textureData.pixelData = this->texStore.pixelData;
 
     asset->locationX = 0;
     asset->locationY = 0;
@@ -269,15 +260,8 @@ void Mesh::checkErrors(const char *invoker)
 
 void Mesh::releaseMesh()
 {
-    if(this->VAO > 0)
-    {
-        glDeleteVertexArrays    (1, &this->VAO);
-    }
-    
-    if(this->VBO > 0)
-    {
-        glDeleteBuffers         (1, &this->VBO);
-    }
+    glDeleteVertexArrays    (1, &this->VAO);
+    glDeleteBuffers         (1, &this->VBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
 };

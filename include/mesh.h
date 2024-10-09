@@ -54,7 +54,7 @@ class Mesh
     public:
         struct TriangulatedMesh
         {
-            int textureId;
+            unsigned int textureId;
 
             int numOfVertices;
             int numOfFaces;

@@ -52,6 +52,7 @@ class TextManager
         virtual ~TextManager();
 
     private: 
+        GlobalsManager globals;
         std::unique_ptr<Mesh> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;
         std::unique_ptr<FontLoader> fontLoader;
@@ -66,6 +67,7 @@ class TextManager
         GLuint shaderProgram;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+
 };
 
 #endif

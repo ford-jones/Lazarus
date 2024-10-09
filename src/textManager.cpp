@@ -76,12 +76,21 @@ void TextManager::drawText()
 {
     for(auto i: word)
     {
-        meshLoader.reset();
+        if(i->modelviewUniformLocation >= 0)
+        {
+            meshLoader.reset();
+            std::cout << "Trying to draw texture: " << i->textureId << std::endl;
+            quad = i;
+            meshLoader->initialiseMesh(quad);
+            meshLoader->loadMesh(quad);
+            //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
+            meshLoader->drawMesh(quad);
+        }
+        else
+        {
+            globals.setExecutionState(LAZARUS_UNIFORM_NOT_FOUND);
+        }
         
-        meshLoader->initialiseMesh(i);
-        meshLoader->loadMesh(i);
-        //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
-        meshLoader->drawMesh(i);
     };
 
     return;
