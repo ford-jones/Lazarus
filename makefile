@@ -1,6 +1,6 @@
 TARGET :=
 
-LDFLAGS := -lGLEW -lglfw -lfmod
+LDFLAGS := -lGLEW -lglfw -lfmod -lfreetype
 
 CXX = g++
 
