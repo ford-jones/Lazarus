@@ -154,7 +154,7 @@ int WindowManager::loadConfig(GLuint shader)
 	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 0.0, 0.0);    // glfwDestroyWindow(this->window);
+    glClearColor        (1.0, 1.0, 1.0, 1.0);
 
     /* ===============================================
         TODO:

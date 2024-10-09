@@ -54,15 +54,12 @@ int TextManager::extendFontStack(std::string filepath, int width, int height)
 //  Needs font index?
 void TextManager::loadText(std::string targetText)
 {
-    // std::cout << GREEN_TEXT << "targetText @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << targetText << std::endl;
     for(char i: targetText)
     {   
         this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
         this->quad = std::make_shared<Mesh::TriangulatedMesh>();
 
         quad = meshLoader->createQuad(1.0, 1.0, LAZARUS_MESH_ISTEXT);
-
-        // std::cout << GREEN_TEXT << "Filepath @:"<< __PRETTY_FUNCTION__ << RESET_TEXT << quad->textureFilepath << std::endl;
 
         quad->textureId = int(i);
 
@@ -78,9 +75,9 @@ void TextManager::drawText()
     {
         if(i->modelviewUniformLocation >= 0)
         {
-            meshLoader.reset();
             std::cout << "Trying to draw texture: " << i->textureId << std::endl;
             quad = i;
+            
             meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
             //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
