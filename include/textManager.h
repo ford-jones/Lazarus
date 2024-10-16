@@ -33,6 +33,7 @@
 #include <string>
 #include <memory>
 #include <vector>
+#include <map>
 
 #include "shader.h"
 #include "fontLoader.h"
@@ -67,6 +68,7 @@ class TextManager
         GLuint shaderProgram;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+        std::map<GLuint, FileReader::Image> textures;
 
 };
 

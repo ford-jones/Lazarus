@@ -58,7 +58,7 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 	glTexStorage3D(
 		GL_TEXTURE_2D_ARRAY, 								//	target
 		this->mipCount, 									//	the expected number of levels (mips) found in each layer
-		GL_RGBA8, 											//	gl internal size to store texel data
+		GL_RGBA8, 												//	gl internal size to store texel data
 		imageData.width, imageData.height, 					// 	expected (max) image width and height
 		textureLayer 										// 	the number of layers to store (max array size)
 	);
@@ -80,32 +80,34 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 
 void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
 {
-	if(imageData.pixelData != NULL)
-	{
-		this->image.width = imageData.width;
-		this->image.height = imageData.height;
-		this->image.pixelData = imageData.pixelData;
+	glPixelStorei(GL_UNPACK_ALIGNMENT, GL_TRUE);
+	
+	this->image.width = imageData.width;
+	this->image.height = imageData.height;
+	this->image.pixelData = imageData.pixelData;
 
-		glTexSubImage3D(
-			GL_TEXTURE_2D_ARRAY, 
-			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
-			0, 0, 													// 	xy offset into the layer
-			(textureLayer - 1), 									// 	layer depth to set this texture, zero-indexed
-			this->image.width, this->image.height,					//	actual texture width / height
-			1, 														// 	number of layers being passed each time this is called
-			GL_RGBA, 												//	texel data format
-			GL_UNSIGNED_BYTE, 										//	texel data type
-			((const void *)(this->image.pixelData)) 				// 	texel data
-		);
-	
-		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-	
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
-	}
+	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
+	glTexParameteriv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+
+	glTexSubImage3D(
+		GL_TEXTURE_2D_ARRAY, 
+		0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
+		0, 0, 													// 	xy offset into the layer
+		(textureLayer - 1), 									// 	layer depth to set this texture, zero-indexed
+		this->image.width, this->image.height,					//	actual texture width / height
+		1, 														// 	number of layers being passed each time this is called
+		GL_RGBA, 												//	texel data format
+		GL_UNSIGNED_BYTE, 										//	texel data type
+		((const void *)(this->image.pixelData)) 				// 	texel data
+	);
+
+	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
 
 	this->checkErrors(__PRETTY_FUNCTION__);
 

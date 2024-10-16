@@ -142,6 +142,8 @@ void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, stri
     {
     	asset->textureFilepath = LAZARUS_MESH_NOTEX;
     };
+
+    return;
 };
 
 void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
@@ -156,6 +158,8 @@ void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 
     asset->numOfVertices = asset->attributes.size() / 4;
     asset->numOfFaces = (asset->numOfVertices) / 3;
+
+   return;
 }
 
 void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
@@ -173,6 +177,8 @@ void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
         asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
         asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
     }
+
+    return;
 };
 
 void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
@@ -183,7 +189,7 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, asset->attributes.size() * sizeof(vec3), &asset->attributes[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, asset->attributes.size() * sizeof(vec3), &asset->attributes[0], GL_DYNAMIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
     glEnableVertexAttribArray(0);
@@ -244,6 +250,8 @@ void Mesh::checkErrors(const char *invoker)
 
         globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     }
+
+    return;
 };
 
 void Mesh::releaseMesh()
@@ -252,6 +260,8 @@ void Mesh::releaseMesh()
     glDeleteBuffers         (1, &this->VBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
+
+    return;
 };
 
 Mesh::~Mesh()

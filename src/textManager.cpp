@@ -22,10 +22,11 @@
 TextManager::TextManager(GLuint shader)
 {
     this->shaderProgram = shader;
-    this->meshLoader = nullptr;
+    this->quad = std::make_shared<Mesh::TriangulatedMesh>();
+    this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
+    
     this->textureLoader = nullptr;
     this->fontLoader = nullptr;
-    this->quad = nullptr;
     this->word = {};
 
     this->fontIndex = 0;
@@ -42,26 +43,23 @@ int TextManager::extendFontStack(std::string filepath, int width, int height)
 
     for(int i = 33; i < 128; i++)
     {
-        std::cout << "Keycode: " << char(i) << std::endl;
-        this->glyph = fontLoader->loadCharacter(char(i), fontIndex);
-        std::cout << "Glyph width: " << glyph.width << std::endl;
+        glyph = fontLoader->loadCharacter(char(i), fontIndex);
         textureLoader->storeTexture(glyph, this->textureId);
+
+        textures.insert(std::pair<GLuint, FileReader::Image>(textureId, glyph));
     };
 
     return fontIndex;
 };
 
-//  Needs font index?
 void TextManager::loadText(std::string targetText)
 {
     for(char i: targetText)
     {   
-        this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
-        this->quad = std::make_shared<Mesh::TriangulatedMesh>();
-
         quad = meshLoader->createQuad(1.0, 1.0, LAZARUS_MESH_ISTEXT);
 
         quad->textureId = int(i);
+        quad->textureData = textures[quad->textureId];
 
         word.push_back(quad);
     };
@@ -73,21 +71,22 @@ void TextManager::drawText()
 {
     for(auto i: word)
     {
-        if(i->modelviewUniformLocation >= 0)
-        {
-            std::cout << "Trying to draw texture: " << i->textureId << std::endl;
-            quad = i;
-            
+        quad.reset();
+        quad = i;
+
+        if(quad->modelviewUniformLocation >= 0)
+        {            
+            //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
             meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
-            //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
             meshLoader->drawMesh(quad);
+            continue;
         }
         else
         {
             globals.setExecutionState(LAZARUS_UNIFORM_NOT_FOUND);
-        }
-        
+            break;
+        };
     };
 
     return;

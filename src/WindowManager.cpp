@@ -140,7 +140,7 @@ int WindowManager::loadConfig(GLuint shader)
 {	
 	if(enableCursor == true)
 	{
-		  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	};
 	
 	if(cullFaces == true)
@@ -153,6 +153,9 @@ int WindowManager::loadConfig(GLuint shader)
 	{
 	    glEnable            (GL_DEPTH_TEST);
 	};
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 
     glClearColor        (1.0, 1.0, 1.0, 1.0);
 
