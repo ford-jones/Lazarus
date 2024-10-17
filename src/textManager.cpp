@@ -44,7 +44,7 @@ int TextManager::extendFontStack(std::string filepath, int width, int height)
     for(int i = 33; i < 128; i++)
     {
         glyph = fontLoader->loadCharacter(char(i), fontIndex);
-        textureLoader->storeTexture(glyph, this->textureId);
+        textureLoader->storeTexture(glyph, this->textureId, width, height);
 
         textures.insert(std::pair<GLuint, FileReader::Image>(textureId, glyph));
     };

@@ -35,7 +35,7 @@ TextureLoader::TextureLoader()
 	this->errorCode = 0;
 };
 
-void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLayer)
+void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLayer, int overideX, int overideY)
 {		
 	/* =========================================================================
 		Note that the value given to textureLayer by glGenTextures serves a 
@@ -59,7 +59,8 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 		GL_TEXTURE_2D_ARRAY, 								//	target
 		this->mipCount, 									//	the expected number of levels (mips) found in each layer
 		GL_RGBA8, 												//	gl internal size to store texel data
-		imageData.width, imageData.height, 					// 	expected (max) image width and height
+		overideX > 0 ? overideX : imageData.width, 
+		overideY > 0 ? overideY : imageData.height, 					// 	expected (max) image width and height
 		textureLayer 										// 	the number of layers to store (max array size)
 	);
 	
@@ -85,6 +86,12 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 	this->image.width = imageData.width;
 	this->image.height = imageData.height;
 	this->image.pixelData = imageData.pixelData;
+
+	std::cout << "Keycode: " << int(textureLayer) << std::endl;
+	std::cout << "Glyph: " << char(textureLayer) << std::endl;
+	std::cout << "Width: " << this->image.width << std::endl;
+	std::cout << "Height: " << this->image.height << std::endl;
+	std::cout << "Data: " << this->image.pixelData << std::endl;
 
 	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
 	glTexParameteriv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);

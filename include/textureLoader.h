@@ -47,7 +47,7 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void storeTexture(FileReader::Image imageData, GLuint &textureLayer);
+		void storeTexture(FileReader::Image imageData, GLuint &textureLayer, int overideX = 0, int overideY = 0);
 		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
 		virtual ~TextureLoader();
 		
