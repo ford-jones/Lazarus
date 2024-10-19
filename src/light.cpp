@@ -21,6 +21,7 @@
 
 Light::Light(GLuint shader)
 {
+    std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
 }
 
@@ -50,3 +51,8 @@ void Light::loadLightSource(shared_ptr<Light::AmbientLight> &lightData)
     glUniform3fv        (lightData->lightPositionUniformLocation, 1, &lightData->lightPosition[0]);
     glUniform3fv        (lightData->lightColorUniformLocation, 1, &lightData->lightColor[0]);
 };
+
+Light::~Light()
+{
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
+}

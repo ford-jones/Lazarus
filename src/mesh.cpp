@@ -21,7 +21,7 @@
 
 Mesh::Mesh(GLuint shader)
 {
-	std::cout << GREEN_TEXT << "Constructing class 'Mesh'." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
 	
 	this->finder = nullptr;
@@ -189,7 +189,7 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, asset->attributes.size() * sizeof(vec3), &asset->attributes[0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, asset->attributes.size() * sizeof(vec3), &asset->attributes[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
     glEnableVertexAttribArray(0);
@@ -267,5 +267,5 @@ void Mesh::releaseMesh()
 Mesh::~Mesh()
 {
     this->releaseMesh();
-    std::cout << GREEN_TEXT << "Destroying 'Mesh' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

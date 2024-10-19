@@ -28,6 +28,8 @@
 /* Engine Status */
 
 static int          LAZARUS_EXECUTION_STATUS            = 0;
+static int          LAZARUS_PRIMARY_DISPLAY_WIDTH       = 0;
+static int          LAZARUS_PRIMARY_DISPLAY_HEIGHT      = 0;
 
 /* User Settings */
 
@@ -64,7 +66,9 @@ static const int    LAZARUS_FILE_UNREADABLE             = 102;
 static const int    LAZARUS_FILESTREAM_CLOSED           = 103;
 static const int    LAZARUS_IMAGE_LOAD_FAILURE          = 104;
 static const int    LAZARUS_IMAGE_RESIZE_FAILURE        = 105;
-static const int    LAZARUS_FT_NO_INIT                  = 106;
+static const int    LAZARUS_FT_INIT_FAILURE             = 106;
+static const int    LAZARUS_FT_LOAD_FAILURE             = 107;
+static const int    LAZARUS_FT_RENDER_FAILURE           = 108;
 static const int    LAZARUS_SHADER_ERROR                = 201;
 static const int    LAZARUS_VSHADER_COMPILE_FAILURE     = 202;
 static const int    LAZARUS_FSHADER_COMPILE_FAILURE     = 203;

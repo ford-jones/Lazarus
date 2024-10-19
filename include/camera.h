@@ -21,6 +21,10 @@
     #include "gl_includes.h"
 #endif
 
+#ifndef LAZARUS_CONSTANTS_H
+    #include "constants.h"
+#endif
+
 #include <iostream>
 #include <stdlib.h>
 #include <memory>
@@ -64,6 +68,7 @@ class Camera
         shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
         void loadCamera(shared_ptr<FixedCamera> &cameraData);
 
+        virtual ~Camera();
     private:
         GLuint shader;
         shared_ptr<FixedCamera> fixedCamera;

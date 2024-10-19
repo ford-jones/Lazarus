@@ -21,6 +21,7 @@
 
 FileReader::FileReader()
 {
+    std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->imageData = 0;
     this->outResize = 0;
     this->resizeStatus = 0;
@@ -166,6 +167,7 @@ FileReader::Image FileReader::readFromImage(string filename)
 
 FileReader::~FileReader()
 {
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	stbi_image_free(this->imageData);
     free(outResize);
 };

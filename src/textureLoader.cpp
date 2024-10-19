@@ -21,7 +21,7 @@
 
 TextureLoader::TextureLoader()
 {
-	std::cout << GREEN_TEXT << "Constructing class 'Texture'" << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
 	this->loader = nullptr;	
 
@@ -36,7 +36,8 @@ TextureLoader::TextureLoader()
 };
 
 void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLayer, int overideX, int overideY)
-{		
+{
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	/* =========================================================================
 		Note that the value given to textureLayer by glGenTextures serves a 
 		number of different purposes here, namely:
@@ -80,9 +81,8 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 };
 
 void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
-{
-	glPixelStorei(GL_UNPACK_ALIGNMENT, GL_TRUE);
-	
+{	
+
 	this->image.width = imageData.width;
 	this->image.height = imageData.height;
 	this->image.pixelData = imageData.pixelData;
@@ -110,8 +110,8 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 
 	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
@@ -171,7 +171,7 @@ int TextureLoader::calculateMipLevels(int width, int height)
 
 TextureLoader::~TextureLoader()
 {
-	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
 	for(unsigned int i = 0; i < this->textures.size(); i++) 
 	{

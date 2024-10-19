@@ -21,7 +21,7 @@
 
 MaterialLoader::MaterialLoader()
 {
-	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	
 	textureLoader = nullptr;
 	diffuseCount = 0;
@@ -134,5 +134,5 @@ MaterialLoader::~MaterialLoader()
     {
         file.close();
     }
-    std::cout << GREEN_TEXT << "Destroying 'MaterialLoader' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

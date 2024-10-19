@@ -21,6 +21,7 @@
 
 Camera::Camera(GLuint shader)
 {
+    std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
     this->shader = shader;
 }
 
@@ -56,3 +57,8 @@ void Camera::loadCamera(shared_ptr<Camera::FixedCamera> &cameraData)
     glUniformMatrix4fv     (cameraData->viewLocation, 1, GL_FALSE, &cameraData->viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
     glUniformMatrix4fv     (cameraData->projectionLocation, 1, GL_FALSE, &cameraData->projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
 };
+
+Camera::~Camera()
+{
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
+}

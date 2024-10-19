@@ -20,6 +20,10 @@
     #include "gl_includes.h"
 #endif
 
+#ifndef LAZARUS_CONSTANTS_H
+    #include "constants.h"
+#endif
+
 #include <iostream>
 #include <stdlib.h>
 #include <memory>
@@ -55,6 +59,7 @@ class Light
         };
         
         Light(GLuint shader);
+        virtual ~Light();
 
         shared_ptr<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b);
         void loadLightSource(shared_ptr<AmbientLight> &lightData);
