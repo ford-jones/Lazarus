@@ -31,6 +31,9 @@ TextManager::TextManager(GLuint shader)
     this->word = {};
 
     this->fontIndex = 0;
+
+    this->atlasX = 0;
+    this->atlasY = 0;
 };
 
 int TextManager::extendFontStack(std::string filepath, int ptSize)
@@ -42,10 +45,14 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
     this->fontIndex = fontLoader->loadFont(filepath, ptSize, 0);
 
+    this->identifyAlphabetDimensions();
+
+    textureLoader->storeBitmapTexture(atlasX, atlasY);
+
     for(int i = 33; i < 128; i++)
     {
         glyph = fontLoader->loadCharacter(char(i), fontIndex);
-        textureLoader->storeTexture(glyph, this->textureId, ptSize, ptSize);
+        textureLoader->loadBitmapToTexture(glyph);
 
         textures.emplace(textureId, glyph);
     };
@@ -70,6 +77,19 @@ void TextManager::loadText(std::string targetText)
         quad->textureData = textures[quad->textureId];
 
         word.push_back(quad);
+    };
+
+    return;
+};
+
+void TextManager::identifyAlphabetDimensions()
+{
+    for(int i = 33; i < 128; i++)
+    {
+        glyph = fontLoader->loadCharacter(char(i), fontIndex);
+        
+        atlasX += glyph.width;
+        atlasY = std::max(atlasY, glyph.height);
     };
 
     return;

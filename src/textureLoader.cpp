@@ -33,11 +33,12 @@ TextureLoader::TextureLoader()
 	this->loopCount = 0;
 	this->mipCount = 0;
 	this->errorCode = 0;
+
+	this->offset = 0;
 };
 
-void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLayer, int overideX, int overideY)
+void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &textureLayer)
 {
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 	/* =========================================================================
 		Note that the value given to textureLayer by glGenTextures serves a 
 		number of different purposes here, namely:
@@ -54,17 +55,15 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 	glGenTextures(1, &textureLayer);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
-	this->mipCount = this->calculateMipLevels(imageData.width, imageData.height);
+	this->mipCount = this->calculateMipLevels(image.width, image.height);
 
 	glTexStorage3D(
 		GL_TEXTURE_2D_ARRAY, 								//	target
 		this->mipCount, 									//	the expected number of levels (mips) found in each layer
-		GL_RGBA8, 												//	gl internal size to store texel data
-		overideX > 0 ? overideX : imageData.width, 
-		overideY > 0 ? overideY : imageData.height, 					// 	expected (max) image width and height
+		GL_RGBA8, 											//	gl internal size to store texel data
+		this->image.width, this->image.height, 				// 	expected (max) image width and height
 		textureLayer 										// 	the number of layers to store (max array size)
 	);
-	
 	/* ======================================
 		Indexing through this texture vector 
 		could become expensive at large sizes.
@@ -80,45 +79,86 @@ void TextureLoader::storeTexture(FileReader::Image imageData, GLuint &textureLay
 	return;
 };
 
-void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
+void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer)
 {	
+	if(imageData.pixelData != NULL)
+	{
+		this->image.width = imageData.width;
+		this->image.height = imageData.height;
+		this->image.pixelData = imageData.pixelData;
 
+		glTexSubImage3D(
+			GL_TEXTURE_2D_ARRAY, 
+			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
+			0, 0, 													// 	xy offset into the layer
+			(textureLayer - 1), 									// 	layer depth to set this texture, zero-indexed
+			this->image.width, this->image.height,					//	actual texture width / height
+			1, 														// 	number of layers being passed each time this is called
+			GL_RGBA, 												//	texel data format
+			GL_UNSIGNED_BYTE, 										//	texel data type
+			((const void *)(this->image.pixelData)) 				// 	texel data
+		);
+	
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+	}
+
+	this->checkErrors(__PRETTY_FUNCTION__);
+};
+
+void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight)
+{
+	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
+	glTexParameteriv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+
+	// glActiveTexture(GL_TEXTURE0);
+
+	glGenTextures(1, &bitmapTexture);
+	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, maxWidth, maxHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+
+	this->checkErrors(__PRETTY_FUNCTION__);
+
+	this->offset = 0;
+};
+
+void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
+{
 	this->image.width = imageData.width;
 	this->image.height = imageData.height;
 	this->image.pixelData = imageData.pixelData;
 
-	std::cout << "Keycode: " << int(textureLayer) << std::endl;
-	std::cout << "Glyph: " << char(textureLayer) << std::endl;
-	std::cout << "Width: " << this->image.width << std::endl;
-	std::cout << "Height: " << this->image.height << std::endl;
-	std::cout << "Data: " << this->image.pixelData << std::endl;
-
-	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
-	glTexParameteriv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
-
-	glTexSubImage3D(
-		GL_TEXTURE_2D_ARRAY, 
-		0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
-		0, 0, 													// 	xy offset into the layer
-		(textureLayer - 1), 									// 	layer depth to set this texture, zero-indexed
-		this->image.width, this->image.height,					//	actual texture width / height
-		1, 														// 	number of layers being passed each time this is called
-		GL_RGBA, 												//	texel data format
-		GL_UNSIGNED_BYTE, 										//	texel data type
-		((const void *)(this->image.pixelData)) 				// 	texel data
+	glTexSubImage2D(
+		GL_TEXTURE_2D, 
+		0, 
+		this->offset, 
+		0, 
+		this->image.width, 
+		this->image.height, 
+		GL_RGBA, 
+		GL_UNSIGNED_BYTE, 
+		(void *)this->image.pixelData
 	);
 
-	glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	offset += imageData.width;
 
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glGenerateMipmap(GL_TEXTURE_2D);
 
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-	this->checkErrors(__PRETTY_FUNCTION__);
-
-}
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+	
+};
 
 void TextureLoader::checkErrors(const char *invoker)
 {

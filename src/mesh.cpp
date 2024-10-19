@@ -99,7 +99,7 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     {
         quad->textureData = finder->readFromImage(quad->textureFilepath);
 
-        texLoader->storeTexture(quad->textureData, this->xyTextureId);
+        texLoader->extendTextureStack(quad->textureData, this->xyTextureId);
         quad->textureId = this->xyTextureId;
     };
 
@@ -207,7 +207,7 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
 
     if(asset->textureFilepath != LAZARUS_MESH_NOTEX)
     {
-        texLoader->loadTexture(asset->textureData, asset->textureId);
+        texLoader->loadFromTextureStack(asset->textureData, asset->textureId);
     }
 	
     return;

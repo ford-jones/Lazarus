@@ -34,6 +34,7 @@
 #include <memory>
 #include <vector>
 #include <map>
+#include <algorithm>
 
 #include "shader.h"
 #include "fontLoader.h"
@@ -53,6 +54,10 @@ class TextManager
         virtual ~TextManager();
 
     private: 
+        void identifyAlphabetDimensions();
+        int atlasX;
+        int atlasY;
+
         GlobalsManager globals;
         std::unique_ptr<Mesh> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;

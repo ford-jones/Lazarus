@@ -47,8 +47,12 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void storeTexture(FileReader::Image imageData, GLuint &textureLayer, int overideX = 0, int overideY = 0);
-		void loadTexture(FileReader::Image imageData, GLuint textureLayer);
+		void extendTextureStack(FileReader::Image imageData, GLuint &textureLayer);
+		void loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer);
+
+		void storeBitmapTexture(int maxWidth, int maxHeight);
+		void loadBitmapToTexture(FileReader::Image imageData);
+
 		virtual ~TextureLoader();
 		
 	private:
@@ -60,11 +64,15 @@ class TextureLoader
 		FileReader::Image image;
 		
 		vector<GLuint> textures;
+		GLuint bitmapTexture;
+
 		GLenum errorCode;
 		
 		int mipCount;
 		int loopCount;
 		int x, y;
+
+		int offset;
 
 		GlobalsManager globals;
 };
