@@ -32,9 +32,7 @@ FontLoader::FontLoader()
 
     this->keyCode = 0;
     
-    this->image.width = 0;
-    this->image.height = 0;
-    this->image.pixelData = NULL;
+    this->setImageData(0, 0, NULL);
 };
 
 void FontLoader::initialise()
@@ -92,9 +90,7 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
 
         globals.setExecutionState(LAZARUS_FT_LOAD_FAILURE);
 
-        this->image.width = 0;
-        this->image.height = 0;
-        this->image.pixelData = NULL;   
+        this->setImageData(0, 0, NULL);
     }
     else
     {
@@ -112,16 +108,23 @@ void FontLoader::createBitmap()
     {
         globals.setExecutionState(LAZARUS_FT_RENDER_FAILURE);
 
-        this->image.width = 0;
-        this->image.height = 0;
-        this->image.pixelData = NULL;
+        this->setImageData(0, 0, NULL);
     }
     else
     {
-        this->image.width = fontFace->glyph->bitmap.width;
-        this->image.height = fontFace->glyph->bitmap.rows;
-        this->image.pixelData = fontFace->glyph->bitmap.buffer;
+        this->setImageData(
+            fontFace->glyph->bitmap.width, 
+            fontFace->glyph->bitmap.rows, 
+            fontFace->glyph->bitmap.buffer
+        );
     };
+};
+
+void FontLoader::setImageData(int width, int height, unsigned char *data)
+{
+    this->image.width = width;
+    this->image.height = height;
+    this->image.pixelData = data;
 };
 
 FontLoader::~FontLoader()

@@ -51,6 +51,8 @@ class FontLoader
 
     private:
         void createBitmap();
+        void setImageData(int width, int height, unsigned char *data);
+
         GlobalsManager globals;
         FileReader::Image image;
         std::vector<FT_Face> fontStack;
