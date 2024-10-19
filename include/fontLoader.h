@@ -50,6 +50,7 @@ class FontLoader
         virtual ~FontLoader();
 
     private:
+        void createBitmap();
         GlobalsManager globals;
         FileReader::Image image;
         std::vector<FT_Face> fontStack;
