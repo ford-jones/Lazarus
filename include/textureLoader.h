@@ -50,7 +50,7 @@ class TextureLoader
 		void extendTextureStack(FileReader::Image imageData, GLuint &textureLayer);
 		void loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer);
 
-		void storeBitmapTexture(int maxWidth, int maxHeight);
+		void storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureLayer);
 		void loadBitmapToTexture(FileReader::Image imageData);
 
 		virtual ~TextureLoader();

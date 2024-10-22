@@ -8,11 +8,13 @@ in vec2 textureCoordinate;
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
 
+uniform int spriteAsset;
+uniform int glyphAsset;
+
 uniform float xyzTexLayerIndex;
 uniform float xyTexLayerIndex;
 
-uniform int spriteAsset;
-
+uniform sampler2D fontStack;
 uniform sampler2DArray xyzAssetTextures;
 uniform sampler2DArray xyAssetTextures;
 
@@ -47,15 +49,30 @@ vec4 interpretColorData ()
         } 
         else
         {
-            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
+            vec4 tex = texture(fontStack, textureCoordinate);
+            
+            vec4 sampled = vec4(1.0, 1.0, 1.0, tex.r);
+            vec4 text = vec4(vec3(1.0, 0.0, 0.0), 1.0) * sampled;
 
-            if(tex.a < 0.1)
+            if(text.a < 0.1)
             {
                 discard;
             }
 
-            return tex;
-        } 
+            return text;
+            
+        }
+        //else
+        //{
+        //    vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
+//
+        //    if(tex.a < 0.1)
+        //    {
+        //        discard;
+        //    }
+//
+        //    return tex;
+        //} 
 
     }
 }

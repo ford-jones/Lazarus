@@ -27,13 +27,14 @@ TextureLoader::TextureLoader()
 
 	this->image = {pixelData: NULL, height: 0, width: 0};
 	this->textures = {};
+	this->bitmapTexture = 0;
 
 	this->x = 0;
 	this->y = 0;
 	this->loopCount = 0;
 	this->mipCount = 0;
 	this->errorCode = 0;
-
+	
 	this->offset = 0;
 };
 
@@ -111,17 +112,25 @@ void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint tex
 	this->checkErrors(__PRETTY_FUNCTION__);
 };
 
-void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight)
+void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
 {
 	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
-	glTexParameteriv(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+	glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
 
-	// glActiveTexture(GL_TEXTURE0);
 
 	glGenTextures(1, &bitmapTexture);
+	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
 
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	textureId = this->bitmapTexture;
+
+	GLint activeTexture;
+    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
+    if (activeTexture != GL_TEXTURE1) {
+        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
+    };
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, maxWidth, maxHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
@@ -135,6 +144,12 @@ void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
 	this->image.width = imageData.width;
 	this->image.height = imageData.height;
 	this->image.pixelData = imageData.pixelData;
+
+	GLint activeTexture;
+    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
+    if (activeTexture != GL_TEXTURE1) {
+        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
+    };
 
 	glTexSubImage2D(
 		GL_TEXTURE_2D, 
@@ -227,4 +242,5 @@ TextureLoader::~TextureLoader()
 			glDeleteTextures(1, &textures[i]);
 		}
 	}
+	glDeleteTextures(1, &bitmapTexture);
 };
