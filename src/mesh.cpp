@@ -45,8 +45,15 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
     triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
 
     triangulatedMesh->is3D = 1;
+    triangulatedMesh->isGlyph = 0;
+
+    this->lookupUniforms(triangulatedMesh);
+
+    glUniform1i(triangulatedMesh->samplerUniformLocation, 2);
 
     this->resolveFilepaths(triangulatedMesh, texturePath, materialPath, meshPath);
+
+    glActiveTexture(GL_TEXTURE2);
     
     meshLoader->parseWavefrontObj(
         this->vertexAttributes,
@@ -61,7 +68,6 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
     triangulatedMesh->textureId = this->xyzTextureId;
 
     this->setInherentProperties(triangulatedMesh);
-    this->lookupUniforms(triangulatedMesh);
 
     return triangulatedMesh;
 };
@@ -71,7 +77,12 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     quad = std::make_shared<TriangulatedMesh>();
 
     quad->is3D = 0;
+    quad->isGlyph = 0;
 
+    this->lookupUniforms(quad);
+
+    glUniform1i(quad->samplerUniformLocation, 3);
+    
     this->resolveFilepaths(quad, texturePath);
 
     /* ======================================================================================================
@@ -99,12 +110,13 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     {
         quad->textureData = finder->readFromImage(quad->textureFilepath);
 
+        glActiveTexture(GL_TEXTURE3);
+
         texLoader->extendTextureStack(quad->textureData, this->xyTextureId);
         quad->textureId = this->xyTextureId;
     };
 
     this->setInherentProperties(quad);
-    this->lookupUniforms(quad);
 
     return quad;
 }
@@ -117,18 +129,20 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
     if((asset->textureFilepath == LAZARUS_MESH_ISTEXT))
     {
         glActiveTexture(GL_TEXTURE1);
-        // glBindTexture(GL_TEXTURE_2D, asset->textureId);
     }
     else if((asset->textureFilepath != LAZARUS_MESH_NOTEX))
     {
+        if(asset->is3D == 1)
+        {
+            glActiveTexture(GL_TEXTURE2);
+        }
+        else
+        {
+            glActiveTexture(GL_TEXTURE3);
+        }
+        
         texLoader->loadFromTextureStack(asset->textureData, asset->textureId);
     }
-
-    GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    if (activeTexture != GL_TEXTURE1) {
-        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
-    };
 
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
@@ -156,12 +170,7 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> &asset)
 {
     glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
     glUniform1i(asset->is3DUniformLocation, asset->is3D);
-
-    GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    if (activeTexture != GL_TEXTURE1) {
-        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
-    };
+    glUniform1i(asset->isGlyphUniformLocation, asset->isGlyph);
 
     if(asset->textureId != 0)
     {
@@ -176,15 +185,6 @@ void Mesh::loadMesh(shared_ptr<TriangulatedMesh> &asset)
 void Mesh::drawMesh(shared_ptr<TriangulatedMesh> &asset)
 {
     glDrawArrays(GL_TRIANGLES, 0, asset->attributes.size());
-
-    GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    std::cout << "Active texture: " << activeTexture << std::endl;
-
-    GLint boundTexture;
-    glGetIntegerv(GL_TEXTURE_BINDING_2D, &boundTexture);
-    std::cout << "Bound texture: " << boundTexture << std::endl;
-
 
     this->checkErrors(__PRETTY_FUNCTION__);
 
@@ -250,14 +250,19 @@ void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 {
     asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
     asset->is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
+    asset->isGlyphUniformLocation = glGetUniformLocation(this->shaderProgram, "glyphAsset");
 
     if(asset->is3D == 1)
     {
+        // glUniform1i(asset->samplerUniformLocation, 2);
+
         asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
         asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
     }
     else 
     {
+        // glUniform1i(asset->samplerUniformLocation, 3);
+
         asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
         asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
     }

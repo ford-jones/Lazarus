@@ -54,8 +54,6 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     {
         glyph = fontLoader->loadCharacter(char(i), fontIndex);
         textureLoader->loadBitmapToTexture(glyph);
-
-        // textures.emplace(textureId, glyph);
     };
 
     return fontIndex;
@@ -73,9 +71,8 @@ void TextManager::loadText(std::string targetText)
     {   
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
         quad = meshLoader->createQuad(1.0f, 1.0f, LAZARUS_MESH_ISTEXT);
-
-        // quad->textureId = int(i);
-        // quad->textureData = textures[quad->textureId];
+        
+        quad->isGlyph = 1;
         quad->textureId = this->textureId;
         quad->textureData = {pixelData: NULL, height: 0, width: 0};
 

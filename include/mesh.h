@@ -80,8 +80,10 @@ class Mesh
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
             GLint is3DUniformLocation;
+            GLint isGlyphUniformLocation;
 
             int is3D;
+            int isGlyph;
         };
 		
 		Mesh(GLuint shader);

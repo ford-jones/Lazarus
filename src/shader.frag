@@ -47,7 +47,7 @@ vec4 interpretColorData ()
             vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, xyzTexLayerIndex));
             return tex;
         } 
-        else
+        else if( glyphAsset == 1)
         {
             vec4 tex = texture(fontStack, textureCoordinate);
             
@@ -62,17 +62,17 @@ vec4 interpretColorData ()
             return text;
             
         }
-        //else
-        //{
-        //    vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
-//
-        //    if(tex.a < 0.1)
-        //    {
-        //        discard;
-        //    }
-//
-        //    return tex;
-        //} 
+        else
+        {
+            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
+
+            if(tex.a < 0.1)
+            {
+                discard;
+            }
+
+            return tex;
+        } 
 
     }
 }
