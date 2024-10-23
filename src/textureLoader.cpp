@@ -56,7 +56,9 @@ void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &text
 	glGenTextures(1, &textureLayer);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
-	this->mipCount = this->calculateMipLevels(image.width, image.height);
+	this->image = imageData;
+	
+	this->mipCount = this->calculateMipLevels(this->image.width, this->image.height);
 
 	glTexStorage3D(
 		GL_TEXTURE_2D_ARRAY, 								//	target
