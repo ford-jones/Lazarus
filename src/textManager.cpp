@@ -70,16 +70,10 @@ void TextManager::loadText(std::string targetText)
     int winWidth = globals.getDisplayWidth();
     int winHeight = globals.getDisplayHeight();
 
-    // glm::mat4 orthProjection = glm::ortho(0.0f, float(winHeight), 0.0f, float(winHeight));
-    // glUniformMatrix4fv     (glGetUniformLocation(shaderProgram, "projectionMatrix"), 1, GL_FALSE, &orthProjection[0][0]);                                          //  Pass projection-uniform data into the shader program
-
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
         this->lookUpUVs(static_cast<int>(targetText[i]));
-
-        std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvL << std::endl;
-        std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvH << std::endl;
 
         quad = meshLoader->createQuad(1.0f, 1.0f, LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
@@ -87,6 +81,7 @@ void TextManager::loadText(std::string targetText)
         quad->textureId = this->textureId;
         quad->textureData = textures.at(static_cast<int>(targetText[i]));
 
+        transformer.rotateMeshAsset(quad, 180.0f, 0.0f, 0.0f);
         transformer.translateMeshAsset(quad, (1.0f * (i + 1)), 0.0f, 0.0f);
 
         word.push_back(quad);
@@ -104,7 +99,6 @@ void TextManager::drawText()
 
         if(quad->modelviewUniformLocation >= 0)
         {            
-            //  Translate mesh on x++ axis by a factor of (image.width * (index + 1))
             meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
             meshLoader->drawMesh(quad);
