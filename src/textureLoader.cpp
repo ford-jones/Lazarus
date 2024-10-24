@@ -57,7 +57,7 @@ void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &text
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
 	this->image = imageData;
-	
+
 	this->mipCount = this->calculateMipLevels(this->image.width, this->image.height);
 
 	glTexStorage3D(
@@ -116,8 +116,8 @@ void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint tex
 
 void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
 {
-	GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
-	glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
+	// GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
+	// glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
 
 
 	glGenTextures(1, &bitmapTexture);
@@ -134,7 +134,7 @@ void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &text
         std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
     };
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, maxWidth, maxHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, maxWidth, maxHeight, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
 
@@ -160,7 +160,7 @@ void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
 		0, 
 		this->image.width, 
 		this->image.height, 
-		GL_RGBA, 
+		GL_RED, 
 		GL_UNSIGNED_BYTE, 
 		(void *)this->image.pixelData
 	);

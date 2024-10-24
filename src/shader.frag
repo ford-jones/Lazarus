@@ -20,35 +20,23 @@ uniform sampler2DArray xyAssetTextures;
 
 out vec4 outFragment;
 
-vec3 calculateLambertianDeflection (vec4 colorData) 
-{
-    vec3 color = vec3(colorData.r, colorData.g, colorData.b);
-
-    vec3 lightDirection = normalize(lightPosition - fragPosition);
-    float diff = max(dot(normalCoordinate, lightDirection), 0.0);
-
-    vec3 illuminatedFrag = (color * lightColor * diff);
-    
-    return illuminatedFrag;
-}
-
 vec4 interpretColorData ()
 {
     if((diffuseColor.r >= 0.0) &&
        (diffuseColor.g >= 0.0) && 
        (diffuseColor.b >= 0.0))
-    {
+    {                                                                                               // Any (No texture)
         return vec4(diffuseColor, 1.0);
     }
     else 
     {
         if( spriteAsset == 1 )
-        {
+        {                                                                                           // 3D Mesh
             vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, xyzTexLayerIndex));
             return tex;
         } 
         else if( glyphAsset == 1)
-        {
+        {                                                                                           // Text
             vec4 tex = texture(fontStack, textureCoordinate);
             
             vec4 sampled = vec4(1.0, 1.0, 1.0, tex.r);
@@ -63,7 +51,7 @@ vec4 interpretColorData ()
             
         }
         else
-        {
+        {                                                                                           //  Sprite
             vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
 
             if(tex.a < 0.1)
@@ -75,6 +63,18 @@ vec4 interpretColorData ()
         } 
 
     }
+}
+
+vec3 calculateLambertianDeflection (vec4 colorData) 
+{                                                                                                   // Lighting
+    vec3 color = vec3(colorData.r, colorData.g, colorData.b);
+
+    vec3 lightDirection = normalize(lightPosition - fragPosition);
+    float diff = max(dot(normalCoordinate, lightDirection), 0.0);
+
+    vec3 illuminatedFrag = (color * lightColor * diff);
+    
+    return illuminatedFrag;
 }
 
 void main ()
