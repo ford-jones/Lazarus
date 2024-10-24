@@ -73,10 +73,10 @@ void TextManager::loadText(std::string targetText)
     // glm::mat4 orthProjection = glm::ortho(0.0f, float(winHeight), 0.0f, float(winHeight));
     // glUniformMatrix4fv     (glGetUniformLocation(shaderProgram, "projectionMatrix"), 1, GL_FALSE, &orthProjection[0][0]);                                          //  Pass projection-uniform data into the shader program
 
-    for(char i: targetText)
+    for(unsigned int i = 0; i < targetText.size(); i++)
     {   
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
-        this->lookUpUVs(static_cast<int>(i));
+        this->lookUpUVs(static_cast<int>(targetText[i]));
 
         std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvL << std::endl;
         std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvH << std::endl;
@@ -85,7 +85,9 @@ void TextManager::loadText(std::string targetText)
         
         quad->isGlyph = 1;
         quad->textureId = this->textureId;
-        quad->textureData = textures.at(static_cast<int>(i));
+        quad->textureData = textures.at(static_cast<int>(targetText[i]));
+
+        transformer.translateMeshAsset(quad, (1.0f * (i + 1)), 0.0f, 0.0f);
 
         word.push_back(quad);
     };
@@ -154,17 +156,6 @@ void TextManager::lookUpUVs(int keyCode)
         targetY = atlasY - cullY;
     };
 
-    std::cout << "Target X: " << targetXL << std::endl;
-    std::cout << "Target Y: " << targetY << std::endl;
-
-    // float percentX = 100 * (static_cast<float>(targetXL) / static_cast<float>(atlasX));
-    // float percentY = 100 * (static_cast<float>(targetY) / static_cast<float>(atlasY));
-
-    // std::cout << "Percent X: " << percentX << std::endl;
-    // std::cout << "Percent Y: " << percentY << std::endl;
-
-    // this->uvL = percentX / 100;
-    // this->uvH = percentY / 100;
     this->glyph = textures.at(keyCode);
 
     targetXR = targetXL + this->glyph.width;
@@ -172,9 +163,6 @@ void TextManager::lookUpUVs(int keyCode)
     this->uvL = static_cast<float>(targetXL) / static_cast<float>(atlasX);
     this->uvR = static_cast<float>(targetXR) / static_cast<float>(atlasX);
     this->uvH = static_cast<float>(targetY) / static_cast<float>(atlasY);
-
-    std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvL << std::endl;
-    std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvH << std::endl;
 };
 
 TextManager::~TextManager()

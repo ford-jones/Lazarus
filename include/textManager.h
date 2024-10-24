@@ -39,6 +39,7 @@
 #include "shader.h"
 #include "fontLoader.h"
 #include "textureLoader.h"
+#include "transforms.h"
 #include "mesh.h"
 
 #ifndef LAZARUS_TEXT_MANAGER_H
@@ -64,6 +65,7 @@ class TextManager
         float uvR;
         float uvH;
 
+        Transform transformer;
         GlobalsManager globals;
         std::unique_ptr<Mesh> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;
