@@ -32,8 +32,9 @@
 #include <iostream>
 #include <string>
 #include <memory>
-#include <vector>
 #include <algorithm>
+#include <vector>
+#include <map>
 
 #include "shader.h"
 #include "fontLoader.h"
@@ -54,8 +55,14 @@ class TextManager
 
     private: 
         void identifyAlphabetDimensions();
+        void lookUpUVs(int keyCode);
+
         int atlasX;
         int atlasY;
+
+        float uvL;
+        float uvR;
+        float uvH;
 
         GlobalsManager globals;
         std::unique_ptr<Mesh> meshLoader;
@@ -72,6 +79,7 @@ class TextManager
         GLuint shaderProgram;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+        std::map<GLuint, FileReader::Image> textures;
 };
 
 #endif

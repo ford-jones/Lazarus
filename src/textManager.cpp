@@ -34,6 +34,10 @@ TextManager::TextManager(GLuint shader)
 
     this->atlasX = 0;
     this->atlasY = 0;
+
+    this->uvL = 0.0;
+    this->uvR = 0.0;
+    this->uvH = 0.0;
 };
 
 int TextManager::extendFontStack(std::string filepath, int ptSize)
@@ -54,6 +58,8 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     {
         glyph = fontLoader->loadCharacter(char(i), fontIndex);
         textureLoader->loadBitmapToTexture(glyph);
+
+        textures.emplace((i - 33), glyph);
     };
 
     return fontIndex;
@@ -70,26 +76,18 @@ void TextManager::loadText(std::string targetText)
     for(char i: targetText)
     {   
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
-        quad = meshLoader->createQuad(1.0f, 1.0f, LAZARUS_MESH_ISTEXT);
+        this->lookUpUVs(static_cast<int>(i));
+
+        std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvL << std::endl;
+        std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvH << std::endl;
+
+        quad = meshLoader->createQuad(1.0f, 1.0f, LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
         quad->isGlyph = 1;
         quad->textureId = this->textureId;
-        quad->textureData = {pixelData: NULL, height: 0, width: 0};
+        quad->textureData = textures.at(static_cast<int>(i));
 
         word.push_back(quad);
-    };
-
-    return;
-};
-
-void TextManager::identifyAlphabetDimensions()
-{
-    for(int i = 33; i < 128; i++)
-    {
-        glyph = fontLoader->loadCharacter(char(i), fontIndex);
-        
-        atlasX += glyph.width;
-        atlasY = std::max(atlasY, glyph.height);
     };
 
     return;
@@ -118,6 +116,65 @@ void TextManager::drawText()
     };
 
     return;
+};
+
+void TextManager::identifyAlphabetDimensions()
+{
+    for(int i = 33; i < 128; i++)
+    {
+        glyph = fontLoader->loadCharacter(char(i), fontIndex);
+        
+        atlasX += glyph.width;
+        atlasY = std::max(atlasY, glyph.height);
+    };
+
+    return;
+};
+
+void TextManager::lookUpUVs(int keyCode)
+{
+    /* =======================================
+        Skip control keys
+    ========================================== */
+    int span = keyCode - 33;
+    int count = 0;
+
+    int targetXL = 0;
+    int targetXR = 0;
+    int targetY = 0;
+
+    while(count < span)
+    {
+        this->glyph = textures.at(count);
+        count += 1;
+
+        int cullY = (atlasY - glyph.height);
+
+        targetXL += glyph.width;
+        targetY = atlasY - cullY;
+    };
+
+    std::cout << "Target X: " << targetXL << std::endl;
+    std::cout << "Target Y: " << targetY << std::endl;
+
+    // float percentX = 100 * (static_cast<float>(targetXL) / static_cast<float>(atlasX));
+    // float percentY = 100 * (static_cast<float>(targetY) / static_cast<float>(atlasY));
+
+    // std::cout << "Percent X: " << percentX << std::endl;
+    // std::cout << "Percent Y: " << percentY << std::endl;
+
+    // this->uvL = percentX / 100;
+    // this->uvH = percentY / 100;
+    this->glyph = textures.at(keyCode);
+
+    targetXR = targetXL + this->glyph.width;
+
+    this->uvL = static_cast<float>(targetXL) / static_cast<float>(atlasX);
+    this->uvR = static_cast<float>(targetXR) / static_cast<float>(atlasX);
+    this->uvH = static_cast<float>(targetY) / static_cast<float>(atlasY);
+
+    std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvL << std::endl;
+    std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvH << std::endl;
 };
 
 TextManager::~TextManager()

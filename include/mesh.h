@@ -89,7 +89,7 @@ class Mesh
 		Mesh(GLuint shader);
 		
         shared_ptr<TriangulatedMesh> create3DAsset(string meshPath, string materialPath, string texturePath = "");
-        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "");
+        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
         void initialiseMesh(shared_ptr<TriangulatedMesh> &meshData);
         void loadMesh(shared_ptr<TriangulatedMesh> &meshData);
