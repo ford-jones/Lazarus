@@ -133,9 +133,16 @@ void FontLoader::flipGlyph()
 {
     FT_Vector pixelStore;
 
-    pixelStore.x = 200 * 64;
-    pixelStore.y = 300 * 64;
+    pixelStore.x = 1 * 64;
+    pixelStore.y = 1 * 64;
 
+    /* =========================================
+        Construct a transformation matrix used to
+        flip the glyph vertically. This is to 
+        accomidate OpenGL's cartesian coordinate
+        system (0.0 being bottom left instead of top 
+        left).
+    ============================================ */
     transformationMatrix.xx = (FT_Fixed)( cos( 0.0f ) * 0x10000L );
     transformationMatrix.xy = (FT_Fixed)(-sin( 0.0f ) * 0x10000L );
     transformationMatrix.yx = (FT_Fixed)( sin( 0.0f ) * 0x10000L );
@@ -143,6 +150,11 @@ void FontLoader::flipGlyph()
 
     FT_Set_Transform( fontFace, &transformationMatrix, &pixelStore);
 
+    /* ==========================================
+        Advance the pen / cursor / locator to the 
+        end of the active glyph's coordinates to 
+        be properly placed for next glyph load.
+    ============================================= */
     pixelStore.x += fontFace->glyph->advance.x;
     pixelStore.y += fontFace->glyph->advance.y;
 };

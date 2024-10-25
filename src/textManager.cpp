@@ -81,7 +81,6 @@ void TextManager::loadText(std::string targetText)
         quad->textureId = this->textureId;
         quad->textureData = textures.at(static_cast<int>(targetText[i]));
 
-        // transformer.rotateMeshAsset(quad, 180.0f, 0.0f, 0.0f);
         transformer.translateMeshAsset(quad, (1.0f * (i + 1)), 0.0f, 0.0f);
 
         word.push_back(quad);
