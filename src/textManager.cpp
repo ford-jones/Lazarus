@@ -30,6 +30,8 @@ TextManager::TextManager(GLuint shader)
     this->fontLoader = nullptr;
     this->word = {};
 
+    this->textColor = glm::vec3(0.0f, 0.0f, 0.0f);
+
     this->fontIndex = 0;
 
     this->atlasX = 0;
@@ -65,10 +67,13 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-void TextManager::loadText(std::string targetText)
+void TextManager::loadText(std::string targetText, float red, float green, float blue)
 {
     int winWidth = globals.getDisplayWidth();
     int winHeight = globals.getDisplayHeight();
+
+    textColor = glm::vec3(red, green, blue);
+    glUniform3fv(glGetUniformLocation(this->shaderProgram, "textColor"), 1, &textColor[0]);
 
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   

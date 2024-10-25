@@ -50,7 +50,7 @@ class TextManager
     public:
         TextManager(GLuint shader);
         int extendFontStack(std::string filepath, int ptSize = 12);
-        void loadText(std::string targetText);
+        void loadText(std::string targetText, float red, float green, float blue);
         void drawText();
         virtual ~TextManager();
 
@@ -65,20 +65,21 @@ class TextManager
         float uvR;
         float uvH;
 
+        unsigned int fontIndex;
+
+        GLuint textureId;
+        GLuint shaderProgram;
+
+        glm::vec3 textColor;
+
         Transform transformer;
         GlobalsManager globals;
+        FileReader::Image glyph;
+
         std::unique_ptr<Mesh> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;
         std::unique_ptr<FontLoader> fontLoader;
-
-        unsigned int fontIndex;
-
         std::shared_ptr<Mesh::TriangulatedMesh> quad;
-
-        FileReader::Image glyph;
-        GLuint textureId;
-
-        GLuint shaderProgram;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
         std::map<GLuint, FileReader::Image> textures;

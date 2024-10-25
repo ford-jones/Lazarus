@@ -7,6 +7,7 @@ in vec2 textureCoordinate;
 
 uniform vec3 lightPosition;
 uniform vec3 lightColor;
+uniform vec3 textColor;
 
 uniform int spriteAsset;
 uniform int glyphAsset;
@@ -40,7 +41,7 @@ vec4 interpretColorData ()
             vec4 tex = texture(fontStack, textureCoordinate);
             
             vec4 sampled = vec4(1.0, 1.0, 1.0, tex.r);
-            vec4 text = vec4(vec3(1.0, 0.0, 0.0), 1.0) * sampled;
+            vec4 text = vec4(textColor, 1.0) * sampled;
 
             if(text.a < 0.1)
             {
