@@ -30,6 +30,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <math.h>
 
 #include "fileReader.h"
 
@@ -51,6 +52,7 @@ class FontLoader
 
     private:
         void createBitmap();
+        void flipGlyph();
         void setImageData(int width, int height, unsigned char *data);
 
         GlobalsManager globals;
@@ -59,6 +61,7 @@ class FontLoader
 
         int keyCode;
 
+        FT_Matrix transformationMatrix;
         FT_Library lib;
         FT_Face fontFace;
 

@@ -80,6 +80,8 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
     this->fontFace = fontStack[fontIndex];
     this->keyCode = int(character);
 
+    this->flipGlyph();
+
     this->glyphIndex = FT_Get_Char_Index(fontFace, keyCode);
     status = FT_Load_Glyph(fontFace, glyphIndex, FT_LOAD_DEFAULT);
 
@@ -125,6 +127,24 @@ void FontLoader::setImageData(int width, int height, unsigned char *data)
     this->image.width = width;
     this->image.height = height;
     this->image.pixelData = data;
+};
+
+void FontLoader::flipGlyph()
+{
+    FT_Vector pixelStore;
+
+    pixelStore.x = 200 * 64;
+    pixelStore.y = 300 * 64;
+
+    transformationMatrix.xx = (FT_Fixed)( cos( 0.0f ) * 0x10000L );
+    transformationMatrix.xy = (FT_Fixed)(-sin( 0.0f ) * 0x10000L );
+    transformationMatrix.yx = (FT_Fixed)( sin( 0.0f ) * 0x10000L );
+    transformationMatrix.yy = (FT_Fixed)( cos( 180.0f ) * 0x10000L );
+
+    FT_Set_Transform( fontFace, &transformationMatrix, &pixelStore);
+
+    pixelStore.x += fontFace->glyph->advance.x;
+    pixelStore.y += fontFace->glyph->advance.y;
 };
 
 FontLoader::~FontLoader()
