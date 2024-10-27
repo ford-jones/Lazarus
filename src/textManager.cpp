@@ -25,7 +25,9 @@ TextManager::TextManager(GLuint shader)
     this->shaderProgram = shader;
     this->quad = std::make_shared<Mesh::TriangulatedMesh>();
     this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
+    this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
     
+    this->camera = nullptr;
     this->textureLoader = nullptr;
     this->fontLoader = nullptr;
     this->word = {};
@@ -80,13 +82,13 @@ void TextManager::loadText(std::string targetText, float red, float green, float
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
         this->lookUpUVs(static_cast<int>(targetText[i]));
 
-        quad = meshLoader->createQuad(1.0f, 1.0f, LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
+        quad = meshLoader->createQuad(128.0f, 128.0f, LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
         quad->isGlyph = 1;
         quad->textureId = this->textureId;
         quad->textureData = textures.at(static_cast<int>(targetText[i]));
 
-        transformer.translateMeshAsset(quad, (1.0f * (i + 1)), 0.0f, 0.0f);
+        transformer.translateMeshAsset(quad, (128.0f * (i + 1)), 0.0f, 0.0f);
 
         word.push_back(quad);
     };
@@ -96,6 +98,8 @@ void TextManager::loadText(std::string targetText, float red, float green, float
 
 void TextManager::drawText()
 {
+    this->camera = cameraBuilder->createOrthoCam(globals.getDisplayWidth(), globals.getDisplayHeight());
+    
     for(auto i: word)
     {
         quad.reset();
@@ -103,6 +107,8 @@ void TextManager::drawText()
 
         if(quad->modelviewUniformLocation >= 0)
         {            
+            cameraBuilder->loadCamera(camera);
+
             meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
             meshLoader->drawMesh(quad);

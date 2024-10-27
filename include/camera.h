@@ -29,6 +29,8 @@
 #include <stdlib.h>
 #include <memory>
 
+#include "globalsManager.h"
+
 using std::shared_ptr;
 using glm::vec3;
 using glm::mat4;
@@ -65,11 +67,13 @@ class Camera
 		//	Make creation function for an orthographic camera (projection matrix constructed with glm::ortho rather than glm::perspective)
 		//	Rename the existing creation function to createPerspectiveCamera()
 		
-        shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
+        shared_ptr<FixedCamera> createPerspectiveCam(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
+        shared_ptr<FixedCamera> createOrthoCam(int arX, int arY);
         void loadCamera(shared_ptr<FixedCamera> &cameraData);
 
         virtual ~Camera();
     private:
+        GlobalsManager globals;
         GLuint shader;
         shared_ptr<FixedCamera> fixedCamera;
 };

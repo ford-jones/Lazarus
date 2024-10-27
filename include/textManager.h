@@ -37,6 +37,7 @@
 #include <map>
 
 #include "shader.h"
+#include "camera.h"
 #include "fontLoader.h"
 #include "textureLoader.h"
 #include "transforms.h"
@@ -79,7 +80,10 @@ class TextManager
         std::unique_ptr<Mesh> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;
         std::unique_ptr<FontLoader> fontLoader;
+        std::unique_ptr<Camera> cameraBuilder;
+
         std::shared_ptr<Mesh::TriangulatedMesh> quad;
+        std::shared_ptr<Camera::FixedCamera> camera;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
         std::map<GLuint, FileReader::Image> textures;
