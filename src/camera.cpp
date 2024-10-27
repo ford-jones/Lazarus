@@ -48,6 +48,7 @@ shared_ptr<Camera::FixedCamera> Camera::createPerspectiveCam(int arX, int arY, d
     fixedCamera->viewLocation         =   glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 
     fixedCamera->projectionLocation   =   glGetUniformLocation(shader, "perspectiveProjectionMatrix");                                                          //  Returns the shader program's projection-matrix index position OR -1 upon encountering an error 
 
+    fixedCamera->usesPerspective      =   1;
 
     return fixedCamera;                                                                                                                             //  Return the newly created camera struct
 };
@@ -75,8 +76,8 @@ shared_ptr<Camera::FixedCamera> Camera::createOrthoCam(int arX, int arY)
     fixedCamera->viewLocation         =   glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 
     fixedCamera->projectionLocation   =   glGetUniformLocation(shader, "orthoProjectionMatrix");                                                          //  Returns the shader program's projection-matrix index position OR -1 upon encountering an error 
 
+    fixedCamera->usesPerspective      =   0;
 
-    return fixedCamera;                                                                 
     return fixedCamera;                                                                                                                             //  Return the newly created camera struct
 };
 
@@ -84,6 +85,8 @@ void Camera::loadCamera(shared_ptr<Camera::FixedCamera> &cameraData)
 {
     glUniformMatrix4fv     (cameraData->viewLocation, 1, GL_FALSE, &cameraData->viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
     glUniformMatrix4fv     (cameraData->projectionLocation, 1, GL_FALSE, &cameraData->projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
+    
+    glUniform1i(glGetUniformLocation(this->shader, "usesPerspective"), cameraData->usesPerspective);
 };
 
 Camera::~Camera()

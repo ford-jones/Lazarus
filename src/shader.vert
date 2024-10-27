@@ -10,8 +10,11 @@ out vec3 diffuseColor;
 out vec3 normalCoordinate;
 out vec2 textureCoordinate;
 
+uniform int usesPerspective;
+
 uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
+uniform mat4 perspectiveProjectionMatrix;
 uniform mat4 orthoProjectionMatrix;
 
 void main ()
@@ -20,7 +23,15 @@ void main ()
    normalCoordinate = mat3(transpose(inverse(modelMatrix))) * inNormal;
 
    vec4 worldPosition = modelMatrix * vec4(inVertex, 1.0);
-   gl_Position = orthoProjectionMatrix * viewMatrix * worldPosition;
+   
+   if(usesPerspective != 0)
+   {
+      gl_Position = perspectiveProjectionMatrix * viewMatrix * worldPosition;   
+   }
+   else
+   {
+      gl_Position = orthoProjectionMatrix * viewMatrix * worldPosition;
+   }
    
    textureCoordinate = vec2(inTexCoord.x, inTexCoord.y);
    diffuseColor = inDiffuse;
