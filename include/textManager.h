@@ -51,7 +51,7 @@ class TextManager
     public:
         TextManager(GLuint shader);
         int extendFontStack(std::string filepath, int ptSize = 12);
-        void loadText(std::string targetText, float red, float green, float blue);
+        void loadText(std::string targetText, float red, float green, float blue, int letterSpacing = 1);
         void drawText();
         virtual ~TextManager();
 

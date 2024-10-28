@@ -85,17 +85,22 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
     
     this->resolveFilepaths(quad, texturePath);
 
-    std::cout << "Uv X @: " << __PRETTY_FUNCTION__ << uvXL << std::endl;
-    std::cout << "Uv Y @: " << __PRETTY_FUNCTION__ << uvY << std::endl;
+    /* ==========================================================
+        If the UV params aren't their default values (0.0) then
+        this quad is being created for a glyph which needs to be 
+        looked up in the texture atlas.
 
+        Otherwise it's a generic sprite.
+    ============================================================= */
+
+    if((uvXL || uvXR || uvY) > 0.0 )
+    {
     /* ======================================================================================================
             Vertex positions,           Diffuse colors,             Normals,                    UVs 
     ========================================================================================================= */
-    if((uvXL || uvXR || uvY) > 0.0 )
-    {
         this->vertexAttributes = {                                                                                          
-            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f), // problem - shouldnt be 0.0, should be uvX ?
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),  // should be (targetX + glyph.width) / atlasX ?
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
             vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
 
             vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
@@ -107,8 +112,8 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float heig
             vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
 
             vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),  // should be (targetX + glyph.width) / atlasX ?
-            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f), // problem - shouldnt be 0.0, should be uvX ?
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
         };
     }
     else
@@ -194,7 +199,7 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
 
 void Mesh::loadMesh(shared_ptr<TriangulatedMesh> &asset)
 {
-    glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
+    glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);
     glUniform1i(asset->is3DUniformLocation, asset->is3D);
     glUniform1i(asset->isGlyphUniformLocation, asset->isGlyph);
 
@@ -274,21 +279,17 @@ void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 
 void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 {
-    asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
+    asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");
     asset->is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
     asset->isGlyphUniformLocation = glGetUniformLocation(this->shaderProgram, "glyphAsset");
 
     if(asset->is3D == 1)
     {
-        // glUniform1i(asset->samplerUniformLocation, 2);
-
         asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
         asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
     }
     else 
     {
-        // glUniform1i(asset->samplerUniformLocation, 3);
-
         asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
         asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
     }
@@ -298,12 +299,12 @@ void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
 
 void Mesh::checkErrors(const char *invoker)
 {
-    this->errorCode = glGetError();                                                                                       //  Check for errors
+    this->errorCode = glGetError();
     
-    if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
+    if(this->errorCode != 0)
     {
-        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
-        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
+        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
+        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
 
         globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     }

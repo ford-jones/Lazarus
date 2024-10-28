@@ -71,16 +71,21 @@ int FontLoader::loadFont(std::string filepath, int charHeight, int charWidth)
 
         fontStack.push_back(fontFace);
 
-        return (fontStack.size() - 1);
+        return fontStack.size();
     }
 };
 
 FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
 {
-    this->fontFace = fontStack[fontIndex];
+    this->fontFace = fontStack[fontIndex - 1];
     this->keyCode = int(character);
 
-    // this->flipGlyph();
+    /* ==================================================================
+        When rendering text under perspective, the glyph will need to be 
+        flipped. Use the following:
+
+        this->flipGlyph();
+    ===================================================================== */
 
     this->glyphIndex = FT_Get_Char_Index(fontFace, keyCode);
     status = FT_Load_Glyph(fontFace, glyphIndex, FT_LOAD_DEFAULT);

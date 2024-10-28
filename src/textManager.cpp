@@ -69,7 +69,7 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-void TextManager::loadText(std::string targetText, float red, float green, float blue)
+void TextManager::loadText(std::string targetText, float red, float green, float blue, int letterSpacing)
 {
     if(word.size() > 0)
     {
@@ -96,7 +96,7 @@ void TextManager::loadText(std::string targetText, float red, float green, float
         quad->textureData = this->glyph;
 
         transformer.translateMeshAsset(quad, static_cast<float>(translation), 0.0f, 0.0f);
-        translation += (this->glyph.width + 2);
+        translation += (this->glyph.width + letterSpacing);
 
         word.push_back(quad);
     };
@@ -153,7 +153,6 @@ void TextManager::lookUpUVs(int keyCode)
     int span = keyCode - 33;
 
     int targetXL = 0;
-    int targetY = atlasY;
 
     for (int i = 0; i < span; ++i)
     {
@@ -166,7 +165,7 @@ void TextManager::lookUpUVs(int keyCode)
     
     this->uvL = static_cast<float>(targetXL) / static_cast<float>(atlasX);
     this->uvR = static_cast<float>(targetXR) / static_cast<float>(atlasX);
-    this->uvH = static_cast<float>(targetY) / static_cast<float>(atlasY);
+    this->uvH = static_cast<float>(this->fontIndex);
 };
 
 TextManager::~TextManager()
