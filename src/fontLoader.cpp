@@ -80,7 +80,7 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
     this->fontFace = fontStack[fontIndex];
     this->keyCode = int(character);
 
-    this->flipGlyph();
+    // this->flipGlyph();
 
     this->glyphIndex = FT_Get_Char_Index(fontFace, keyCode);
     status = FT_Load_Glyph(fontFace, glyphIndex, FT_LOAD_DEFAULT);
