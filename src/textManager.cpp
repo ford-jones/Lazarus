@@ -71,6 +71,11 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
 void TextManager::loadText(std::string targetText, float red, float green, float blue)
 {
+    if(word.size() > 0)
+    {
+        word.clear();
+    };
+
     int winWidth = globals.getDisplayWidth();
     int winHeight = globals.getDisplayHeight();
 
@@ -81,18 +86,17 @@ void TextManager::loadText(std::string targetText, float red, float green, float
 
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
-        // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
         this->lookUpUVs(static_cast<int>(targetText[i]));
         this->glyph = textures.at(static_cast<int>(targetText[i]));
 
-        quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->glyph.height), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
+        quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->atlasY), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
         quad->isGlyph = 1;
         quad->textureId = this->textureId;
         quad->textureData = this->glyph;
 
         transformer.translateMeshAsset(quad, static_cast<float>(translation), 0.0f, 0.0f);
-        translation += this->glyph.width;
+        translation += (this->glyph.width + 2);
 
         word.push_back(quad);
     };
@@ -143,31 +147,23 @@ void TextManager::identifyAlphabetDimensions()
 
 void TextManager::lookUpUVs(int keyCode)
 {
-    /* =======================================
-        Skip control keys
-    ========================================== */
+    /* =========================================================================== 
+        Skip control keys and calculate the span offset for non-control characters
+    ============================================================================== */
     int span = keyCode - 33;
-    int count = 0;
 
     int targetXL = 0;
-    int targetXR = 0;
-    int targetY = 0;
+    int targetY = atlasY;
 
-    while(count < span)
+    for (int i = 0; i < span; ++i)
     {
-        this->glyph = textures.at(count);
-        count += 1;
+        this->glyph = textures.at(i);
+        targetXL += this->glyph.width;
+    }
 
-        int cullY = (atlasY - glyph.height);
-
-        targetXL += glyph.width;
-        targetY = atlasY - cullY;
-    };
-
-    this->glyph = textures.at(keyCode);
-
-    targetXR = targetXL + this->glyph.width;
-
+    this->glyph = textures.at(span);
+    int targetXR = targetXL + this->glyph.width;
+    
     this->uvL = static_cast<float>(targetXL) / static_cast<float>(atlasX);
     this->uvR = static_cast<float>(targetXR) / static_cast<float>(atlasX);
     this->uvH = static_cast<float>(targetY) / static_cast<float>(atlasY);
