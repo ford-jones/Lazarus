@@ -69,7 +69,7 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-void TextManager::loadText(std::string targetText, float red, float green, float blue, int letterSpacing)
+void TextManager::loadText(std::string targetText, float red, float green, float blue, int posX, int posY, int letterSpacing)
 {
     if(word.size() > 0)
     {
@@ -95,7 +95,7 @@ void TextManager::loadText(std::string targetText, float red, float green, float
         quad->textureId = this->textureId;
         quad->textureData = this->glyph;
 
-        transformer.translateMeshAsset(quad, static_cast<float>(translation), 0.0f, 0.0f);
+        transformer.translateMeshAsset(quad, static_cast<float>(posX + translation), static_cast<float>(posY), 0.0f);
         translation += (this->glyph.width + letterSpacing);
 
         word.push_back(quad);
