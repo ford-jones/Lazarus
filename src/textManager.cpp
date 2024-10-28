@@ -77,18 +77,22 @@ void TextManager::loadText(std::string targetText, float red, float green, float
     textColor = glm::vec3(red, green, blue);
     glUniform3fv(glGetUniformLocation(this->shaderProgram, "textColor"), 1, &textColor[0]);
 
+    int translation = 0;
+
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
         // quad = meshLoader->createQuad((quad->textureData.width * (2.0f / winWidth)), (quad->textureData.height * (2.0f / winHeight)), LAZARUS_MESH_ISTEXT);
         this->lookUpUVs(static_cast<int>(targetText[i]));
+        this->glyph = textures.at(static_cast<int>(targetText[i]));
 
-        quad = meshLoader->createQuad(128.0f, 128.0f, LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
+        quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->glyph.height), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
         quad->isGlyph = 1;
         quad->textureId = this->textureId;
-        quad->textureData = textures.at(static_cast<int>(targetText[i]));
+        quad->textureData = this->glyph;
 
-        transformer.translateMeshAsset(quad, (128.0f * (i + 1)), 0.0f, 0.0f);
+        transformer.translateMeshAsset(quad, static_cast<float>(translation), 0.0f, 0.0f);
+        translation += this->glyph.width;
 
         word.push_back(quad);
     };
