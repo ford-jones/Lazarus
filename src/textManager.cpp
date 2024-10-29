@@ -60,7 +60,7 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
     for(int i = 33; i < 128; i++)
     {
-        glyph = fontLoader->loadCharacter(char(i), fontIndex);
+        glyph = fontLoader->loadCharacter(static_cast<char>(i), fontIndex);
         textureLoader->loadBitmapToTexture(glyph);
 
         textures.emplace((i - 33), glyph);
@@ -78,8 +78,6 @@ void TextManager::loadText(std::string targetText, float red, float green, float
 
     /* ============================================================
         TODO:
-        Handle spaces
-        Figure out why lowercase isn't working
         Glyph stretching / incorrect width? 
         Refactor
         Documentation
@@ -93,21 +91,22 @@ void TextManager::loadText(std::string targetText, float red, float green, float
     glUniform3fv(glGetUniformLocation(this->shaderProgram, "textColor"), 1, &textColor[0]);
 
     int translation = 0;
-
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
+        std::cout << "Glyph: " << targetText[i] << std::endl;
+        std::cout << "Key: " << static_cast<int>(targetText[i]) << std::endl;
         if(targetText[i] == ' ')
         {
             this->uvL = -1.0f;
             this->uvR = -1.0f;
             this->uvH = -1.0f;
 
-            this->glyph = {pixelData: NULL, height: 0, width: 50}; // what will width be?
+            this->glyph = {pixelData: NULL, height: 0, width: (letterSpacing * 8)};
         }
         else
         {
             this->lookUpUVs(static_cast<int>(targetText[i]));
-            this->glyph = textures.at(static_cast<int>(targetText[i]));
+            this->glyph = textures.at((static_cast<int>(targetText[i]) - 33));
         };
 
         quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->atlasY), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
@@ -157,7 +156,7 @@ void TextManager::identifyAlphabetDimensions()
 {
     for(int i = 33; i < 128; i++)
     {
-        glyph = fontLoader->loadCharacter(char(i), fontIndex);
+        glyph = fontLoader->loadCharacter(static_cast<char>(i), fontIndex);
         
         atlasX += glyph.width;
         atlasY = std::max(atlasY, glyph.height);

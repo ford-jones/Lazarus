@@ -86,7 +86,7 @@ class TextManager
         std::shared_ptr<Camera::FixedCamera> camera;
 
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
-        std::map<GLuint, FileReader::Image> textures;
+        std::map<int, FileReader::Image> textures;
 };
 
 #endif
