@@ -35,7 +35,8 @@ TextManager::TextManager(GLuint shader)
     this->textColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
     this->fontIndex = 0;
-
+    this->wordCount = 0;
+    
     this->atlasX = 0;
     this->atlasY = 0;
 
@@ -69,7 +70,7 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-void TextManager::loadText(std::string targetText, float red, float green, float blue, int posX, int posY, int letterSpacing)
+int TextManager::loadText(std::string targetText, float red, float green, float blue, int posX, int posY, int letterSpacing)
 {
     if(word.size() > 0)
     {
@@ -78,7 +79,9 @@ void TextManager::loadText(std::string targetText, float red, float green, float
 
     /* ============================================================
         TODO:
-        Glyph stretching / incorrect width? 
+        Store and make accessible each word
+        Glyphs along top line, maybe flip?
+
         Refactor
         Documentation
         Comments about confusing shit
@@ -93,8 +96,6 @@ void TextManager::loadText(std::string targetText, float red, float green, float
     int translation = 0;
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
-        std::cout << "Glyph: " << targetText[i] << std::endl;
-        std::cout << "Key: " << static_cast<int>(targetText[i]) << std::endl;
         if(targetText[i] == ' ')
         {
             this->uvL = -1.0f;
@@ -121,13 +122,18 @@ void TextManager::loadText(std::string targetText, float red, float green, float
         word.push_back(quad);
     };
 
-    return;
+    wordCount += 1;
+    layout.insert(std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>>(wordCount, word));
+
+    return wordCount;
 };
 
-void TextManager::drawText()
+void TextManager::drawText(int layoutIndex)
 {
     this->camera = cameraBuilder->createOrthoCam(globals.getDisplayWidth(), globals.getDisplayHeight());
     
+    this->word = layout.at(layoutIndex);
+
     for(auto i: word)
     {
         quad.reset();
