@@ -84,8 +84,8 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
         When rendering text under perspective, the glyph will need to be 
         flipped. Use the following:
 
-        this->flipGlyph();
     ===================================================================== */
+    this->flipGlyph();
 
     this->glyphIndex = FT_Get_Char_Index(fontFace, keyCode);
     status = FT_Load_Glyph(fontFace, glyphIndex, FT_LOAD_DEFAULT);

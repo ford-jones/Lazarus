@@ -36,7 +36,7 @@ TextManager::TextManager(GLuint shader)
 
     this->fontIndex = 0;
     this->wordCount = 0;
-    
+
     this->atlasX = 0;
     this->atlasY = 0;
 
@@ -79,10 +79,7 @@ int TextManager::loadText(std::string targetText, float red, float green, float 
 
     /* ============================================================
         TODO:
-        Store and make accessible each word
-        Glyphs along top line, maybe flip?
-
-        Refactor
+        Refactor - why the hell does this file reader con/de:struct
         Documentation
         Comments about confusing shit
     =============================================================== */
@@ -117,6 +114,7 @@ int TextManager::loadText(std::string targetText, float red, float green, float 
         quad->textureData = this->glyph;
 
         transformer.translateMeshAsset(quad, static_cast<float>(posX + translation), static_cast<float>(posY), 0.0f);
+        transformer.rotateMeshAsset(quad, 180.0f, 0.0f, 0.0f);
         translation += (this->glyph.width + letterSpacing);
 
         word.push_back(quad);
