@@ -24,9 +24,10 @@ Mesh::Mesh(GLuint shader)
 	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
 	
-	this->finder = nullptr;
-	this->meshLoader = nullptr;
+	this->finder = std::make_unique<FileReader>();
     this->texLoader = std::make_unique<TextureLoader>();
+
+	meshLoader = nullptr;
 	triangulatedMesh = nullptr;
     quad = nullptr;
 
@@ -226,7 +227,6 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> &asset)
 
 void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, string texPath, string mtlPath, string objPath)
 {
-    this->finder = std::make_unique<FileReader>();
     if(objPath != "") 
     {
         asset->meshFilepath =  finder->relativePathToAbsolute(objPath);
