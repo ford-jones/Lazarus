@@ -76,6 +76,16 @@ void TextManager::loadText(std::string targetText, float red, float green, float
         word.clear();
     };
 
+    /* ============================================================
+        TODO:
+        Handle spaces
+        Figure out why lowercase isn't working
+        Glyph stretching / incorrect width? 
+        Refactor
+        Documentation
+        Comments about confusing shit
+    =============================================================== */
+
     int winWidth = globals.getDisplayWidth();
     int winHeight = globals.getDisplayHeight();
 
@@ -86,8 +96,19 @@ void TextManager::loadText(std::string targetText, float red, float green, float
 
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
-        this->lookUpUVs(static_cast<int>(targetText[i]));
-        this->glyph = textures.at(static_cast<int>(targetText[i]));
+        if(targetText[i] == ' ')
+        {
+            this->uvL = -1.0f;
+            this->uvR = -1.0f;
+            this->uvH = -1.0f;
+
+            this->glyph = {pixelData: NULL, height: 0, width: 50}; // what will width be?
+        }
+        else
+        {
+            this->lookUpUVs(static_cast<int>(targetText[i]));
+            this->glyph = textures.at(static_cast<int>(targetText[i]));
+        };
 
         quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->atlasY), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
