@@ -80,11 +80,19 @@ FileReader::Image FontLoader::loadCharacter(char character, int fontIndex)
     this->fontFace = fontStack[fontIndex - 1];
     this->keyCode = int(character);
 
-    /* ==================================================================
-        When rendering text under perspective, the glyph will need to be 
-        flipped. Use the following:
+    /* ====================================================================
+        The glyph needs to be rotated on load, prior to being rendered to a
+        bitmap. When rendered; each glyph will then be aligned on the 
+        bottom of it's bounding box rather than the default behaviour which 
+        aligns glyphs along the top.
 
-    ===================================================================== */
+        This means the texture will be upside-down when it's loaded into
+        VRAM / passed into OpenGL. As a result, the quad the texture is 
+        mapped to will also have to be rotated.
+
+        If you need to see what I mean, disable the following line and use
+        renderDoc to inspect the texture once it's on the GPU.
+    ======================================================================= */
     this->flipGlyph();
 
     this->glyphIndex = FT_Get_Char_Index(fontFace, keyCode);
@@ -158,7 +166,7 @@ void FontLoader::flipGlyph()
     /* ==========================================
         Advance the pen / cursor / locator to the 
         end of the active glyph's coordinates to 
-        be properly placed for next glyph load.
+        be properly located for next glyph load.
     ============================================= */
     pixelStore.x += fontFace->glyph->advance.x;
     pixelStore.y += fontFace->glyph->advance.y;
