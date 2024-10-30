@@ -51,16 +51,26 @@ class TextManager
     public:
         TextManager(GLuint shader);
         int extendFontStack(std::string filepath, int ptSize = 12);
-        int loadText(std::string targetText, float red, float green, float blue, int posX, int posY, int letterSpacing = 1);
+        int loadText(std::string targetText, int posX, int posY, int letterSpacing = 1, float red = 0.0f, float green = 0.0f, float blue = 0.0f);
         void drawText(int layoutIndex = 0);
         virtual ~TextManager();
 
     private: 
         void identifyAlphabetDimensions();
+        void setActiveGlyph(char target, int spacing);
+        void setTextColor(float r, float g, float b);
         void lookUpUVs(int keyCode);
+
+        int translation;
+        int targetKey;
+        int targetXL;
+        int targetXR;
+        int span;
 
         int atlasX;
         int atlasY;
+
+        float monitorWidth;
 
         float uvL;
         float uvR;
@@ -89,6 +99,7 @@ class TextManager
         std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
         std::map<int, FileReader::Image> textures;
         std::map<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layout;
+        std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layoutEntry;
 };
 
 #endif

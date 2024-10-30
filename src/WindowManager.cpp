@@ -91,23 +91,6 @@ int WindowManager::initialise()
         return -1;
     };
 
-    // this->window = launchFullscreen
-    // ? glfwCreateWindow
-    // (
-    //     videoMode->width, 
-    //     videoMode->height, 
-    //     this->frame.title, 
-    //     this->monitor, 
-    //     NULL
-    // )
-    // : glfwCreateWindow
-    // (
-    //     this->frame.width,
-    //     this->frame.height,
-    //     this->frame.title, 
-    //     NULL,
-    //     NULL
-    // );
     int targetWidth = 0;
     int targetHeight = 0;
 
@@ -204,7 +187,7 @@ int WindowManager::loadConfig(GLuint shader)
 
 int WindowManager::open()
 {
-    glfwSetWindowShouldClose(this->window, GLFW_FALSE);    // glfwDestroyWindow(this->window);
+    glfwSetWindowShouldClose(this->window, GLFW_FALSE);
     this->isOpen = true;
 
     return GLFW_NO_ERROR;

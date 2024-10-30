@@ -19,6 +19,16 @@
 
 #include "../include/textManager.h"
 
+    /* =======================================================
+        TODO:
+        - Concatenate any additional texture atlas's produced by
+        this function into the existing atlas in memory at a 
+        y-offset equal to the textureId.
+
+        - Make draw call param optional. If it isn't present 
+        the entire layout should be drawn.
+    ========================================================== */
+
 TextManager::TextManager(GLuint shader)
 {
     std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
@@ -32,6 +42,12 @@ TextManager::TextManager(GLuint shader)
     this->fontLoader = nullptr;
     this->word = {};
 
+    this->translation = 0;
+    this->span = 0;
+    this->targetKey = 0;
+    this->targetXL = 0;
+    this->targetXR = 0;
+
     this->textColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
     this->fontIndex = 0;
@@ -39,6 +55,8 @@ TextManager::TextManager(GLuint shader)
 
     this->atlasX = 0;
     this->atlasY = 0;
+
+    this->monitorWidth = 0.0;
 
     this->uvL = 0.0;
     this->uvR = 0.0;
@@ -58,7 +76,12 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
     glUniform1i(glGetUniformLocation(this->shaderProgram, "fontStack"), 1);
     textureLoader->storeBitmapTexture(atlasX, atlasY, this->textureId);
-
+    /* ===========================================================================
+        The expression (n - 33) AKA (i = 33 && i < 128) occurs in several places 
+        and is used to skip control keys as well as calculate the span offset for 
+        non-control characters (i.e. keycodes which don't have a unicode UTF-8 
+        glyph associated with them. e.g. shift / ctrl).
+    ============================================================================== */
     for(int i = 33; i < 128; i++)
     {
         glyph = fontLoader->loadCharacter(static_cast<char>(i), fontIndex);
@@ -70,42 +93,19 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-int TextManager::loadText(std::string targetText, float red, float green, float blue, int posX, int posY, int letterSpacing)
+int TextManager::loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue)
 {
+
     if(word.size() > 0)
     {
-        word.clear();
+        this->word.clear();
     };
 
-    /* ============================================================
-        TODO:
-        Refactor - why the hell does this file reader con/de:struct
-        Documentation
-        Comments about confusing shit
-    =============================================================== */
+    this->setTextColor(red, green, blue);
 
-    int winWidth = globals.getDisplayWidth();
-    int winHeight = globals.getDisplayHeight();
-
-    textColor = glm::vec3(red, green, blue);
-    glUniform3fv(glGetUniformLocation(this->shaderProgram, "textColor"), 1, &textColor[0]);
-
-    int translation = 0;
     for(unsigned int i = 0; i < targetText.size(); i++)
     {   
-        if(targetText[i] == ' ')
-        {
-            this->uvL = -1.0f;
-            this->uvR = -1.0f;
-            this->uvH = -1.0f;
-
-            this->glyph = {pixelData: NULL, height: 0, width: (letterSpacing * 8)};
-        }
-        else
-        {
-            this->lookUpUVs(static_cast<int>(targetText[i]));
-            this->glyph = textures.at((static_cast<int>(targetText[i]) - 33));
-        };
+        this->setActiveGlyph(targetText[i], letterSpacing);
 
         quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->atlasY), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
@@ -113,31 +113,53 @@ int TextManager::loadText(std::string targetText, float red, float green, float 
         quad->textureId = this->textureId;
         quad->textureData = this->glyph;
 
-        transformer.translateMeshAsset(quad, static_cast<float>(posX + translation), static_cast<float>(posY), 0.0f);
+        /* ===========================================================
+            Note here that translation values are positive. This is 
+            because the orthographic camera currently uses a cartesian 
+            coordinate system. 
+            (i.e. 
+            0.0 x 0.0 = top left, 
+            monitorWidth x monitorHeight = bottom right)
+        ============================================================== */
+        transformer.translateMeshAsset(quad, static_cast<float>(posX + this->translation), static_cast<float>(posY), 0.0f);
         transformer.rotateMeshAsset(quad, 180.0f, 0.0f, 0.0f);
-        translation += (this->glyph.width + letterSpacing);
+        this->translation += (this->glyph.width + letterSpacing);
 
-        word.push_back(quad);
+        this->word.push_back(quad);
     };
 
-    wordCount += 1;
-    layout.insert(std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>>(wordCount, word));
+    this->wordCount += 1;
 
-    return wordCount;
+    this->layoutEntry = std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>>(this->wordCount, this->word);
+    layout.insert(this->layoutEntry);
+
+    this->translation = 0;
+
+    return this->wordCount;
 };
 
 void TextManager::drawText(int layoutIndex)
 {
+    /* ===============================================
+        Unlike other mesh assets (i.e. 3D mesh or 
+        sprites), quads which are wrapped with a glyph
+        texture are rendered using an orthographic 
+        projection matrix which is overlain over the 
+        perspective projection matrix. This is done by 
+        saving glyph draw calls till last, prior to 
+        swapping the front and back buffers. This 
+        gives the effect of 2D / HUD text.
+    ================================================== */
     this->camera = cameraBuilder->createOrthoCam(globals.getDisplayWidth(), globals.getDisplayHeight());
     
     this->word = layout.at(layoutIndex);
 
-    for(auto i: word)
+    for(auto i: this->word)
     {
         quad.reset();
         quad = i;
 
-        if(quad->modelviewUniformLocation >= 0)
+        if((quad->modelviewUniformLocation >= 0) && (camera->projectionLocation >= 0))
         {            
             cameraBuilder->loadCamera(camera);
 
@@ -158,6 +180,12 @@ void TextManager::drawText(int layoutIndex)
 
 void TextManager::identifyAlphabetDimensions()
 {
+    /* =====================================================
+        Glyphs will be loaded into the texture atlas in a 
+        continuous line. The height of this line is equal to 
+        the tallest glyph bitmap and the width is equal to 
+        the culmilative width of each glyph's bitmap.
+    ======================================================== */
     for(int i = 33; i < 128; i++)
     {
         glyph = fontLoader->loadCharacter(static_cast<char>(i), fontIndex);
@@ -169,27 +197,58 @@ void TextManager::identifyAlphabetDimensions()
     return;
 };
 
+void TextManager::setActiveGlyph(char target, int spacing)
+{
+    if(target == ' ')
+    {
+        this->uvL = -1.0f;
+        this->uvR = -1.0f;
+        this->uvH = -1.0f;
+
+        this->glyph = {pixelData: NULL, height: 0, width: (spacing * 8)};
+    }
+    else
+    {
+        this->targetKey = static_cast<int>(target);
+
+        this->lookUpUVs(this->targetKey);
+        this->glyph = textures.at((this->targetKey - 33));
+    };
+};
+
+void TextManager::setTextColor(float r, float g, float b)
+{
+    this->textColor = glm::vec3(r, g, b);
+    glUniform3fv(glGetUniformLocation(this->shaderProgram, "textColor"), 1, &this->textColor[0]);
+};
+
 void TextManager::lookUpUVs(int keyCode)
 {
-    /* =========================================================================== 
-        Skip control keys and calculate the span offset for non-control characters
+    this->span = keyCode - 33;
+    this->targetXL = 0;
+
+    /* ===========================================================================
+        Calculate L / R / T / B UV coordinates / where the glyph is located in
+        the alphabet texture atlas. Divide by primary monitor dimensions to get 
+        normalised value.
     ============================================================================== */
-    int span = keyCode - 33;
-
-    int targetXL = 0;
-
     for (int i = 0; i < span; ++i)
     {
         this->glyph = textures.at(i);
-        targetXL += this->glyph.width;
+        this->targetXL += this->glyph.width;
     }
 
     this->glyph = textures.at(span);
-    int targetXR = targetXL + this->glyph.width;
+    this->targetXR = targetXL + this->glyph.width;
+
+    this->monitorWidth = static_cast<float>(atlasX);
     
-    this->uvL = static_cast<float>(targetXL) / static_cast<float>(atlasX);
-    this->uvR = static_cast<float>(targetXR) / static_cast<float>(atlasX);
+    this->uvL = static_cast<float>(this->targetXL) / monitorWidth;
+    this->uvR = static_cast<float>(this->targetXR) / monitorWidth;
     this->uvH = static_cast<float>(this->fontIndex);
+
+    this->targetXL = 0;
+    this->targetXR = 0;
 };
 
 TextManager::~TextManager()
