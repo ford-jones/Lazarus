@@ -116,10 +116,6 @@ void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint tex
 
 void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
 {
-	// GLint swizzleMask[] = {GL_RED, GL_ZERO, GL_ZERO, GL_ZERO};
-	// glTexParameteriv(GL_TEXTURE_2D, GL_TEXTURE_SWIZZLE_RGBA, swizzleMask);
-
-
 	glGenTextures(1, &bitmapTexture);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
@@ -127,13 +123,14 @@ void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &text
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	textureId = this->bitmapTexture;
+	/* ========================================================================================
+		Allocate space for the texture atlas. The texture atlas hasn't been constructed yet so
+		0 is passed in for the meantime. 
 
-	GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    if (activeTexture != GL_TEXTURE1) {
-        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
-    };
-
+		Note the use of GL_R8. The glyphs are monocolour bitmaps and so are loaded into a 
+		single-channel, which is later swizzled into the alpha value of a RGBA 4-channel color 
+		on the GPU side. The swizzle can and probably should be done here to make it clearer.
+	=========================================================================================== */
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, maxWidth, maxHeight, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
@@ -147,12 +144,11 @@ void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
 	this->image.height = imageData.height;
 	this->image.pixelData = imageData.pixelData;
 
-	GLint activeTexture;
-    glGetIntegerv(GL_ACTIVE_TEXTURE, &activeTexture);
-    if (activeTexture != GL_TEXTURE1) {
-        std::cout << "Oh no @: " << __PRETTY_FUNCTION__ << std::endl;
-    };
-
+	/* ================================================================
+		Load the glyph's rendered bitmap into the previously allocated
+		texture at an offset equal to the current width of the texture
+		atlas.
+	=================================================================== */
 	glTexSubImage2D(
 		GL_TEXTURE_2D, 
 		0, 
