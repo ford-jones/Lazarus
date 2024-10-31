@@ -21,9 +21,15 @@
     #include "gl_includes.h"
 #endif
 
+#ifndef LAZARUS_CONSTANTS_H
+    #include "constants.h"
+#endif
+
 #include <iostream>
 #include <stdlib.h>
 #include <memory>
+
+#include "globalsManager.h"
 
 using std::shared_ptr;
 using glm::vec3;
@@ -55,16 +61,17 @@ class Camera
 
             mat4 viewMatrix;                                                                    //  A view matrix matrice passed into the shader program as a uniform
             mat4 projectionMatrix;                                                              //  A projection matrix matrice passed into the shader program as a uniform
-        };
 
-		//	TODO:
-		//	Make creation function for an orthographic camera (projection matrix constructed with glm::ortho rather than glm::perspective)
-		//	Rename the existing creation function to createPerspectiveCamera()
+            int usesPerspective;
+        };
 		
-        shared_ptr<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
+        shared_ptr<FixedCamera> createPerspectiveCam(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ);
+        shared_ptr<FixedCamera> createOrthoCam(int arX, int arY);
         void loadCamera(shared_ptr<FixedCamera> &cameraData);
 
+        virtual ~Camera();
     private:
+        GlobalsManager globals;
         GLuint shader;
         shared_ptr<FixedCamera> fixedCamera;
 };

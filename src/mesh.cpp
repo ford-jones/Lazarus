@@ -21,12 +21,13 @@
 
 Mesh::Mesh(GLuint shader)
 {
-	std::cout << GREEN_TEXT << "Constructing class 'Mesh'." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
 	
-	this->finder = nullptr;
-	this->meshLoader = nullptr;
+	this->finder = std::make_unique<FileReader>();
     this->texLoader = std::make_unique<TextureLoader>();
+
+	meshLoader = nullptr;
 	triangulatedMesh = nullptr;
     quad = nullptr;
 
@@ -45,14 +46,21 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
     triangulatedMesh = std::make_shared<Mesh::TriangulatedMesh>();
 
     triangulatedMesh->is3D = 1;
+    triangulatedMesh->isGlyph = 0;
+
+    this->lookupUniforms(triangulatedMesh);
+
+    glUniform1i(triangulatedMesh->samplerUniformLocation, 2);
 
     this->resolveFilepaths(triangulatedMesh, texturePath, materialPath, meshPath);
+
+    glActiveTexture(GL_TEXTURE2);
     
     meshLoader->parseWavefrontObj(
         this->vertexAttributes,
         this->diffuseColors,
         this->xyzTextureId,
-        this->texStore,
+        triangulatedMesh->textureData,
         triangulatedMesh->meshFilepath.c_str(),
         triangulatedMesh->materialFilepath.c_str(),
         triangulatedMesh->textureFilepath.c_str()
@@ -61,123 +69,112 @@ std::shared_ptr<Mesh::TriangulatedMesh> Mesh::create3DAsset(string meshPath, str
     triangulatedMesh->textureId = this->xyzTextureId;
 
     this->setInherentProperties(triangulatedMesh);
-    this->lookupUniforms(triangulatedMesh);
 
     return triangulatedMesh;
 };
 
-std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float height, string texturePath)
+std::shared_ptr<Mesh::TriangulatedMesh> Mesh::createQuad(float width, float height, string texturePath, float uvXL, float uvXR, float uvY)
 {
     quad = std::make_shared<TriangulatedMesh>();
 
     quad->is3D = 0;
+    quad->isGlyph = 0;
 
+    this->lookupUniforms(quad);
+
+    glUniform1i(quad->samplerUniformLocation, 3);
+    
     this->resolveFilepaths(quad, texturePath);
 
+    /* ==========================================================
+        If the UV params aren't their default values (0.0) then
+        this quad is being created for a glyph which needs to be 
+        looked up in the texture atlas.
+
+        Otherwise it's a generic sprite.
+    ============================================================= */
+
+    if((uvXL || uvXR || uvY) > 0.0 )
+    {
     /* ======================================================================================================
             Vertex positions,           Diffuse colors,             Normals,                    UVs 
     ========================================================================================================= */
-    this->vertexAttributes = {
-        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+        this->vertexAttributes = {                                                                                          
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
 
-        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
-    
-        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
 
-        vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
-        vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
-        vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
-    };
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
 
-    if(quad->textureFilepath != LAZARUS_MESH_NOTEX)
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
+        };
+    }
+    else
     {
-        texLoader->storeTexture(quad->textureFilepath, this->xyTextureId, this->texStore);
+        this->vertexAttributes = {
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 1.0f, 0.0f),
+
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
+        };
     }
 
-    quad->textureId = this->xyTextureId;
+    if((quad->textureFilepath != LAZARUS_MESH_NOTEX) && (quad->textureFilepath != LAZARUS_MESH_ISTEXT))
+    {
+        quad->textureData = finder->readFromImage(quad->textureFilepath);
+
+        glActiveTexture(GL_TEXTURE3);
+
+        texLoader->extendTextureStack(quad->textureData, this->xyTextureId);
+        quad->textureId = this->xyTextureId;
+    };
 
     this->setInherentProperties(quad);
-    this->lookupUniforms(quad);
 
     return quad;
 }
-
-void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, string texPath, string mtlPath, string objPath)
-{
-    this->finder = std::make_unique<FileReader>();
-    if(objPath != "") 
-    {
-        asset->meshFilepath =  finder->relativePathToAbsolute(objPath);
-    } 
-    else
-    {
-        asset->meshFilepath = LAZARUS_MESH_NOOBJ;
-    };
-
-    if(mtlPath != "") 
-    {
-        asset->materialFilepath = finder->relativePathToAbsolute(mtlPath);
-    }
-    else
-    {
-        asset->materialFilepath = LAZARUS_MESH_NOMTL;
-    }
-    
-    if(texPath != "")
-    {
-	    asset->textureFilepath = finder->relativePathToAbsolute(texPath);
-    }
-    else
-    {
-    	asset->textureFilepath = LAZARUS_MESH_NOTEX;
-    };
-};
-
-void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
-{
-    asset->attributes = this->vertexAttributes;
-
-    asset->textureData.width = this->texStore.width;
-    asset->textureData.height = this->texStore.height;
-    asset->textureData.pixelData = this->texStore.pixelData;
-
-    asset->locationX = 0;
-    asset->locationY = 0;
-    asset->locationZ = 0;
-
-    asset->modelviewMatrix = mat4(1.0f);
-
-    asset->numOfVertices = asset->attributes.size() / 4;
-    asset->numOfFaces = (asset->numOfVertices) / 3;
-}
-
-void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
-{
-    asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");                                                //  Retrieve the locations of where vert and frag shaders uniforms should be stored
-    asset->is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
-
-    if(asset->is3D == 1)
-    {
-        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
-        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
-    }
-    else 
-    {
-        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
-        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
-    }
-};
 
 void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
 {	
     glGenVertexArrays(1, &this->VAO);
 	glBindVertexArray(this->VAO);
+
+    if((asset->textureFilepath == LAZARUS_MESH_ISTEXT))
+    {
+        glActiveTexture(GL_TEXTURE1);
+    }
+    else if((asset->textureFilepath != LAZARUS_MESH_NOTEX))
+    {
+        if(asset->is3D == 1)
+        {
+            glActiveTexture(GL_TEXTURE2);
+        }
+        else
+        {
+            glActiveTexture(GL_TEXTURE3);
+        }
+        
+        texLoader->loadFromTextureStack(asset->textureData, asset->textureId);
+    }
 
     glGenBuffers(1, &this->VBO);
     glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
@@ -197,19 +194,15 @@ void Mesh::initialiseMesh(std::shared_ptr<TriangulatedMesh> &asset)
     glEnableVertexAttribArray(3);
 
     this->checkErrors(__PRETTY_FUNCTION__);
-
-    if(asset->textureFilepath != LAZARUS_MESH_NOTEX)
-    {
-        texLoader->loadTexture(asset->textureData, asset->textureId);
-    }
 	
     return;
 };
 
 void Mesh::loadMesh(shared_ptr<TriangulatedMesh> &asset)
 {
-    glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);                                    //  Pass the values for each uniform into the shader program
+    glUniformMatrix4fv(asset->modelviewUniformLocation, 1, GL_FALSE, &asset->modelviewMatrix[0][0]);
     glUniform1i(asset->is3DUniformLocation, asset->is3D);
+    glUniform1i(asset->isGlyphUniformLocation, asset->isGlyph);
 
     if(asset->textureId != 0)
     {
@@ -232,17 +225,91 @@ void Mesh::drawMesh(shared_ptr<TriangulatedMesh> &asset)
     return;
 };
 
+void Mesh::resolveFilepaths(std::shared_ptr<Mesh::TriangulatedMesh> &asset, string texPath, string mtlPath, string objPath)
+{
+    if(objPath != "") 
+    {
+        asset->meshFilepath =  finder->relativePathToAbsolute(objPath);
+    } 
+    else
+    {
+        asset->meshFilepath = LAZARUS_MESH_NOOBJ;
+    };
+
+    if(mtlPath != "") 
+    {
+        asset->materialFilepath = finder->relativePathToAbsolute(mtlPath);
+    }
+    else
+    {
+        asset->materialFilepath = LAZARUS_MESH_NOMTL;
+    }
+    
+    if(texPath == LAZARUS_MESH_ISTEXT)
+    {
+        asset->textureFilepath = LAZARUS_MESH_ISTEXT;
+    }
+    else if(texPath != "")
+    {
+	    asset->textureFilepath = finder->relativePathToAbsolute(texPath);
+    }
+    else
+    {
+    	asset->textureFilepath = LAZARUS_MESH_NOTEX;
+    };
+
+    return;
+};
+
+void Mesh::setInherentProperties(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
+{
+    asset->attributes = this->vertexAttributes;
+
+    asset->locationX = 0;
+    asset->locationY = 0;
+    asset->locationZ = 0;
+
+    asset->modelviewMatrix = mat4(1.0f);
+
+    asset->numOfVertices = asset->attributes.size() / 4;
+    asset->numOfFaces = (asset->numOfVertices) / 3;
+
+   return;
+}
+
+void Mesh::lookupUniforms(std::shared_ptr<Mesh::TriangulatedMesh> &asset)
+{
+    asset->modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");
+    asset->is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
+    asset->isGlyphUniformLocation = glGetUniformLocation(this->shaderProgram, "glyphAsset");
+
+    if(asset->is3D == 1)
+    {
+        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
+        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
+    }
+    else 
+    {
+        asset->samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
+        asset->textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
+    }
+
+    return;
+};
+
 void Mesh::checkErrors(const char *invoker)
 {
-    this->errorCode = glGetError();                                                                                       //  Check for errors
+    this->errorCode = glGetError();
     
-    if(this->errorCode != 0)                                                                                                  //  If a valid error code is returned from OpenGL
+    if(this->errorCode != 0)
     {
-        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;                      //  Print it to the console
-        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;                      //  Print it to the console
+        std::cerr << RED_TEXT << "ERROR::GL_ERROR::CODE " << RESET_TEXT << this->errorCode << std::endl;
+        std::cerr << RED_TEXT << "INVOKED BY: " << RESET_TEXT << invoker << std::endl;
 
         globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     }
+
+    return;
 };
 
 void Mesh::releaseMesh()
@@ -251,10 +318,12 @@ void Mesh::releaseMesh()
     glDeleteBuffers         (1, &this->VBO);
 
     this->checkErrors(__PRETTY_FUNCTION__);
+
+    return;
 };
 
 Mesh::~Mesh()
 {
     this->releaseMesh();
-    std::cout << GREEN_TEXT << "Destroying 'Mesh' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

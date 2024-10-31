@@ -21,6 +21,7 @@
 
 Shader::Shader()
 {
+    std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->vertReader = nullptr;
 	this->fragReader = nullptr;
 	this->vertShaderProgram = NULL;
@@ -96,6 +97,7 @@ GLuint Shader::initialiseShader()
 
 Shader::~Shader()
 {
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
     glDeleteShader          (this->vertShader);
     glDeleteShader          (this->fragShader);
     glDeleteProgram         (this->shaderProgram);

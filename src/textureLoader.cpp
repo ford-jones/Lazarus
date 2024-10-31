@@ -21,73 +21,52 @@
 
 TextureLoader::TextureLoader()
 {
-	std::cout << GREEN_TEXT << "Constructing class 'Texture'" << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
 	this->loader = nullptr;	
 
 	this->image = {pixelData: NULL, height: 0, width: 0};
 	this->textures = {};
+	this->bitmapTexture = 0;
 
 	this->x = 0;
 	this->y = 0;
 	this->loopCount = 0;
 	this->mipCount = 0;
 	this->errorCode = 0;
+	
+	this->offset = 0;
 };
 
-void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileReader::Image &imageData)
-{	
-	this->loader = std::make_shared<FileReader>();
-	this->image = loader->readFromImage(texturePath);
-	
-	if(this->image.pixelData != NULL)
-	{	
-		/* =========================================================================
-			Note that the value given to textureLayer by glGenTextures serves a 
-			number of different purposes here, namely:
-			
-			1. To specify the total expected texture-array length when the storage 
-			   size is allocated / re-alloc'd
-			2. As an identifier during texel loading for which layer / position in the 
-			   array the loaded texels refer to.
-			3. As a Mesh::TriangulatedMesh property which is converted to floating 
-			   point and passed to the fragment shader as a uniform value; used to 
-			   traverse the z-axis of the array (subnote: the array is a cube).
+void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &textureLayer)
+{
+	/* =========================================================================
+		Note that the value given to textureLayer by glGenTextures serves a 
+		number of different purposes here, namely:
+		
+		1. To specify the total expected texture-array length when the storage 
+		   size is allocated / re-alloc'd
+		2. As an identifier during texel loading for which layer / position in the 
+		   array the loaded texels refer to.
+		3. As a Mesh::TriangulatedMesh property which is converted to floating 
+		   point and passed to the fragment shader as a uniform value; used to 
+		   traverse the z-axis of the array (subnote: the array is a cube).
+		i.e. size, index position & uniform value
+	============================================================================ */
+	glGenTextures(1, &textureLayer);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
-			i.e. size, index position & uniform value
-		============================================================================ */
-		glGenTextures(1, &textureLayer);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
+	this->image = imageData;
 
-		this->mipCount = this->calculateMipLevels(image.width, image.height);
+	this->mipCount = this->calculateMipLevels(this->image.width, this->image.height);
 
-		glTexStorage3D(
-			GL_TEXTURE_2D_ARRAY, 								//	target
-			this->mipCount, 									//	the expected number of levels (mips) found in each layer
-			GL_RGBA8, 											//	gl internal size to store texel data
-			this->image.width, this->image.height, 				// 	expected (max) image width and height
-			textureLayer 										// 	the number of layers to store (max array size)
-		);
-
-		imageData.width = this->image.width;
-		imageData.height = this->image.height;
-		imageData.pixelData = this->image.pixelData;
-	}
-	else
-	{
-		globals.setExecutionState(LAZARUS_FILE_NOT_FOUND);
-		std::cout << RED_TEXT << "LAZARUS::ERROR::TEXTURE_LOADER" << std::endl;
-		std::cout << "Status: " << globals.getExecutionState() << RESET_TEXT << std::endl;
-
-		textureLayer = 0;
-
-		imageData.width = 0;
-        imageData.height = 0;
-        imageData.pixelData = NULL;
-
-		return;
-	};
-
+	glTexStorage3D(
+		GL_TEXTURE_2D_ARRAY, 								//	target
+		this->mipCount, 									//	the expected number of levels (mips) found in each layer
+		GL_RGBA8, 											//	gl internal size to store texel data
+		this->image.width, this->image.height, 				// 	expected (max) image width and height
+		textureLayer 										// 	the number of layers to store (max array size)
+	);
 	/* ======================================
 		Indexing through this texture vector 
 		could become expensive at large sizes.
@@ -103,8 +82,8 @@ void TextureLoader::storeTexture(string texturePath, GLuint &textureLayer, FileR
 	return;
 };
 
-void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer)
-{
+void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer)
+{	
 	if(imageData.pixelData != NULL)
 	{
 		this->image.width = imageData.width;
@@ -133,8 +112,66 @@ void TextureLoader::loadTexture(FileReader::Image imageData, GLuint textureLayer
 	}
 
 	this->checkErrors(__PRETTY_FUNCTION__);
+};
 
-}
+void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
+{
+	glGenTextures(1, &bitmapTexture);
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	textureId = this->bitmapTexture;
+	/* ========================================================================================
+		Allocate space for the texture atlas. The texture atlas hasn't been constructed yet so
+		0 is passed in for the meantime. 
+
+		Note the use of GL_R8. The glyphs are monocolour bitmaps and so are loaded into a 
+		single-channel, which is later swizzled into the alpha value of a RGBA 4-channel color 
+		on the GPU side. The swizzle can and probably should be done here to make it clearer.
+	=========================================================================================== */
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, maxWidth, maxHeight, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+
+	this->checkErrors(__PRETTY_FUNCTION__);
+
+	this->offset = 0;
+};
+
+void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
+{
+	this->image.width = imageData.width;
+	this->image.height = imageData.height;
+	this->image.pixelData = imageData.pixelData;
+
+	/* ================================================================
+		Load the glyph's rendered bitmap into the previously allocated
+		texture at an offset equal to the current width of the texture
+		atlas.
+	=================================================================== */
+	glTexSubImage2D(
+		GL_TEXTURE_2D, 
+		0, 
+		this->offset, 
+		0, 
+		this->image.width, 
+		this->image.height, 
+		GL_RED, 
+		GL_UNSIGNED_BYTE, 
+		(void *)this->image.pixelData
+	);
+
+	offset += imageData.width;
+
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	
+	
+};
 
 void TextureLoader::checkErrors(const char *invoker)
 {
@@ -187,7 +224,7 @@ int TextureLoader::calculateMipLevels(int width, int height)
 
 TextureLoader::~TextureLoader()
 {
-	std::cout << GREEN_TEXT << "Destroying 'Texture' class." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
 	for(unsigned int i = 0; i < this->textures.size(); i++) 
 	{
@@ -203,4 +240,5 @@ TextureLoader::~TextureLoader()
 			glDeleteTextures(1, &textures[i]);
 		}
 	}
+	glDeleteTextures(1, &bitmapTexture);
 };

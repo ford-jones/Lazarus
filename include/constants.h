@@ -1,3 +1,22 @@
+//              .,                                                                                                          .(*      ,*,                
+//                ((.     (.    ,                                                                          */*  ,%##%%%%%%%%%%%%%%%#(*           .      
+//         .//**/#%%%%%%%%%%%%%%#*   .,                                                             ,**   .(%%%%%%#(******,***,/#%%%%%%%%###(/,         
+//             #%%%#*.#%/***,,..,*(%(.    ,,                                                     *     /#%##/*****,,,,,,,,,.,...,,#%,  .#%#.            
+//    .,     *%&#/   %#**,,*..,....,.*#,     ..                                               *     ,%#%#/*,,*,*,,,,,.,.,,.,...,...((     /#(//*/**.    
+//           (%#    *#*...,.,,..........*/      ,                                          .      *#%(#(**,,,,,,,,..,..,..,,........(.     *#(          
+//           *#     *(......,.............(#      ,                                       .     ,((, ##,,,.....,.................. ./       **  .,.     
+//            *     ./........ ...........*#*,                                          ,      ,(,  ./*,,,..,,.................  .. *                   
+//                   /, ........    ... ../(  *.                                              ,*     /,...,,.,,.....   ............**                   
+//                    *... .............  /    ,                                             *,      ,*,,............  ,....     ...                    
+//                     *.   ..... .... ..*                                                  .*        *...................   .  ...                     
+//               *       ... ......... ,.                                                   ,          ... ..........  ...     ..       ,               
+//                ((        .,.,.. ...                                                                   .  . .. .  .  ... .  ..      //                
+//              ,/(#%#*                                                                                     .....  ... ......       .#*                 
+//                 /((##%#(*                                                                                      .......        ,(#(*,                 
+//               (.           .,,,,,                                                                                        .*#%%(                      
+//                                        
+/*  LAZARUS ENGINE */
+
 #ifndef LAZARUS_CONSTANTS_H
 #define LAZARUS_CONSTANTS_H
 
@@ -9,6 +28,8 @@
 /* Engine Status */
 
 static int          LAZARUS_EXECUTION_STATUS            = 0;
+static int          LAZARUS_PRIMARY_DISPLAY_WIDTH       = 0;
+static int          LAZARUS_PRIMARY_DISPLAY_HEIGHT      = 0;
 
 /* User Settings */
 
@@ -32,6 +53,7 @@ static const int    LAZARUS_MOUSE_NOCLICK               = 999;
 
 /* Entity placeholders */
 
+static const char*  LAZARUS_MESH_ISTEXT                 = "This mesh is used to display a glyph.";
 static const char*  LAZARUS_MESH_NOOBJ                  = "Non-wavefront mesh.";
 static const char*  LAZARUS_MESH_NOMTL                  = "Colourless mesh.";
 static const char*  LAZARUS_MESH_NOTEX                  = "Textureless mesh.";
@@ -44,10 +66,14 @@ static const int    LAZARUS_FILE_UNREADABLE             = 102;
 static const int    LAZARUS_FILESTREAM_CLOSED           = 103;
 static const int    LAZARUS_IMAGE_LOAD_FAILURE          = 104;
 static const int    LAZARUS_IMAGE_RESIZE_FAILURE        = 105;
+static const int    LAZARUS_FT_INIT_FAILURE             = 106;
+static const int    LAZARUS_FT_LOAD_FAILURE             = 107;
+static const int    LAZARUS_FT_RENDER_FAILURE           = 108;
 static const int    LAZARUS_SHADER_ERROR                = 201;
 static const int    LAZARUS_VSHADER_COMPILE_FAILURE     = 202;
 static const int    LAZARUS_FSHADER_COMPILE_FAILURE     = 203;
 static const int    LAZARUS_SHADER_LINKING_FAILURE      = 204;
+static const int    LAZARUS_UNIFORM_NOT_FOUND           = 205;
 static const int    LAZARUS_OPENGL_ERROR                = 301;
 static const int    LAZARUS_NO_CONTEXT                  = 302;
 static const int    LAZARUS_WINDOW_ERROR                = 303;

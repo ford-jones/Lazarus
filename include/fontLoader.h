@@ -14,11 +14,8 @@
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
-//                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+//                                        
 /*  LAZARUS ENGINE */
-#ifndef LAZARUS_GL_INCLUDES_H
-    #include "gl_includes.h"
-#endif
 
 #ifndef LAZARUS_CONSTANTS_H
 	#include "constants.h"
@@ -29,44 +26,51 @@
 #endif
 
 #include <iostream>
+#include <ft2build.h>
 #include <vector>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <memory>
+#include <math.h>
 
 #include "fileReader.h"
-#include "textureLoader.h"
 
-using std::unique_ptr;
-using std::vector;
-using std::string;
-using glm::vec3;
-using glm::vec2;
-using std::ifstream;
-using std::stringstream;
+#include FT_FREETYPE_H
 
-#ifndef MATERIAL_LOADER_H
-#define MATERIAL_LOADER_H
+#ifndef LAZARUS_FONT_LOADER_H
+#define LAZARUS_FONT_LOADER_H
 
-class MaterialLoader
+class FontLoader
 {
-    public:        
-        MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath = "");
-        virtual ~MaterialLoader();
+    public:
+        FontLoader();
+
+        void initialise();
+        int loadFont(std::string filepath, int charHeight, int charWidth);
+        FileReader::Image loadCharacter(char character, int fontIndex);
+
+        virtual ~FontLoader();
 
     private:
-        unique_ptr<FileReader> fileReader;
-    	unique_ptr<TextureLoader> textureLoader;
-        
-        vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
-        ifstream file;
-        char currentLine[256];
-        int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
-        int texCount;
+        void createBitmap();
+        void flipGlyph();
+        void setImageData(int width, int height, unsigned char *data);
 
         GlobalsManager globals;
+        FileReader::Image image;
+        std::vector<FT_Face> fontStack;
+
+        int keyCode;
+
+        FT_Matrix transformationMatrix;
+        FT_Library lib;
+        FT_Face fontFace;
+
+        unsigned int glyphIndex;
+
+        FT_Error status;
+
+        std::unique_ptr<FileReader> fileReader;
+        std::string absolutePath;
 };
 
 #endif

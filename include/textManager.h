@@ -14,8 +14,9 @@
 //              ,/(#%#*                                                                                     .....  ... ......       .#*                 
 //                 /((##%#(*                                                                                      .......        ,(#(*,                 
 //               (.           .,,,,,                                                                                        .*#%%(                      
-//                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
+//                                        
 /*  LAZARUS ENGINE */
+
 #ifndef LAZARUS_GL_INCLUDES_H
     #include "gl_includes.h"
 #endif
@@ -29,44 +30,76 @@
 #endif
 
 #include <iostream>
-#include <vector>
 #include <string>
-#include <fstream>
-#include <sstream>
 #include <memory>
+#include <algorithm>
+#include <vector>
+#include <map>
 
-#include "fileReader.h"
+#include "shader.h"
+#include "camera.h"
+#include "fontLoader.h"
 #include "textureLoader.h"
+#include "transforms.h"
+#include "mesh.h"
 
-using std::unique_ptr;
-using std::vector;
-using std::string;
-using glm::vec3;
-using glm::vec2;
-using std::ifstream;
-using std::stringstream;
+#ifndef LAZARUS_TEXT_MANAGER_H
+#define LAZARUS_TEXT_MANAGER_H
 
-#ifndef MATERIAL_LOADER_H
-#define MATERIAL_LOADER_H
-
-class MaterialLoader
+class TextManager
 {
-    public:        
-        MaterialLoader();
-        bool loadMaterial(vector<vec3> &out, vector<vector<int>> data, string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath = "");
-        virtual ~MaterialLoader();
+    public:
+        TextManager(GLuint shader);
+        int extendFontStack(std::string filepath, int ptSize = 12);
+        int loadText(std::string targetText, int posX, int posY, int letterSpacing = 1, float red = 0.0f, float green = 0.0f, float blue = 0.0f);
+        void drawText(int layoutIndex = 0);
+        virtual ~TextManager();
 
-    private:
-        unique_ptr<FileReader> fileReader;
-    	unique_ptr<TextureLoader> textureLoader;
-        
-        vec3 diffuse;                                           //  Diffuse colour, the main / dominant colour of a face
-        ifstream file;
-        char currentLine[256];
-        int diffuseCount;                                    //  The number of times an instance of `char[]="Kd"`(diffuse color) has appeared since the last invocation
-        int texCount;
+    private: 
+        void identifyAlphabetDimensions();
+        void setActiveGlyph(char target, int spacing);
+        void setTextColor(float r, float g, float b);
+        void lookUpUVs(int keyCode);
 
+        int translation;
+        int targetKey;
+        int targetXL;
+        int targetXR;
+        int span;
+
+        int atlasX;
+        int atlasY;
+
+        float monitorWidth;
+
+        float uvL;
+        float uvR;
+        float uvH;
+
+        unsigned int fontIndex;
+        unsigned int wordCount;
+
+        GLuint textureId;
+        GLuint shaderProgram;
+
+        glm::vec3 textColor;
+
+        Transform transformer;
         GlobalsManager globals;
+        FileReader::Image glyph;
+
+        std::unique_ptr<Mesh> meshLoader;
+        std::unique_ptr<TextureLoader> textureLoader;
+        std::unique_ptr<FontLoader> fontLoader;
+        std::unique_ptr<Camera> cameraBuilder;
+
+        std::shared_ptr<Mesh::TriangulatedMesh> quad;
+        std::shared_ptr<Camera::FixedCamera> camera;
+
+        std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+        std::map<int, FileReader::Image> textures;
+        std::map<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layout;
+        std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layoutEntry;
 };
 
 #endif

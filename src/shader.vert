@@ -5,14 +5,19 @@ layout(location = 1) in vec3 inDiffuse;
 layout(location = 2) in vec3 inNormal;
 layout(location = 3) in vec3 inTexCoord;
 
+uniform int usesPerspective;
+
+uniform mat4 modelMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 perspectiveProjectionMatrix;
+uniform mat4 orthoProjectionMatrix;
+
 out vec3 fragPosition;
 out vec3 diffuseColor;
 out vec3 normalCoordinate;
 out vec2 textureCoordinate;
 
-uniform mat4 modelMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 projectionMatrix;
+flat out int isUnderPerspective;
 
 void main ()
 {
@@ -20,8 +25,17 @@ void main ()
    normalCoordinate = mat3(transpose(inverse(modelMatrix))) * inNormal;
 
    vec4 worldPosition = modelMatrix * vec4(inVertex, 1.0);
-   gl_Position = projectionMatrix * viewMatrix * worldPosition;
+   
+   if(usesPerspective != 0)
+   {
+      gl_Position = perspectiveProjectionMatrix * viewMatrix * worldPosition;   
+   }
+   else
+   {
+      gl_Position = orthoProjectionMatrix * viewMatrix * worldPosition;
+   }
    
    textureCoordinate = vec2(inTexCoord.x, inTexCoord.y);
    diffuseColor = inDiffuse;
+   isUnderPerspective = usesPerspective;
 }

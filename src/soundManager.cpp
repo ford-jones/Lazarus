@@ -20,7 +20,7 @@
 
 SoundManager::SoundManager() 
 {
-    std::cout << GREEN_TEXT << "Constructing class 'SoundManager'." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
 	this->audioOut = nullptr;
 	this->reader = nullptr;
@@ -218,7 +218,7 @@ void SoundManager::checkErrors(FMOD_RESULT res)
 
 SoundManager::~SoundManager()
 {
-    std::cout << GREEN_TEXT << "Destroying 'SoundManager' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	
 	for(unsigned int i = 0; i < this->audioStore.size(); i++)
 	{

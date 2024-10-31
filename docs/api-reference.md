@@ -315,7 +315,7 @@ Params:
 > **materialPath:** *The relative path to the wavefront material asset you wish to render.*
 > **texturePath:** *The relative path to the texture image. (optional)*
 
-#### shared_ptr\<TriangulatedMesh> createQuad(float width, float height, std::string texturePath)
+#### shared_ptr\<TriangulatedMesh> createQuad(float width, float height, std::string texturePath, float uvXL, float uvXR, float uvY)
 Creates a quad (2D plane) to the size of the specified height and width. \
 Textures loaded into a quad have their fragments discarded where the texture opacity is 0.0 - used for sprites.
 
@@ -325,6 +325,9 @@ Params:
 > **width:** *The relative path to the wavefront mesh asset you wish to render.* 
 > **height:** *The relative path to the wavefront material asset you wish to render.*
 > **texturePath:** *The relative path to the texture image. (optional)*
+> **uvXL:** *The normalised x-axis coordinate of the UV's left-side. Used for text rendering. (optional)*
+> **uvXR:** *The normalised x-axis coordinate of the UV's right-side. Used for text rendering. (optional)*
+> **uvY:** *The normalised y-axis coordinate of the UV's top edge. Used for text rendering. (optional)*
 
 #### shared_ptr\<TriangulatedMesh> initialiseMesh(shared_ptr\<TriangulatedMesh> meshData)
 Generates a new vertex array object and binds it to the current OpenGL context. \
@@ -610,6 +613,46 @@ Params:
 > **listenerLocationY:** *The audio listener's location on the y-axis.* \
 > **listenerLocationZ:** *The audio listener's location on the z-axis.*
 
+## TextManager:
+A management class for rendering and laying out text on the screen.
+
+### Constructor:
+#### TextManager(GLuint shader)
+
+Params:
+> **shader:** *The id of the shader program used to render this camera. Acquired from the return value of `Shader::initialiseShader()`*
+
+### Functions:
+#### int extendFontStack(std::string filepath, int ptSize)
+Loads a new TrueType font into a texture atlas stored in VRAM. \
+
+Returns the font index used for font selection when loading text.
+
+params:
+> **filepath:** *The relative path to the TrueType `.ttf` font file.* \
+> **ptSize:** *The desired character pt size. (default: `12`)*
+
+#### int loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue)
+Loads the desired text using glyphs from the selected font. Sets the text's colour, position on the screen and letterspacing. It's worth noting \
+here that a space `' '` is equal to `letterSpacing * 8`.
+
+Returns the word(s) layout index.
+
+Params:
+> **targetText:** *The desired string to load to memory.* \
+> **posY:** *The y-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the top left.* \
+> **posX:** *The x-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the top left.* \
+> **letterSpacing:** *How much spacing (in pixels) to put between each character. Word spacing is equal to this value * 8. (default: `1`)* \
+> **red:** *Set the decimal value of the text's red colour channel. (default: `0.0`)* \
+> **green:** *Set the decimal value of the text's green colour channel. (default: `0.0`)* \
+> **blue:** *Set the decimal value of the text's blue colour channel. (default: `0.0`)* 
+
+#### void drawText(int layoutIndex)
+Draws text that has been loaded into the layout at `layoutIndex` onto the screen.
+
+Params:
+> **layoutIndex:** *The identifier of a string previously loaded by `TextManager::loadText`.*
+
 ## Status Codes:
 - **LAZARUS_OK** *The engines default state. No problems. (Code: 0)* 
 - **LAZARUS_FILE_NOT_FOUND** *The specified asset couldn't be found (Code: 101)* 
@@ -617,12 +660,17 @@ Params:
 - **LAZARUS_FILESTREAM_CLOSED** *The filestream input closed unexpectedly. (Code: 103)* 
 - **LAZARUS_IMAGE_LOAD_FAILURE** *STB was unable to load the contents of the given image file into a 8_8_8_8 (RGBA) buffer. (Code: 104)*
 - **LAZARUS_IMAGE_RESIZE_FAILURE** *STB was unable to resize the image to the height and width specified at `LAZARUS_MAX_IMAGE_WIDTH` / `LAZARUS_MAX_IMAGE_HEIGHT` (Code: 105)*
+- **LAZARUS_FT_INIT_FAILURE** *Lazarus failed to inititialise the freetype2 library. (Code: 106)*
+- **LAZARUS_FT_LOAD_FAILURE** *Freetype has indicated that it is unable to load the TrueType font from the desired location. (Code: 107)*
+- **LAZARUS_FT_RENDER_FAILURE** *Despite being able to load the target glyph's splines, freetype was unable to render them into a monochrome bitmap. (Code: 108)*
 - **LAZARUS_SHADER_ERROR** *OpenGL does not regard the output from shader compilation to be a valid shader program. (Code: 201)* 
 - **LAZARUS_VSHADER_COMPILE_FAILURE** *The vertex shader failed to compile. (Code: 202)*
 - **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
 - **LAZARUS_SHADER_LINKING_FAILURE** *OpenGL failed to link the shaders. (Code: 204)*
+- **LAZARUS_UNIFORM_NOT_FOUND** *Lazarus failed to perform a lookup on the desired uniform from the vertex or fragment shader. (Code: 205)*
 - **LAZARUS_OPENGL_ERROR** *An error occured in the OpenGL graphics pipeline. (Code: 301)*
 - **LAZARUS_NO_CONTEXT** *Unable to find a window with an active OpenGL context. (Code: 302)*
 - **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
 - **LAZARUS_GLFW_NOINIT** *GL framework wrangler failed to initialise. (Code: 304)*
+- **LAZARUS_WIN_EXCEEDS_MAX** *The requested window size is larger than the dimensions of the primary monitor. (Code: 305)*
 - **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 401)*

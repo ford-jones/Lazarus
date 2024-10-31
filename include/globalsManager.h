@@ -49,6 +49,10 @@ class GlobalsManager
 
         void setExecutionState(int state);
         int getExecutionState();
+
+        void setDisplaySize(int width, int height);
+        int getDisplayWidth();
+        int getDisplayHeight();
 };
 
 #endif

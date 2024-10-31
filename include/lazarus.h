@@ -1,11 +1,27 @@
+//              .,                                                                                                          .(*      ,*,                
+//                ((.     (.    ,                                                                          */*  ,%##%%%%%%%%%%%%%%%#(*           .      
+//         .//**/#%%%%%%%%%%%%%%#*   .,                                                             ,**   .(%%%%%%#(******,***,/#%%%%%%%%###(/,         
+//             #%%%#*.#%/***,,..,*(%(.    ,,                                                     *     /#%##/*****,,,,,,,,,.,...,,#%,  .#%#.            
+//    .,     *%&#/   %#**,,*..,....,.*#,     ..                                               *     ,%#%#/*,,*,*,,,,,.,.,,.,...,...((     /#(//*/**.    
+//           (%#    *#*...,.,,..........*/      ,                                          .      *#%(#(**,,,,,,,,..,..,..,,........(.     *#(          
+//           *#     *(......,.............(#      ,                                       .     ,((, ##,,,.....,.................. ./       **  .,.     
+//            *     ./........ ...........*#*,                                          ,      ,(,  ./*,,,..,,.................  .. *                   
+//                   /, ........    ... ../(  *.                                              ,*     /,...,,.,,.....   ............**                   
+//                    *... .............  /    ,                                             *,      ,*,,............  ,....     ...                    
+//                     *.   ..... .... ..*                                                  .*        *...................   .  ...                     
+//               *       ... ......... ,.                                                   ,          ... ..........  ...     ..       ,               
+//                ((        .,.,.. ...                                                                   .  . .. .  .  ... .  ..      //                
+//              ,/(#%#*                                                                                     .....  ... ......       .#*                 
+//                 /((##%#(*                                                                                      .......        ,(#(*,                 
+//               (.           .,,,,,                                                                                        .*#%%(                      
+//                                        
+/*  LAZARUS ENGINE */
+
 #ifndef LAZARUS_GL_INCLUDES_H
     #include "gl_includes.h"
 #endif
 
-// #ifndef LAZARUS_GLOBALS_MANAGER_H
-    #include "globalsManager.h"
-// #endif
-
+#include "globalsManager.h"
 #include "WindowManager.h"
 #include "eventManager.h"
 #include "mesh.h"
@@ -16,12 +32,14 @@
 #include "fpsCounter.h"
 #include "fileReader.h"
 #include "soundManager.h"
+#include "textManager.h"
 
 #ifndef LAZARUS_H
 #define LAZARUS_H
 
 namespace Lazarus
 {
+    using ::TextManager;
     using ::GlobalsManager;
     using ::WindowManager;
     using ::EventManager;

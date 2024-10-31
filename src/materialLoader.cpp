@@ -21,7 +21,7 @@
 
 MaterialLoader::MaterialLoader()
 {
-	std::cout << GREEN_TEXT << "Constructing class 'MaterialLoader'." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	
 	textureLoader = nullptr;
 	diffuseCount = 0;
@@ -103,11 +103,13 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         }
     };
 
-    if(texturePath != LAZARUS_MESH_NOTEX)
+    if((texturePath != LAZARUS_MESH_NOTEX) && (texturePath != LAZARUS_MESH_ISTEXT))
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
+        this->fileReader = std::make_unique<FileReader>();
         
-		textureLoader->storeTexture(texturePath, textureId, imageData);
+        imageData = fileReader->readFromImage(texturePath);
+		textureLoader->extendTextureStack(imageData, textureId);
     } 
     else
     {
@@ -132,5 +134,5 @@ MaterialLoader::~MaterialLoader()
     {
         file.close();
     }
-    std::cout << GREEN_TEXT << "Destroying 'MaterialLoader' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

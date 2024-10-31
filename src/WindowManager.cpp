@@ -27,7 +27,7 @@
 ========================================== */
 WindowManager::WindowManager(const char *title, int width, int height)
 {
-	std::cout << GREEN_TEXT << "Constructing class 'WindowManager'." << RESET_TEXT << std::endl;
+	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->errorCode = GLFW_NO_ERROR;
 	this->errorMessage = NULL;
 	
@@ -91,23 +91,33 @@ int WindowManager::initialise()
         return -1;
     };
 
-    this->window = launchFullscreen
-    ? glfwCreateWindow
-    (
-        videoMode->width, 
-        videoMode->height, 
-        this->frame.title, 
-        this->monitor, 
-        NULL
-    )
-    : glfwCreateWindow
-    (
-        this->frame.width,
-        this->frame.height,
-        this->frame.title, 
-        NULL,
-        NULL
+    int targetWidth = 0;
+    int targetHeight = 0;
+
+    launchFullscreen
+    ? (((targetWidth = videoMode->width) && (targetHeight = videoMode->height)) 
+        &&  (
+            this->window = glfwCreateWindow(
+                videoMode->width, 
+                videoMode->height, 
+                this->frame.title, 
+                this->monitor, 
+                NULL
+            ))
+        )
+    : ((targetWidth = this->frame.width) && (targetHeight = this->frame.height) 
+        &&  (
+            this->window = glfwCreateWindow(
+                this->frame.width, 
+                this->frame.height, 
+                this->frame.title, 
+                NULL, 
+                NULL
+            )
+        )
     );
+
+    globals.setDisplaySize(targetWidth, targetHeight);
 
     glfwSetWindowPos(this->window, floor((videoMode->width - this->frame.width) / 2), floor((videoMode->height - this->frame.height) / 2));
 
@@ -140,7 +150,7 @@ int WindowManager::loadConfig(GLuint shader)
 {	
 	if(enableCursor == true)
 	{
-		  glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	    glfwSetInputMode(this->window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	};
 	
 	if(cullFaces == true)
@@ -154,7 +164,10 @@ int WindowManager::loadConfig(GLuint shader)
 	    glEnable            (GL_DEPTH_TEST);
 	};
 
-    glClearColor        (0.0, 0.0, 0.0, 0.0);    // glfwDestroyWindow(this->window);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+
+    glClearColor        (0.0, 0.0, 0.0, 0.0);
 
     /* ===============================================
         TODO:
@@ -174,7 +187,7 @@ int WindowManager::loadConfig(GLuint shader)
 
 int WindowManager::open()
 {
-    glfwSetWindowShouldClose(this->window, GLFW_FALSE);    // glfwDestroyWindow(this->window);
+    glfwSetWindowShouldClose(this->window, GLFW_FALSE);
     this->isOpen = true;
 
     return GLFW_NO_ERROR;
@@ -252,5 +265,5 @@ WindowManager::~WindowManager()
 
     glfwTerminate();
 
-    std::cout << GREEN_TEXT << "Destroying 'WindowManager' class." << RESET_TEXT << std::endl;
+    std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

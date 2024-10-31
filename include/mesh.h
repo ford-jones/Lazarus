@@ -80,14 +80,16 @@ class Mesh
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
             GLint is3DUniformLocation;
+            GLint isGlyphUniformLocation;
 
             int is3D;
+            int isGlyph;
         };
 		
 		Mesh(GLuint shader);
 		
         shared_ptr<TriangulatedMesh> create3DAsset(string meshPath, string materialPath, string texturePath = "");
-        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "");
+        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
         void initialiseMesh(shared_ptr<TriangulatedMesh> &meshData);
         void loadMesh(shared_ptr<TriangulatedMesh> &meshData);
@@ -109,8 +111,6 @@ class Mesh
 
         GLuint xyzTextureId;
         GLuint xyTextureId;
-		
-        FileReader::Image texStore;
 
 		GLuint shaderProgram;
         GLuint VAO;                                                                         //  The OpenGL Vertex Array Object

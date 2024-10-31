@@ -30,14 +30,20 @@ Audio engine documentation: https://www.fmod.com/docs/2.03/api/welcome.html \
 Downloads: https://www.fmod.com/download#fmodengine \
 Sign up: https://www.fmod.com/profile/register 
 
-7. Valgrind resources: \
+7. FreeType2: \
+Official Documentation: https://freetype.org/index.html
+
+8. Valgrind resources: \
 Official Documentation: https://valgrind.org/docs/ \
 Downloads: https://valgrind.org/downloads/ \
 Install instructions: https://stackoverflow.com/questions/24935217/how-to-install-valgrind-properly
 
-8. gdb resources: \
+9. gdb resources: \
 Official Documentation: https://ftp.gnu.org/old-gnu/Manuals/gdb/html_chapter/gdb_toc.html \
 Download / installation: https://www.gdbtutorial.com/tutorial/how-install-gdb
 
-8. C++ resources: \
+10. C++ resources: \
 Core guidelines: https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#S-functions
+
+11. Misc:
+RGB decimal colours: https://www.tug.org/pracjourn/2007-4/walden/color.pdf
