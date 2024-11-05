@@ -1,1 +1,22 @@
 
+name: Web-server CI
+on:
+  pull_request_review:
+    types:
+      - 'submitted'
+
+permissions:
+  contents: read
+
+jobs:
+  update-blog:
+    if: github.event.review.state == 'approved'
+    name: Update lazarusengine.xyz
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Update website release notes
+        shell: bash
+        run: |
+          cat .github/changelogs/latest.md >> $CHANGELOG >> $GITHUB_ENV
+          curl -X POST http://localhost:3000/api/v1/blog/addChangeLog ${{ env.CHANGELOG }}
