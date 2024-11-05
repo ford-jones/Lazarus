@@ -1,4 +1,5 @@
 {
+  "changelog_type": "commit_message",
   "exclude_labels": ["bot", "dependabot", "ci"],
   "group_config": [
     {
