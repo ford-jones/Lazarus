@@ -1,4 +1,4 @@
-name: Release Notes CI
+name: Changelog CI
 on:
   workflow_dispatch:
     inputs:
@@ -17,7 +17,7 @@ on:
       - 'main'
 
 jobs:
-  approved:
+  create-changelog:
     permissions:
       contents: 'write'  
     runs-on: ubuntu-latest
