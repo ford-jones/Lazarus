@@ -1,7 +1,5 @@
 {
   "exclude_labels": ["bot", "dependabot", "ci"],
-  "commit_changelog": false,
-  "comment_changelog": true,
   "group_config": [
     {
       "title": "Bug Fixes",
