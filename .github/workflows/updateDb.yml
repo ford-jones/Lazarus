@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   update-blog:
-    if: github.event.review.state == 'approved'
     name: Update lazarusengine.xyz
     runs-on: ubuntu-22.04
     steps:
