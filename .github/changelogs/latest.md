@@ -1,5 +1,7 @@
-# Version: 2024.11.05080645
+# Version: 2024.11.05081859
 
+* [9411bed](https://github.com/ford-jones/Lazarus/commit/9411bed42da55699cb1ce2c34842675617e145bb): [Changelog CI] Add Changelog for Version 2024.11.05080645
+* [8229e5e](https://github.com/ford-jones/Lazarus/commit/8229e5e00e683d28a0375f2841cb5d6df7799c1c): Update updateDb.yml
 * [3e14828](https://github.com/ford-jones/Lazarus/commit/3e14828e10902c920fdfd93a059f52c9afe35d0e): [Changelog CI] Add Changelog for Version 2024.11.05052741
 * [6b5a1c0](https://github.com/ford-jones/Lazarus/commit/6b5a1c0686051a4f6c95f74a8d7a1266076f58d1): Update changelog.yml
 * [442a5da](https://github.com/ford-jones/Lazarus/commit/442a5dafa2ec76442562e2fc406cb69b76a79dc3): Hopefull this is the end of this terrible malpractice
