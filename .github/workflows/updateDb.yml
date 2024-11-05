@@ -1,0 +1,25 @@
+
+name: Web-server CI
+on:
+  push:
+    branches:
+      - 'main'
+
+permissions:
+  contents: read
+
+jobs:
+  update-blog:
+    name: Update lazarusengine.xyz
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Read changelogs
+        id: readLog
+        run: |
+          content=$(jq -Rs . < .github/changelogs/latest.md)
+          echo "::set-output name=data::${content}"
+      - name: Update website release notes
+        shell: bash
+        run: |
+          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"changelog":${{ steps.readLog.outputs.data }}}' --include
