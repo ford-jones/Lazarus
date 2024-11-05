@@ -27,7 +27,7 @@ jobs:
       - name: Set current date as env variable
         id: date
         run: |
-          echo "::set-output name=date::$(date +'%Y.%m.%dT%H:%M:%S')"
+          echo "::set-output name=date::$(date +'%Y.%m.%d%H%M%S')"
           
       - name: Run Changelog CI
         uses: saadmk11/changelog-ci@v1.1.2
