@@ -22,6 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Cleanup previous output
+        run: |
+          rm -rf .github/changelogs/latest.md
       - name: Set current date as env variable
         id: date
         run: |
