@@ -1,9 +1,9 @@
 
 name: Web-server CI
 on:
-  pull_request_review:
-    types:
-      - 'submitted'
+  push:
+    branches:
+      - 'main'
 
 permissions:
   contents: read
