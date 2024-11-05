@@ -1,0 +1,41 @@
+name: Changelog CI
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: true
+        default: 'warning'
+      tags:
+        description: 'Test scenario tags'  
+        
+  pull_request:
+    types:
+      - 'opened'
+      - 'reopened'
+
+jobs:
+  create-changelog:
+    permissions:
+      contents: 'write'  
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Cleanup previous output
+        run: |
+          rm -rf .github/changelogs/latest.md
+      - name: Set current date as env variable
+        id: date
+        run: |
+          echo "::set-output name=date::$(date +'%Y.%m.%d%H%M%S')"
+      - name: Run Changelog CI
+        uses: saadmk11/changelog-ci@v1.1.2
+        with:
+          release_version: ${{ steps.date.outputs.date }}
+          committer_username: ${{ github.actor }}
+          config_file: .github/changelogs/config.json
+          changelog_filename: .github/changelogs/latest.md
+        id: changelog-ci
+      - run: |
+          echo "${{ steps.changelog-ci.outputs.changelog }}"
