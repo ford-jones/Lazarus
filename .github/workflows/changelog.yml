@@ -8,10 +8,10 @@ on:
         default: 'warning'
       tags:
         description: 'Test scenario tags'  
-        
-  push:
-    branches: 
-      - 'main'
+
+  pull_request:
+    types:
+      - 'opened'
 
 jobs:
   create-changelog:
