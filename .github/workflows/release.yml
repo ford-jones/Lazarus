@@ -1,6 +1,11 @@
 
 name: Create Release CI
 on:
+  workflow_dispatch:
+    inputs:
+        release_version:
+        description: 'Set Release Version'
+        required: true
   push:
     tags:
       - "v*"
