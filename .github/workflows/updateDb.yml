@@ -22,4 +22,4 @@ jobs:
       - name: Update website release notes
         shell: bash
         run: |
-          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: Application/json" --data """${{ steps.readLog.outputs.data }}""" --include
+          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: Application/json" --data ${{ steps.readLog.outputs.data }} --include
