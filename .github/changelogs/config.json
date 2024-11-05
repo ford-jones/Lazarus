@@ -1,4 +1,4 @@
 {
   "changelog_type": "commit_message",
-  "exclude_labels": ["bot", "dependabot", "ci"],
+  "exclude_labels": ["bot", "dependabot", "ci"]
 }
