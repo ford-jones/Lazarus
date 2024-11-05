@@ -1,5 +1,7 @@
-# Version: 2024.11.05082326
+# Version: 2024.11.05083306
 
+* [c1b9e50](https://github.com/ford-jones/Lazarus/commit/c1b9e502706cb91553a225fa09929ab65b388cd1): [Changelog CI] Add Changelog for Version 2024.11.05082326
+* [c5fc119](https://github.com/ford-jones/Lazarus/commit/c5fc11949b48a56c5957e243a474082484f15675): Update updateDb.yml
 * [9aae8e9](https://github.com/ford-jones/Lazarus/commit/9aae8e918b84053da57d391d4be21f5794764458): [Changelog CI] Add Changelog for Version 2024.11.05081859
 * [6b206a7](https://github.com/ford-jones/Lazarus/commit/6b206a7dde7668ec9ac18d8b98cad7efe54a4fbc): Update updateDb.yml
 * [9411bed](https://github.com/ford-jones/Lazarus/commit/9411bed42da55699cb1ce2c34842675617e145bb): [Changelog CI] Add Changelog for Version 2024.11.05080645
