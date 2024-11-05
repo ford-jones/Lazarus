@@ -18,4 +18,5 @@ jobs:
         shell: bash
         run: |
           echo "CHANGELOG=$(cat .github/changelogs/latest.md)" >> $GITHUB_ENV
-          curl -X POST https://lazarus-server.onrender.com/addChangeLog ${{ env.CHANGELOG }}
+          echo env.CHANGELOG
+          curl -X POST https://lazarus-server.onrender.com/addChangeLog "${{ env.CHANGELOG }}"
