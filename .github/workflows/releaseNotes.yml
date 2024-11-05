@@ -21,7 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        run: |
+          echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
   approved:
     permissions:
       contents: 'write'  
@@ -32,7 +33,7 @@ jobs:
       - name: Run Changelog CI
         uses: saadmk11/changelog-ci@v1.1.2
         with:
-          release_version: ${{env.NOW}}
+          release_version: ${{ env.NOW }}
           committer_username: ${{ github.actor }}
           config_file: .github/workflows/changeLogConfig.json
         id: changelog-ci
