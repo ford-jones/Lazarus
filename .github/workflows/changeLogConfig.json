@@ -2,6 +2,7 @@
   "version_regex": "v?([0-9]{1,2})+[.]+([0-9]{1,2})+[.]+([0-9]{1,2})\\s\\(\\d{1,2}-\\d{1,2}-\\d{4}\\)",
   "exclude_labels": ["bot", "dependabot", "ci"],
   "commit_changelog": false,
+  "comment_changelog": true,
   "group_config": [
     {
       "title": "Bug Fixes",
