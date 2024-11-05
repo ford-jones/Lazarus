@@ -27,7 +27,7 @@ jobs:
         uses: saadmk11/changelog-ci@v1.1.2
         with:
           release_version: ${{ github.event.inputs.release_version }}
-          commiter_username: ${{ github.actor }}
+          committer_username: ${{ github.actor }}
           config_file: .github/workflows/changeLogConfig.json
         id: changelog-ci
       - run: |
