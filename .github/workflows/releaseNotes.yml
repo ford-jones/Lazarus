@@ -28,6 +28,7 @@ jobs:
         with:
           release_version: ${{ github.event.inputs.release_version }}
           commiter_username: ${{ github.actor }}
+          config_file: changeLogConfig.JSON
         id: changelog-ci
       - run: |
           echo "${{ steps.changelog-ci.outputs.changelog }}"
