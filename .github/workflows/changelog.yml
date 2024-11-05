@@ -19,17 +19,10 @@ jobs:
       contents: 'write'  
     runs-on: ubuntu-latest
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set current date as env variable
-        id: date
-        run: |
-          echo "::set-output name=date::$(date +'%Y.%m.%d%H%M%S')"
-          
+    steps:          
       - name: Run Changelog CI
         uses: saadmk11/changelog-ci@v1.1.2
         with:
-          release_version: ${{ steps.date.outputs.date }}
           committer_username: ${{ github.actor }}
           config_file: .github/changelogs/config.json
           changelog_filename: .github/changelogs/latest.md
