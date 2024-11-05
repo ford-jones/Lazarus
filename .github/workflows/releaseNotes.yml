@@ -12,8 +12,9 @@ on:
       tags:
         description: 'Test scenario tags'  
         
-  pull_request_review:
-    types: [submitted]
+  push:
+    branches: 
+      - 'main'
 
 jobs:
   approved:
