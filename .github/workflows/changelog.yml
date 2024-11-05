@@ -17,7 +17,6 @@ jobs:
   create-changelog:
     permissions:
       contents: 'write'  
-      actions: 'write'
     runs-on: ubuntu-latest
 
     steps:
@@ -32,8 +31,8 @@ jobs:
         with:
           release_version: ${{ steps.date.outputs.date }}
           committer_username: ${{ github.actor }}
-          config_file: .github/workflows/changeLogConfig.json
-          changelog_filename: .github/workflows/latestLogs.md
+          config_file: .github/changelogs/config.json
+          changelog_filename: .github/changelogs/latest.md
         id: changelog-ci
       - run: |
           echo "${{ steps.changelog-ci.outputs.changelog }}"
