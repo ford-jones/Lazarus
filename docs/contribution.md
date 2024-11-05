@@ -28,9 +28,10 @@ fix/loaderMemoryLeak
 There are two continuous-integration workflows upstream which you should be aware of.
 1. `create-release.yml`:
   - This workflow creates and publishes a new release.
-  - To trigger, push to main with the `SemVer` number prefixed with a `v`, like so:
+  - To trigger, create a tag and then push to main with the `SemVer` number prefixed with a `v`, like so:
 ```
-git push origin main v1.0.0
+git tag v1.0.0
+git push origin v1.0.0 
 ```
 
 2. `changelog.yml`
