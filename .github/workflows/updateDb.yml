@@ -17,7 +17,8 @@ jobs:
       - name: Read changelogs
         id: readLog
         run: |
-          echo "::set-output name=data::$(cat .github/changelogs/latest.md)"
+          content=$(cat .github/changelogs/latest.md | jq -Rs .)
+          echo "::set-output name=data::${content}"
       - name: Update website release notes
         shell: bash
         run: |
