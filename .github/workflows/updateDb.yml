@@ -14,9 +14,11 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v2
+      - name: Read changelogs
+        id: readLog
+        run: |
+          echo "::set-output name=data::$(cat .github/changelogs/latest.md)"
       - name: Update website release notes
         shell: bash
         run: |
-          echo "CHANGELOG=$(cat .github/changelogs/latest.md)" >> $GITHUB_ENV
-          echo env.CHANGELOG
-          curl -X POST https://lazarus-server.onrender.com/addChangeLog "${{ env.CHANGELOG }}"
+          curl -X POST https://lazarus-server.onrender.com/addChangeLog "${{ steps.readLog.outputs.data }}"
