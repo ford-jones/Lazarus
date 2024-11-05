@@ -1,5 +1,7 @@
-# Version: 2024.11.05052741
+# Version: 2024.11.05080645
 
+* [3e14828](https://github.com/ford-jones/Lazarus/commit/3e14828e10902c920fdfd93a059f52c9afe35d0e): [Changelog CI] Add Changelog for Version 2024.11.05052741
+* [6b5a1c0](https://github.com/ford-jones/Lazarus/commit/6b5a1c0686051a4f6c95f74a8d7a1266076f58d1): Update changelog.yml
 * [442a5da](https://github.com/ford-jones/Lazarus/commit/442a5dafa2ec76442562e2fc406cb69b76a79dc3): Hopefull this is the end of this terrible malpractice
 * [693fe53](https://github.com/ford-jones/Lazarus/commit/693fe533219670ac86fc14dbc8e673ec90193c86): [Changelog CI] Add Changelog for Version 2024.11.05051053
 * [1b0ab16](https://github.com/ford-jones/Lazarus/commit/1b0ab16592a77b3a536319476a6b96755be5cce5): Delete something.txt
