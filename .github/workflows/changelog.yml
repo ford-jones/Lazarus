@@ -32,6 +32,7 @@ jobs:
           release_version: ${{ steps.date.outputs.date }}
           committer_username: ${{ github.actor }}
           config_file: .github/workflows/changeLogConfig.json
+          changelog_filename: .github/workflows/latestLogs.md
         id: changelog-ci
       - run: |
           echo "${{ steps.changelog-ci.outputs.changelog }}"
