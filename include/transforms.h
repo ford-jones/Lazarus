@@ -25,6 +25,7 @@
 #include "mesh.h"
 #include "camera.h"
 #include "light.h"
+#include "globalsManager.h"
 
 using glm::vec3;
 using std::shared_ptr;
@@ -48,6 +49,9 @@ class Transform
 		void rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
 
 		void translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z);
+
+	public:
+		GlobalsManager globals;
 };
 
 #endif

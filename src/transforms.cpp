@@ -75,6 +75,11 @@ void Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, fl
 
 void Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z)
 {	
+	if(x >= 90.0f || x <= -90.0f)
+	{
+		globals.setExecutionState(LAZARUS_INVALID_RADIANS);
+	};
+	
 	glm::vec3 temp;
 	temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
 	temp.y = sin(glm::radians(-x));
