@@ -42,6 +42,7 @@ using std::shared_ptr;
 class Transform
 {	
     public:
+		Transform();
 		void translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);
     	void rotateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);
 
@@ -50,8 +51,12 @@ class Transform
 
 		void translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z);
 
-	public:
+	private:
+		float determineUpVector(float rotation);
+		float up;
+
 		GlobalsManager globals;
+
 };
 
 #endif

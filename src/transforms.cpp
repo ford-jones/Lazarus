@@ -23,6 +23,10 @@
 	TODO: 
 	Create scaling translation
 ==================================================== */
+Transform::Transform()
+{
+	this->up = 0.0f;
+};
 
 void Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z)
 {
@@ -75,19 +79,24 @@ void Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, fl
 
 void Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z)
 {	
-	if(x >= 90.0f || x <= -90.0f)
+	if((x > 360.0f) || (x < -360.0f))
 	{
 		globals.setExecutionState(LAZARUS_INVALID_RADIANS);
-	};
-	
-	glm::vec3 temp;
-	temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
-	temp.y = sin(glm::radians(-x));
-	temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
+	}
+	else
+	{
+		this->up = this->determineUpVector(x);
+		camera->upVector = glm::vec3(0.0f, this->up, 0.0f);
 
-	camera->direction = temp;
+		glm::vec3 temp;
+		temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
+		temp.y = sin(glm::radians(-x));
+		temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
 
-	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties	
+		camera->direction = temp;
+
+		camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties	
+	}
 	
 	return;
 };
@@ -100,4 +109,16 @@ void Transform::translateLightAsset(shared_ptr<Light::AmbientLight> &light, floa
 	light->locationZ += z;
 	
 	return;
+};
+
+float Transform::determineUpVector(float rotation)
+{
+	if((rotation >= 90.0f && rotation <= 270.0f) || (rotation <= -90.0f && rotation >= -270.0f))
+	{
+		return -1.0f;
+	}
+	else
+	{
+		return 1.0f;
+	};
 };
