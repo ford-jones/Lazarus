@@ -71,7 +71,7 @@ shared_ptr<Camera::FixedCamera> Camera::createOrthoCam(int arX, int arY)
     fixedCamera->upVector             =   vec3(0.0f, 1.0f, 0.0f);                                                                                          //  Define the tilt / rotation of the camera
     
     fixedCamera->viewMatrix           =   glm::lookAt(fixedCamera->cameraPosition, (fixedCamera->cameraPosition + fixedCamera->direction), fixedCamera->upVector);              //  Define the view-matrix through the camera properties
-    fixedCamera->projectionMatrix     =   glm::ortho(0.0f, static_cast<float>(arX), static_cast<float>(arY), 0.0f);
+    fixedCamera->projectionMatrix     =   glm::ortho(0.0f, static_cast<float>(arX), 0.0f, static_cast<float>(arY));
 
     fixedCamera->viewLocation         =   glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 
     fixedCamera->projectionLocation   =   glGetUniformLocation(shader, "orthoProjectionMatrix");                                                          //  Returns the shader program's projection-matrix index position OR -1 upon encountering an error 
