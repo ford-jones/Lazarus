@@ -461,23 +461,30 @@ Params:
 > **shader:** *The id of the shader program used to render this camera. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions: 
-#### shared_ptr\<FixedCamera> createFixedCamera(int arX, int arY, double pX, double pY, double pZ, double tX, double tY, double tZ, double uX, double uY, double uZ)
-Creates a new instance of a `FixedCamera`, initialises the values of its properties and returns it.
+#### shared_ptr\<FixedCamera> createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
+Creates a new instance of a `FixedCamera`, with a perspective projection matrix. 
 
 Returns a shared pointer to the camera object.
 
 Params:
-> **arX:** *The x-axis aspect ratio / width of the viewport.* \
-> **arY:** *The y-axis aspect ratio / height of the viewport.* \
 > **pX:** *The x-axis starting position / location of the camera.* \
 > **pY:** *The y-axis starting position / location of the camera.* \
 > **pZ:** *The z-axis starting position / location of the camera.* \
 > **tX:** *The x-axis target / lookat coordinate.* \
 > **tY:** *The y-axis target / lookat coordinate.* \
 > **tZ:** *The z-axis target / lookat coordinate.* \
-> **uX:** *The x-axis "up" vector. (Which way is up).* \
-> **uY:** *The y-axis "up" vector. (Which way is up).* \
-> **uZ:** *The z-axis "up" vector. (Which way is up).*
+> **arX:** *The x-axis aspect ratio / width of the viewport. (Default: `LAZARUS_PRIMARY_DISPLAY_WIDTH`)* \
+> **arY:** *The y-axis aspect ratio / height of the viewport. (Default: `LAZARUS_PRIMARY_DISPLAY_HEIGHT`)* 
+
+### Functions: 
+#### shared_ptr\<FixedCamera> createOrthoCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
+Creates a new instance of a `FixedCamera`, with an orthographic projection matrix. 
+
+Returns a shared pointer to the camera object.
+
+Params:
+> **arX:** *The x-axis aspect ratio / width of the viewport.*  \
+> **arY:** *The y-axis aspect ratio / height of the viewport.* 
 
 #### shared_ptr\<FixedCamera> loadCamera(shared_ptr\<FixedCamera> cameraData)
 Passes the camera's projection matrix and view matrix into the shader program's corresponding uniform locations.
@@ -640,8 +647,8 @@ Returns the word(s) layout index.
 
 Params:
 > **targetText:** *The desired string to load to memory.* \
-> **posY:** *The y-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the top left.* \
-> **posX:** *The x-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the top left.* \
+> **posY:** *The y-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the bottom left.* \
+> **posX:** *The x-axis coordinate of where the upper-left-most point of the first character should be positioned in pixels. With the origin (0.0) starting in the bottom left.* \
 > **letterSpacing:** *How much spacing (in pixels) to put between each character. Word spacing is equal to this value * 8. (default: `1`)* \
 > **red:** *Set the decimal value of the text's red colour channel. (default: `0.0`)* \
 > **green:** *Set the decimal value of the text's green colour channel. (default: `0.0`)* \

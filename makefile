@@ -4,7 +4,7 @@ LDFLAGS := -lGLEW -lglfw -lfmod -lfreetype
 
 CXX = g++
 
-CXXFLAGS = -std=c++17 -fPIC
+CXXFLAGS = -std=c++17 -fPIC -Wall
 
 # OS-specifics
 ifeq ($(shell uname),Linux)

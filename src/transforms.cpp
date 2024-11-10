@@ -23,13 +23,30 @@
 	TODO: 
 	Create scaling translation
 ==================================================== */
+Transform::Transform()
+{
+	this->up = 0.0f;
+	this->localCoordinates = glm::vec3(0.0, 0.0, 0.0);
+	this->worldCoordinates = glm::vec4(localCoordinates, 0.0);
+};
 
 void Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z)
 {
-    mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, glm::vec3(x, y, z));
-    mesh->locationX += x;
-    mesh->locationY += y;
-    mesh->locationZ += z;
+	this->localCoordinates = glm::vec3(x, y, z);
+    mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, this->localCoordinates);
+
+	/* ===========================================================================
+		Find worldspace coordinates by multiplying object-space coordinates by the 
+		entity's modelview matrix.
+
+		See: https://learnopengl.com/img/getting-started/coordinate_systems.png
+	=============================================================================== */
+	
+	this->worldCoordinates = mesh->modelviewMatrix * glm::vec4(this->localCoordinates, 1.0);
+
+    mesh->locationX = this->worldCoordinates.x;
+    mesh->locationY = this->worldCoordinates.y;
+    mesh->locationZ = this->worldCoordinates.z;
 
 	return;
 };
@@ -75,14 +92,24 @@ void Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, fl
 
 void Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z)
 {	
-	glm::vec3 temp;
-	temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
-	temp.y = sin(glm::radians(-x));
-	temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
+	if((x > 360.0f) || (x < -360.0f))
+	{
+		globals.setExecutionState(LAZARUS_INVALID_RADIANS);
+	}
+	else
+	{
+		this->up = this->determineUpVector(x);
+		camera->upVector = glm::vec3(0.0f, this->up, 0.0f);
 
-	camera->direction = temp;
+		glm::vec3 temp;
+		temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
+		temp.y = sin(glm::radians(-x));
+		temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
 
-	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties	
+		camera->direction = temp;
+
+		camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties	
+	}
 	
 	return;
 };
@@ -95,4 +122,16 @@ void Transform::translateLightAsset(shared_ptr<Light::AmbientLight> &light, floa
 	light->locationZ += z;
 	
 	return;
+};
+
+float Transform::determineUpVector(float rotation)
+{
+	if((rotation >= 90.0f && rotation <= 270.0f) || (rotation <= -90.0f && rotation >= -270.0f))
+	{
+		return -1.0f;
+	}
+	else
+	{
+		return 1.0f;
+	};
 };
