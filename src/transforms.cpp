@@ -26,14 +26,27 @@
 Transform::Transform()
 {
 	this->up = 0.0f;
+	this->localCoordinates = glm::vec3(0.0, 0.0, 0.0);
+	this->worldCoordinates = glm::vec4(localCoordinates, 0.0);
 };
 
 void Transform::translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z)
 {
-    mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, glm::vec3(x, y, z));
-    mesh->locationX += x;
-    mesh->locationY += y;
-    mesh->locationZ += z;
+	this->localCoordinates = glm::vec3(x, y, z);
+    mesh->modelviewMatrix = glm::translate(mesh->modelviewMatrix, this->localCoordinates);
+
+	/* ===========================================================================
+		Find worldspace coordinates by multiplying object-space coordinates by the 
+		entity's modelview matrix.
+
+		See: https://learnopengl.com/img/getting-started/coordinate_systems.png
+	=============================================================================== */
+	
+	this->worldCoordinates = mesh->modelviewMatrix * glm::vec4(this->localCoordinates, 1.0);
+
+    mesh->locationX = this->worldCoordinates.x;
+    mesh->locationY = this->worldCoordinates.y;
+    mesh->locationZ = this->worldCoordinates.z;
 
 	return;
 };
