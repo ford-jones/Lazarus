@@ -27,3 +27,18 @@ jobs:
               --repo="$GITHUB_REPOSITORY" \
               --title="${tag#v}" \
               --generate-notes
+              
+  update-blog:
+    name: Update lazarusengine.xyz
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Read changelogs
+        id: readLog
+        run: |
+          content=$(jq -Rs . < .github/changelogs/latest.md)
+          echo "::set-output name=data::${content}"
+      - name: Update website release notes
+        shell: bash
+        run: |
+          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"date": "", "title": "${{ github.ref_name#v }}", "description": "CI release notes", "changeLog":${{ steps.readLog.outputs.data }}}' --include
