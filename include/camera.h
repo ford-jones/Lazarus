@@ -65,9 +65,9 @@ class Camera
             int usesPerspective;
         };
 		
-        shared_ptr<FixedCamera> createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX = 0, int arY = 0);
-        shared_ptr<FixedCamera> createOrthoCam(int arX, int arY);
-        void loadCamera(shared_ptr<FixedCamera> &cameraData);
+        FixedCamera createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX = 0, int arY = 0);
+        FixedCamera createOrthoCam(int arX, int arY);
+        void loadCamera(FixedCamera &cameraData);
 
         virtual ~Camera();
 
@@ -77,7 +77,7 @@ class Camera
         int monitorY;
 
         GLuint shader;
-        shared_ptr<FixedCamera> fixedCamera;
+        FixedCamera fixedCamera;
 };
 
 #endif

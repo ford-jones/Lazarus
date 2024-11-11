@@ -36,7 +36,6 @@ TextManager::TextManager(GLuint shader)
     this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
     this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
     
-    this->camera = nullptr;
     this->textureLoader = nullptr;
     this->fontLoader = nullptr;
     this->word = {};
@@ -148,7 +147,7 @@ void TextManager::drawText(int layoutIndex)
     {
         quad = i;
 
-        if((quad.modelviewUniformLocation >= 0) && (camera->projectionLocation >= 0))
+        if((quad.modelviewUniformLocation >= 0) && (camera.projectionLocation >= 0))
         {            
             cameraBuilder->loadCamera(camera);
 

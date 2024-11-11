@@ -94,7 +94,7 @@ class TextManager
         std::unique_ptr<Camera> cameraBuilder;
 
         Mesh::TriangulatedMesh quad;
-        std::shared_ptr<Camera::FixedCamera> camera;
+        Camera::FixedCamera camera;
 
         std::vector<Mesh::TriangulatedMesh> word;
         std::map<int, FileReader::Image> textures;
