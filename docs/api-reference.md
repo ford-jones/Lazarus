@@ -237,58 +237,58 @@ Params:
 A class built to handle transformations of different world assets such as mesh, cameras and lights.
 
 ### Functions:
-#### shared_ptr\<Mesh::TriangulatedMesh> translateMeshAsset(shared_ptr\<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
+#### Mesh::TriangulatedMesh translateMeshAsset(Mesh::TriangulatedMesh mesh, float x, float y, float z)
 Applies a translation transformation (movement) to a mesh asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Mesh::TriangulatedMesh` object in real time. \
-Returns a shared pointer to the mesh object.
+Returns a new mesh entity.
 
 Params:
-> **mesh:** *A pointer to the mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
+> **mesh:** *The mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the mesh.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the mesh.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the mesh.*
 
-#### shared_ptr\<Mesh::TriangulatedMesh> rotateMeshAsset(shared_ptr\<Mesh::TriangulatedMesh> mesh, float x, float y, float z)
+#### Mesh::TriangulatedMesh rotateMeshAsset(Mesh::TriangulatedMesh mesh, float x, float y, float z)
 Applies a rotation transformation to a mesh asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the mesh. Not to be confused with an orbital rotation. \
-Returns a shared pointer to the mesh object.
+Returns a new mesh entity.
 
 Params:
-> **mesh:** *A pointer to the mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
+> **mesh:** *The mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis (yaw) rotational value of the mesh.* \
 > **y:** *A floating point number used to increment / decrement the y-axis (pitch) rotational value of the mesh.* \
 > **z:** *A floating point number used to increment / decrement the z-axis (roll) rotational value of the mesh.*
 
-#### shared_ptr\<Camera::FixedCamera> translateCameraAsset(shared_ptr\<Camera::FixedCamera> camera, float x, float y, float z)
+#### Camera::FixedCamera translateCameraAsset(Camera::FixedCamera camera, float x, float y, float z)
 Applies a translation transformation (movement) to a camera asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Camera::FixedCamera` object in real time. \
-Returns a shared pointer to the camera object.
+Returns a new camera entity.
 
 Params:
-> **camera:** *A pointer to the camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
+> **camera:** *The camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the camera.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the camera.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the camera.*
 
-#### shared_ptr\<Camera::FixedCamera> rotateCameraAsset(shared_ptr\<Camera::FixedCamera> camera, float x, float y, float z)
+#### Camera::FixedCamera rotateCameraAsset(Camera::FixedCamera camera, float x, float y, float z)
 Applies a rotation transformation to a camera asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the camera. Not to be confused with an orbital rotation. \
-Returns a shared pointer to the camera object.
+Returns a new camera entity.
 
 Params:
-> **camera:** *A pointer to the camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
+> **camera:** *The camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the camera.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the camera.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the camera.*
 
-#### shared_ptr\<Light::AmbientLight> translateLightAsset(shared_ptr\<Light::AmbientLight> light, float x, float y, float z)
+#### Light::AmbientLight translateLightAsset(Light::AmbientLight light, float x, float y, float z)
 Applies a translation transformation (movement) to a light asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `Light::AmbientLight` object in real time. \
-Returns a shared pointer to the light object.
+Returns a new light entity.
 
 
 Params:
-> **light:** *A pointer to the light asset to be acted upon. (type: `std::shared_ptr<Light::AmbientLight>`)* \
+> **light:** *The light asset to be acted upon. (type: `std::shared_ptr<Light::AmbientLight>`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the light.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the light.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the light.*
@@ -303,23 +303,23 @@ Params:
 > **shader:** *The id of the shader program used to render this mesh. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions:
-#### shared_ptr\<TriangulatedMesh> create3DAsset(std::string meshPath, std::string materialPath, std::string texturePath)
+#### Mesh::TriangulatedMesh create3DAsset(std::string meshPath, std::string materialPath, std::string texturePath)
 Finds and reads a wavefront (obj) file located at `meshPath`. \
 Creates a new instance of a `TriangulatedMesh`, initialises the values of its properties and returns it. \
 Invokes the `MaterialLoader::loadMaterial()` function and passes on the `materialPath`.
 
-Returns a shared pointer to the mesh object.
+Returns a new mesh entity.
 
 Params:
 > **meshPath:** *The relative path to the wavefront mesh asset you wish to render.* 
 > **materialPath:** *The relative path to the wavefront material asset you wish to render.*
 > **texturePath:** *The relative path to the texture image. (optional)*
 
-#### shared_ptr\<TriangulatedMesh> createQuad(float width, float height, std::string texturePath, float uvXL, float uvXR, float uvY)
+#### Mesh::TriangulatedMesh createQuad(float width, float height, std::string texturePath, float uvXL, float uvXR, float uvY)
 Creates a quad (2D plane) to the size of the specified height and width. \
 Textures loaded into a quad have their fragments discarded where the texture opacity is 0.0 - used for sprites.
 
-Returns a shared pointer to the mesh object.
+Returns a new mesh entity.
 
 Params:
 > **width:** *The relative path to the wavefront mesh asset you wish to render.* 
@@ -329,33 +329,33 @@ Params:
 > **uvXR:** *The normalised x-axis coordinate of the UV's right-side. Used for text rendering. (optional)*
 > **uvY:** *The normalised y-axis coordinate of the UV's top edge. Used for text rendering. (optional)*
 
-#### shared_ptr\<TriangulatedMesh> initialiseMesh(shared_ptr\<TriangulatedMesh> meshData)
+#### Mesh::TriangulatedMesh initialiseMesh(Mesh::TriangulatedMesh meshData)
 Generates a new vertex array object and binds it to the current OpenGL context. \
 Generates and binds a vertex buffer object to the array object for each of the mesh's properties, these are:
 - vertex coordinates
 - vertex normals
 - diffuse colours
 
-Returns a shared pointer to the mesh object.
+Returns a new mesh entity.
 
 Params:
-> **meshData:** *A pointer to the mesh object who's data you wish to write to buffers.*
+> **meshData:** *The mesh object who's data you wish to write to buffers.*
 
-#### shared_ptr\<TriangulatedMesh> loadMesh(shared_ptr<TriangulatedMesh> meshData)
+#### Mesh::TriangulatedMesh loadMesh(Mesh::TriangulatedMesh meshData)
 Loads a mesh object's buffer data into their correct GPU uniform positions located inside the shader program that was referenced in the class constructor.
 
 Params:
-> **meshData:** *A pointer to the mesh object who's buffer data you wish to pass into the shader program.*
+> **meshData:** *The mesh object who's buffer data you wish to pass into the shader program.*
 
-#### shared_ptr\<TriangulatedMesh> drawMesh(shared_ptr<TriangulatedMesh> meshData)
+#### Mesh::TriangulatedMesh drawMesh(Mesh::TriangulatedMesh meshData)
 Draws the mesh object contents of the shader program's uniforms onto the render loops back buffer (see: `WindowManager::handleBuffers()`). \
 Be sure to bring the back buffer forward to see the draw result.
 
 > Params:
-> **meshData:** *A pointer to the mesh object you wish to draw.*
+> **meshData:** *The mesh object you wish to draw.*
 
 ### Members:
-> **TriangulatedMesh:** *A collection of properties which make up a mesh object. (type: `struct`)* 
+> **TriangulatedMesh:** *A collection of properties which make up a mesh entity. (type: `struct`)* 
 >	- **textureId:** *The serialised id of the mesh objects texture. The layer depth of the texture. (type: `int`)* 
 >   - **is3D:** *Literal 0 (false) or 1 (true). Flags the shader to treat the mesh as a sprite, discarding fragments with an alpha value higher than 0.1 (type: `int`)*
 >	- **numOfFaces:** *The number of faces that make up the mesh. (type: `int`)* 
@@ -464,7 +464,7 @@ Params:
 #### shared_ptr\<FixedCamera> createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
 Creates a new instance of a `FixedCamera`, with a perspective projection matrix. 
 
-Returns a shared pointer to the camera object.
+Returns a new camera entity.
 
 Params:
 > **pX:** *The x-axis starting position / location of the camera.* \
@@ -477,10 +477,10 @@ Params:
 > **arY:** *The y-axis aspect ratio / height of the viewport. (Default: `LAZARUS_PRIMARY_DISPLAY_HEIGHT`)* 
 
 ### Functions: 
-#### shared_ptr\<FixedCamera> createOrthoCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
+#### FixedCamera createOrthoCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
 Creates a new instance of a `FixedCamera`, with an orthographic projection matrix. 
 
-Returns a shared pointer to the camera object.
+Returns a new camera entity.
 
 Params:
 > **arX:** *The x-axis aspect ratio / width of the viewport.*  \
@@ -489,13 +489,13 @@ Params:
 #### shared_ptr\<FixedCamera> loadCamera(shared_ptr\<FixedCamera> cameraData)
 Passes the camera's projection matrix and view matrix into the shader program's corresponding uniform locations.
 
-Returns a shared pointer to the camera object.
+Returns a new camera entity.
 
 Params:
-> **cameraData:** *A pointer to the camera asset you would like to render.*
+> **cameraData:** *The camera asset you would like to render.*
 
 ### Members:
-> **FixedCamera:** *A collection of properties which make up a camera asset. (type: `struct`)* 
+> **FixedCamera:** *A collection of properties which make up a camera entity. (type: `struct`)* 
 >	- **id:** *This camera's unique id. (type: `int`)* 
 >	- **locationX:** *The x-axis coordinate of the camera's position in world space. (type: `float`)*
 >	- **locationY:** *The y-axis coordinate of the camera's position in world space. (type: `float`)*
@@ -519,10 +519,10 @@ Params:
 > **shader:** *The id of the shader program used to render this light. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions: 
-#### shared_ptr\<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b)
+#### AmbientLight createAmbientLight(double x, double y, double z, double r, double g, double b)
 Creates a new instance of an `AmbientLight`, initialises the values of its properties and returns it.
 
-Returns a shared pointer to the light object.
+Returns a new light entity.
 
 Params:
 > **x:** *The x-axis starting coordinate of the light in world-space.* \
@@ -532,14 +532,14 @@ Params:
 > **g:** *This light's green colour value.* \
 > **b:** *This light's blue colour value.* 
 
-#### void loadLightSource(shared_ptr\<AmbientLight> &lightData)
+#### void loadLightSource(AmbientLight &lightData)
 Passes the light object's locative (x,y,z) values into the vertex shader and its' colour (r,g,b) values into the fragment shader.
 
 Params:
 > **lightData:** *A reference to the light asset you would like to render.*
 
 ### Members:
-> **AmbientLight:** *A collection of properties which make up a light asset. (type: `struct`)*
+> **AmbientLight:** *A collection of properties which make up a light entity. (type: `struct`)*
 >	- **id:** *This light's unique id. (type: `int`)*
 >	- **locationX:** *The x-axis coordinate of the light's position in world space. (type: `float`)*
 >	- **locationY:** *The y-axis coordinate of the light's position in world space. (type: `float`)*
@@ -681,3 +681,4 @@ Params:
 - **LAZARUS_GLFW_NOINIT** *GL framework wrangler failed to initialise. (Code: 304)*
 - **LAZARUS_WIN_EXCEEDS_MAX** *The requested window size is larger than the dimensions of the primary monitor. (Code: 305)*
 - **LAZARUS_AUDIO_ERROR** *An error occured in the FMOD audio backend. (Code: 401)*
+- **LAZARUS_INVALID_RADIANS** *Lazarus recieved a rotational value which exceeds 360.0. (Code: 501)*
