@@ -88,19 +88,19 @@ class Mesh
 		
 		Mesh(GLuint shader);
 		
-        shared_ptr<TriangulatedMesh> create3DAsset(string meshPath, string materialPath, string texturePath = "");
-        shared_ptr<TriangulatedMesh> createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
+        TriangulatedMesh create3DAsset(string meshPath, string materialPath, string texturePath = "");
+        TriangulatedMesh createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
-        void initialiseMesh(shared_ptr<TriangulatedMesh> &meshData);
-        void loadMesh(shared_ptr<TriangulatedMesh> &meshData);
-        void drawMesh(shared_ptr<TriangulatedMesh> &meshData);
+        void initialiseMesh(TriangulatedMesh &meshData);
+        void loadMesh(TriangulatedMesh &meshData);
+        void drawMesh(TriangulatedMesh &meshData);
 
         virtual ~Mesh();
 
     private:
-        void resolveFilepaths(shared_ptr<TriangulatedMesh> &asset, string texPath = "", string mtlPath = "", string objPath = "");
-        void setInherentProperties(shared_ptr<TriangulatedMesh> &asset);
-        void lookupUniforms(shared_ptr<TriangulatedMesh> &asset);
+        void resolveFilepaths(TriangulatedMesh &asset, string texPath = "", string mtlPath = "", string objPath = "");
+        void setInherentProperties(TriangulatedMesh &asset);
+        void lookupUniforms(TriangulatedMesh &asset);
         void checkErrors(const char *invoker);
         void releaseMesh();
 
@@ -120,8 +120,8 @@ class Mesh
         unique_ptr<MeshLoader> meshLoader;
         unique_ptr<TextureLoader> texLoader;
         
-        shared_ptr<TriangulatedMesh> triangulatedMesh;
-        shared_ptr<TriangulatedMesh> quad;
+        TriangulatedMesh triangulatedMesh;
+        TriangulatedMesh quad;
 
         GlobalsManager globals;
 

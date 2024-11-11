@@ -33,7 +33,6 @@ TextManager::TextManager(GLuint shader)
 {
     std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
     this->shaderProgram = shader;
-    this->quad = std::make_shared<Mesh::TriangulatedMesh>();
     this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
     this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
     
@@ -109,9 +108,9 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
 
         quad = meshLoader->createQuad(static_cast<float>(this->glyph.width), static_cast<float>(this->atlasY), LAZARUS_MESH_ISTEXT, this->uvL, this->uvR, this->uvH);
         
-        quad->isGlyph = 1;
-        quad->textureId = this->textureId;
-        quad->textureData = this->glyph;
+        quad.isGlyph = 1;
+        quad.textureId = this->textureId;
+        quad.textureData = this->glyph;
 
         transformer.translateMeshAsset(quad, static_cast<float>(posX + this->translation), static_cast<float>(posY), 0.0f);
         this->translation += (this->glyph.width + letterSpacing);
@@ -121,7 +120,7 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
 
     this->wordCount += 1;
 
-    this->layoutEntry = std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>>(this->wordCount, this->word);
+    this->layoutEntry = std::pair<int, std::vector<Mesh::TriangulatedMesh>>(this->wordCount, this->word);
     layout.insert(this->layoutEntry);
 
     this->translation = 0;
@@ -147,10 +146,9 @@ void TextManager::drawText(int layoutIndex)
 
     for(auto i: this->word)
     {
-        quad.reset();
         quad = i;
 
-        if((quad->modelviewUniformLocation >= 0) && (camera->projectionLocation >= 0))
+        if((quad.modelviewUniformLocation >= 0) && (camera->projectionLocation >= 0))
         {            
             cameraBuilder->loadCamera(camera);
 

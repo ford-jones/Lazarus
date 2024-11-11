@@ -43,8 +43,8 @@ class Transform
 {	
     public:
 		Transform();
-		void translateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);
-    	void rotateMeshAsset(shared_ptr<Mesh::TriangulatedMesh> &mesh, float x, float y, float z);
+		void translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
+    	void rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
 
 		void translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
 		void rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
