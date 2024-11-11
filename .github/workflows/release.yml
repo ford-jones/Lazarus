@@ -12,16 +12,15 @@ on:
 
 permissions:
   contents: write
-
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  tag: ${{ github.ref_name }}
 jobs:
   create-release:
     name: Release pushed tag
     runs-on: ubuntu-22.04
     steps:
       - name: Create release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
@@ -41,4 +40,4 @@ jobs:
       - name: Update website release notes
         shell: bash
         run: |
-          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"date": "$(date +'%Y.%m.%d%H%M%S')", "title": "${{ github.ref_name#v }}", "description": "CI release notes", "changeLog":${{ steps.readLog.outputs.data }}}' --include
+          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"date": "$(date +'%Y.%m.%d%H%M%S')", "title": "$tag", "description": "CI release notes", "changeLog":${{ steps.readLog.outputs.data }}}' --include
