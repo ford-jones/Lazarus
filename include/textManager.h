@@ -93,13 +93,13 @@ class TextManager
         std::unique_ptr<FontLoader> fontLoader;
         std::unique_ptr<Camera> cameraBuilder;
 
-        std::shared_ptr<Mesh::TriangulatedMesh> quad;
+        Mesh::TriangulatedMesh quad;
         std::shared_ptr<Camera::FixedCamera> camera;
 
-        std::vector<std::shared_ptr<Mesh::TriangulatedMesh>> word;
+        std::vector<Mesh::TriangulatedMesh> word;
         std::map<int, FileReader::Image> textures;
-        std::map<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layout;
-        std::pair<int, std::vector<std::shared_ptr<Mesh::TriangulatedMesh>>> layoutEntry;
+        std::map<int, std::vector<Mesh::TriangulatedMesh>> layout;
+        std::pair<int, std::vector<Mesh::TriangulatedMesh>> layoutEntry;
 };
 
 #endif
