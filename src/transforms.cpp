@@ -114,12 +114,12 @@ void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y,
 	return;
 };
 
-void Transform::translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z)
+void Transform::translateLightAsset(Light::AmbientLight &light, float x, float y, float z)
 {
-	light->lightPosition += vec3(x, y, z);
-	light->locationX += x;
-	light->locationY += y;
-	light->locationZ += z;
+	light.lightPosition += vec3(x, y, z);
+	light.locationX += x;
+	light.locationY += y;
+	light.locationZ += z;
 	
 	return;
 };

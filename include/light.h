@@ -26,9 +26,7 @@
 
 #include <iostream>
 #include <stdlib.h>
-#include <memory>
 
-using std::shared_ptr;
 using glm::vec3;
 
 #ifndef LAZARUS_LIGHT_H
@@ -61,12 +59,12 @@ class Light
         Light(GLuint shader);
         virtual ~Light();
 
-        shared_ptr<AmbientLight> createAmbientLight(double x, double y, double z, double r, double g, double b);
-        void loadLightSource(shared_ptr<AmbientLight> &lightData);
+        AmbientLight createAmbientLight(double x, double y, double z, double r, double g, double b);
+        void loadLightSource(AmbientLight &lightData);
 
     private:
     	GLuint shaderProgram;
-        shared_ptr<AmbientLight> ambientLight;
+        AmbientLight ambientLight;
         
 };
 

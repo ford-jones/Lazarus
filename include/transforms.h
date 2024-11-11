@@ -49,7 +49,7 @@ class Transform
 		void translateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
 		void rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
 
-		void translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z);
+		void translateLightAsset(Light::AmbientLight &light, float x, float y, float z);
 
 	private:
 		float determineUpVector(float rotation);
