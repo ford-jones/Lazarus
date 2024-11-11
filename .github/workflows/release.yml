@@ -46,9 +46,9 @@ jobs:
     steps:
       - name: Create release
         run: |
-          gh release create "$tag" \
+          gh release create "${{ env.tag }}" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="${tag#v}" \
+              --title="${{{ env.tag }}#v}" \
               --generate-notes
 
   update-blog:
@@ -64,4 +64,4 @@ jobs:
       - name: Update website release notes
         shell: bash
         run: |
-          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"date": "$(date +'%Y.%m.%d%H%M%S')", "title": "$tag", "description": "CI release notes", "changeLog":${{ steps.readLog.outputs.data }}}' --include
+          curl --request POST --url "https://lazarus-server.onrender.com/addChangeLog" --header "Content-Type: application/json" --data '{"date": "$(date +'%Y.%m.%d%H%M%S')", "title": "${{ env.tag }}", "description": "CI release notes", "changeLog":${{ steps.readLog.outputs.data }}}' --include
