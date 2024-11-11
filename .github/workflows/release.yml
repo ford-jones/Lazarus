@@ -42,7 +42,7 @@ jobs:
           
   create-release:
     permissions:
-      contents: 'read-all'  
+      contents: 'write'  
     name: Release pushed tag
     runs-on: ubuntu-22.04
     steps:
@@ -50,7 +50,7 @@ jobs:
         run: |
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
-              --title="$tag#v}" \
+              --title="$tag#v" \
               --generate-notes
 
   update-blog:
