@@ -42,7 +42,7 @@ jobs:
           
   create-release:
     permissions:
-      contents: 'read'  
+      contents: 'read-all'  
     name: Release pushed tag
     runs-on: ubuntu-22.04
     steps:
