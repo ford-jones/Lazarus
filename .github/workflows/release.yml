@@ -41,6 +41,8 @@ jobs:
           echo "${{ steps.changelog-ci.outputs.changelog }}"
           
   create-release:
+    permissions:
+      contents: 'read'  
     name: Release pushed tag
     runs-on: ubuntu-22.04
     steps:
