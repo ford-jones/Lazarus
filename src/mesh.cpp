@@ -150,61 +150,75 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
 
 void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
 {	
-    glGenVertexArrays(1, &this->VAO);
-	glBindVertexArray(this->VAO);
-
-    if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
+    if(asset.modelviewUniformLocation >= 0)
     {
-        glActiveTexture(GL_TEXTURE1);
+        glGenVertexArrays(1, &this->VAO);
+    	glBindVertexArray(this->VAO);
+
+        if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
+        {
+            glActiveTexture(GL_TEXTURE1);
+        }
+        else if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
+        {
+            if(asset.is3D == 1)
+            {
+                glActiveTexture(GL_TEXTURE2);
+            }
+            else
+            {
+                glActiveTexture(GL_TEXTURE3);
+            }
+
+            texLoader->loadFromTextureStack(asset.textureData, asset.textureId);
+        }
+
+        glGenBuffers(1, &this->VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, asset.attributes.size() * sizeof(vec3), &asset.attributes[0], GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
+        glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
+        glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
+        glEnableVertexAttribArray(2);
+
+        glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(3 * sizeof(vec3)));
+        glEnableVertexAttribArray(3);
+
+        this->checkErrors(__PRETTY_FUNCTION__);
     }
-    else if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
+    else
     {
-        if(asset.is3D == 1)
-        {
-            glActiveTexture(GL_TEXTURE2);
-        }
-        else
-        {
-            glActiveTexture(GL_TEXTURE3);
-        }
-        
-        texLoader->loadFromTextureStack(asset.textureData, asset.textureId);
-    }
-
-    glGenBuffers(1, &this->VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-
-    glBufferData(GL_ARRAY_BUFFER, asset.attributes.size() * sizeof(vec3), &asset.attributes[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(1 * sizeof(vec3)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(2 * sizeof(vec3)));
-    glEnableVertexAttribArray(2);
-
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, (4 * sizeof(vec3)), (void*)(3 * sizeof(vec3)));
-    glEnableVertexAttribArray(3);
-
-    this->checkErrors(__PRETTY_FUNCTION__);
+        globals.setExecutionState(LAZARUS_MATRIX_LOCATION_ERROR);
+    };
 	
     return;
 };
 
 void Mesh::loadMesh(Mesh::TriangulatedMesh &asset)
 {
-    glUniformMatrix4fv(asset.modelviewUniformLocation, 1, GL_FALSE, &asset.modelviewMatrix[0][0]);
-    glUniform1i(asset.is3DUniformLocation, asset.is3D);
-    glUniform1i(asset.isGlyphUniformLocation, asset.isGlyph);
-
-    if(asset.textureId != 0)
+    if(asset.modelviewUniformLocation >= 0)
     {
-        glUniform1f(asset.textureLayerUniformLocation, (asset.textureId - 1));
+        glUniformMatrix4fv(asset.modelviewUniformLocation, 1, GL_FALSE, &asset.modelviewMatrix[0][0]);
+        glUniform1i(asset.is3DUniformLocation, asset.is3D);
+        glUniform1i(asset.isGlyphUniformLocation, asset.isGlyph);
+    
+        if(asset.textureId != 0)
+        {
+            glUniform1f(asset.textureLayerUniformLocation, (asset.textureId - 1));
+        }
+    
+        this->checkErrors(__PRETTY_FUNCTION__);
     }
-
-    this->checkErrors(__PRETTY_FUNCTION__);
+    else
+    {
+        globals.setExecutionState(LAZARUS_MATRIX_LOCATION_ERROR);
+    };
 
     return;
 };

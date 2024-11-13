@@ -81,5 +81,6 @@ static const int    LAZARUS_GLFW_NOINIT                 = 304;
 static const int    LAZARUS_WIN_EXCEEDS_MAX             = 305;
 static const int    LAZARUS_AUDIO_ERROR                 = 401;
 static const int    LAZARUS_INVALID_RADIANS             = 501;
+static const int    LAZARUS_MATRIX_LOCATION_ERROR       = 502;
 
 #endif
