@@ -98,10 +98,17 @@ Camera::FixedCamera Camera::createOrthoCam(int arX, int arY)
 
 void Camera::loadCamera(Camera::FixedCamera &cameraData)
 {
-    glUniformMatrix4fv     (cameraData.viewLocation, 1, GL_FALSE, &cameraData.viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
-    glUniformMatrix4fv     (cameraData.projectionLocation, 1, GL_FALSE, &cameraData.projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
-    
-    glUniform1i(glGetUniformLocation(this->shader, "usesPerspective"), cameraData.usesPerspective);
+    if(cameraData.projectionLocation >= 0)
+    {
+        glUniformMatrix4fv     (cameraData.viewLocation, 1, GL_FALSE, &cameraData.viewMatrix[0][0]);                                                      //  Pass view-uniform data into the shader program
+        glUniformMatrix4fv     (cameraData.projectionLocation, 1, GL_FALSE, &cameraData.projectionMatrix[0][0]);                                          //  Pass projection-uniform data into the shader program
+
+        glUniform1i(glGetUniformLocation(this->shader, "usesPerspective"), cameraData.usesPerspective);
+    }
+    else
+    {
+        globals.setExecutionState(LAZARUS_MATRIX_LOCATION_ERROR);
+    };
 };
 
 Camera::~Camera()
