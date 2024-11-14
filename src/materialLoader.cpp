@@ -34,7 +34,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     texCount = 0;
 
     file.open(materialPath.c_str());
-    char identifier[128];
     
     if( !file.is_open() )
     {

@@ -179,7 +179,7 @@ vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char d
 
 void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes)
 {
-    for( unsigned int i = 0; i < numOfAttributes; i++ )
+    for( int i = 0; i < numOfAttributes; i++ )
     {
 
         unsigned int vertexIndex    =   vertexIndices[i];
