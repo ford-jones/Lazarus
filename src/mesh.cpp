@@ -27,6 +27,8 @@ Mesh::Mesh(GLuint shader)
 	this->finder = std::make_unique<FileReader>();
     this->texLoader = std::make_unique<TextureLoader>();
 
+    this->triangulatedMesh = {};
+
 	meshLoader = nullptr;
 
     this->vertexAttributes = {};
@@ -40,6 +42,7 @@ Mesh::Mesh(GLuint shader)
 
 Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
+    this->triangulatedMesh = {};
     this->meshLoader = std::make_unique<MeshLoader>();
 
     triangulatedMesh.is3D = 1;
@@ -56,14 +59,14 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
     meshLoader->parseWavefrontObj(
         this->vertexAttributes,
         this->diffuseColors,
-        this->xyzTextureId,
+        triangulatedMesh.textureId,
         triangulatedMesh.textureData,
         triangulatedMesh.meshFilepath.c_str(),
         triangulatedMesh.materialFilepath.c_str(),
         triangulatedMesh.textureFilepath.c_str()
     );
 
-    triangulatedMesh.textureId = this->xyzTextureId;
+    // triangulatedMesh.textureId = this->xyzTextureId;
 
     this->setInherentProperties(triangulatedMesh);
 
@@ -139,8 +142,8 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
 
         glActiveTexture(GL_TEXTURE3);
 
-        texLoader->extendTextureStack(quad.textureData, this->xyTextureId);
-        quad.textureId = this->xyTextureId;
+        texLoader->extendTextureStack(quad.textureData.width, quad.textureData.height, quad.textureId);
+        // quad.textureId = this->xyTextureId;
     };
 
     this->setInherentProperties(quad);

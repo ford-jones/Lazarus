@@ -109,7 +109,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         this->fileReader = std::make_unique<FileReader>();
         
         imageData = fileReader->readFromImage(texturePath);
-		textureLoader->extendTextureStack(imageData, textureId);
+		textureLoader->extendTextureStack(imageData.width, imageData.height, textureId);
     } 
     else
     {

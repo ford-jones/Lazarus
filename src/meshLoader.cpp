@@ -25,13 +25,11 @@ MeshLoader::MeshLoader()
 	this->materialIdentifierIndex	=	0;
 	this->triangleCount				=	0;
 
-	this->matFinder 				= 	nullptr;
 	this->matLoader 				=	nullptr;
 };
 
 bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
-	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
 	
     this->materialIdentifierIndex = 0;
@@ -50,19 +48,6 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
     {
         switch (currentLine[0])
         {
-        case 'm':
-            /* ============================================
-                materialPath should be optional.
-                The path / filename can be gathered by
-                reading the file. The materialPath argument
-                should only need to be used as an overide.
-
-                For instance if the filename was changed 
-                since export.
-            ================================================ */
-            this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);
-            break;
-        
         case 'v':
             if ( currentLine[1] == ' ' )
             {
@@ -137,16 +122,14 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         file.close();
         this->materialData = {materialIdentifierIndex, triangleCount};
 		this->materialBuffer.push_back(this->materialData);
-        		
-        matFinder.reset();
 
         if((texturePath != LAZARUS_MESH_NOTEX) && ((texturePath != LAZARUS_MESH_ISTEXT)))
         {
-	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData, texturePath);
+	        matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData, texturePath);
         } 
         else
         {
-            matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData);
+            matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData);
         }
     }
 

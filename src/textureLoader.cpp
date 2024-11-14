@@ -38,7 +38,7 @@ TextureLoader::TextureLoader()
 	this->offset = 0;
 };
 
-void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &textureLayer)
+void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, GLuint &textureLayer)
 {
 	/* =========================================================================
 		Note that the value given to textureLayer by glGenTextures serves a 
@@ -56,15 +56,13 @@ void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &text
 	glGenTextures(1, &textureLayer);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
-	this->image = imageData;
-
-	this->mipCount = this->calculateMipLevels(this->image.width, this->image.height);
+	this->mipCount = this->calculateMipLevels(maxWidth, maxHeight);
 
 	glTexStorage3D(
 		GL_TEXTURE_2D_ARRAY, 								//	target
 		this->mipCount, 									//	the expected number of levels (mips) found in each layer
 		GL_RGBA8, 											//	gl internal size to store texel data
-		this->image.width, this->image.height, 				// 	expected (max) image width and height
+		maxWidth, maxHeight, 				// 	expected (max) image width and height
 		textureLayer 										// 	the number of layers to store (max array size)
 	);
 	/* ======================================
@@ -84,12 +82,14 @@ void TextureLoader::extendTextureStack(FileReader::Image imageData, GLuint &text
 
 void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer)
 {	
-	if(imageData.pixelData != NULL)
-	{
-		this->image.width = imageData.width;
-		this->image.height = imageData.height;
-		this->image.pixelData = imageData.pixelData;
+	this->image.width = imageData.width;
+	this->image.height = imageData.height;
+	this->image.pixelData = imageData.pixelData;
 
+	if(this->image.pixelData != NULL)
+	{
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+		
 		glTexSubImage3D(
 			GL_TEXTURE_2D_ARRAY, 
 			0, 														// 	mipmap level (leave as 0 if openGL is generating the mipmaps)
@@ -120,8 +120,6 @@ void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &text
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
 
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
 	textureId = this->bitmapTexture;
 	/* ========================================================================================
 		Allocate space for the texture atlas. The texture atlas hasn't been constructed yet so
@@ -149,6 +147,9 @@ void TextureLoader::loadBitmapToTexture(FileReader::Image imageData)
 		texture at an offset equal to the current width of the texture
 		atlas.
 	=================================================================== */
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
 	glTexSubImage2D(
 		GL_TEXTURE_2D, 
 		0, 
