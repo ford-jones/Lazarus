@@ -49,6 +49,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         switch (currentLine[0])
         {
         case 'v':
+            /* =============================================
+                v = Vertex Position Coordinates (location)
+            ================================================ */
             if ( currentLine[1] == ' ' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -59,7 +62,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
                 this->tempVertexPositions.push_back(this->vertex);
             } 
-
+            /* =============================================
+                vt = Vertex Texture Coordinates (UV / ST)
+            ================================================ */
             else if ( currentLine[1] == 't' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -69,7 +74,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
                 this->tempUvs.push_back(this->uv);
             }
-
+            /* ==============================================
+                vn = Vertex Normal coordinates (direction)
+            ================================================= */
             else if ( currentLine[1] == 'n' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -81,7 +88,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
                 this->tempNormals.push_back(this->normal);
             }
             break;
-
+        /* ==============================================
+            f = Face
+        ================================================= */
         case 'f':
             this->triangleCount += 1;
 
@@ -91,6 +100,18 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
                 stringstream ssJ(i);
                 string tokenJ;
 
+                /* ============================================
+                    Unlike the other identifiers on the current
+                    line which are folliowed by xyz coordinates; 
+                    values following a face identifier contain 
+                    the indexes describing which v, vt and vn
+                    lines define the properties of *this* face.
+
+                    Note / TODO:
+                    Some editors deliminate face data with a 
+                    dash character '-', others use whitespace
+                    ' '. Blender uses a forward-slash '/'.
+                =============================================== */
                 while(getline(ssJ, tokenJ, '/')) 
                 {
                     if (tokenJ != "f") 
@@ -103,7 +124,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
             this->constructTriangle();
 
             break;
-
+        /* ===============================================
+            usemtl = Use material identifier
+        ================================================== */
         case 'u':
             this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);

@@ -34,17 +34,20 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     texCount = 0;
 
     file.open(materialPath.c_str());
-    char identifier[128];                                                                                           //  Store for the first string of each line from the loaded file
+    char identifier[128];
     
     if( !file.is_open() )
-    {                                                                                                               //  If, the file has a null value                                 
+    {
         globals.setExecutionState(LAZARUS_FILE_UNREADABLE);
-        return false;                                                                                               //  Return from the function, exit the thread
+        return false;
     }   
 
     while( file.getline(currentLine, 256) ) 
     {        
-        if( (currentLine[0] == 'K') && (currentLine[1] == 'd') )                                                                        // If the first string of the current line is "Kd" the line holds a set of diffuse colors
+        /* =============================================
+            Kd = diffuse colors
+        ================================================ */
+        if( (currentLine[0] == 'K') && (currentLine[1] == 'd') )
         {
             diffuseCount += 1;
             for(auto i: data)
@@ -57,7 +60,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
                     stringstream ss(currentString);
                     string token;
 
-                    vector<string> tokenStore;                                     //  Continue reading the line, the next 3 strings are mapped to a diffuse object in order of r,g,b
+                    vector<string> tokenStore;
                     while(getline(ss, token, ' ')) 
                     {
                         tokenStore.push_back(token);
@@ -66,14 +69,23 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
                     diffuse.r = stof(tokenStore[1]);
                     diffuse.g = stof(tokenStore[2]);
                     diffuse.b = stof(tokenStore[3]);
+                    /* ====================================================
+                        Push the current diffuse object into the out
+                        out parameter N times.
 
-    	            for(int j = 0; j < faceCount * 3; j++)                                                       //  Where n = the number of vertex's using the color (number of triangles * 3)
+                        N = The number of vertices which use this color.
+                        (faceCount * 3)
+                    ======================================================= */
+    	            for(int j = 0; j < faceCount * 3; j++)
     	            {
-    	                out.push_back(diffuse);                                                                          //  Push the current diffuse object into the out array n times
+    	                out.push_back(diffuse);
     	            };
     	        };        
             };
         }
+        /* ==========================================
+            map_Kd = Image texture
+        ============================================= */
         if( ((currentLine[0] == 'm') && (currentLine[1] == 'a') && (currentLine[2] == 'p')))
         {
             texCount += 1;
@@ -113,6 +125,12 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     } 
     else
     {
+        /* ========================================
+            Layers of the sampler array are aren't 
+            zero-indexed. Texture id's of 0 are 
+            another indicator that no texture is in
+            use.
+        =========================================== */
         textureId = 0;
 
         imageData.width = 0;
@@ -120,7 +138,7 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         imageData.pixelData = NULL;
     }
 
-    if (file.eof())                                                                                             //  If, the scanner has reached the end of the file
+    if (file.eof())
     {
         file.close();
     }
