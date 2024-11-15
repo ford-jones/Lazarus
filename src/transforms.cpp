@@ -60,7 +60,7 @@ void Transform::rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, 
     return;
 };
 
-void Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z)
+void Transform::translateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z)
 {
 	/* =========================================
 		TODO:
@@ -69,28 +69,28 @@ void Transform::translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, fl
 		Speed usage here is silly, make it a user input
 		glm::lookAt() helper function
 	============================================ */
-	camera->locationX += x;
-	camera->locationY += y;
-	camera->locationZ += z;
+	camera.locationX += x;
+	camera.locationY += y;
+	camera.locationZ += z;
 
 	float speed = x + y + z;
 
 	if(x != 0.0)
 	{
-		camera->cameraPosition += (glm::normalize(glm::cross(camera->direction, camera->upVector)) * speed);
+		camera.cameraPosition += (glm::normalize(glm::cross(camera.direction, camera.upVector)) * speed);
 	}
 
 	if(z != 0.0)
 	{
-		camera->cameraPosition += (speed * camera->direction);
+		camera.cameraPosition += (speed * camera.direction);
 	}
 
-	camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);
+	camera.viewMatrix = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);
 	
 	return;
 };
 
-void Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z)
+void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z)
 {	
 	if((x > 360.0f) || (x < -360.0f))
 	{
@@ -99,27 +99,27 @@ void Transform::rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float
 	else
 	{
 		this->up = this->determineUpVector(x);
-		camera->upVector = glm::vec3(0.0f, this->up, 0.0f);
+		camera.upVector = glm::vec3(0.0f, this->up, 0.0f);
 
 		glm::vec3 temp;
 		temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
 		temp.y = sin(glm::radians(-x));
 		temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 
 
-		camera->direction = temp;
+		camera.direction = temp;
 
-		camera->viewMatrix = glm::lookAt(camera->cameraPosition, (camera->cameraPosition + camera->direction), camera->upVector);              //  Define the view-matrix through the camera properties	
+		camera.viewMatrix = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties	
 	}
 	
 	return;
 };
 
-void Transform::translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z)
+void Transform::translateLightAsset(Light::AmbientLight &light, float x, float y, float z)
 {
-	light->lightPosition += vec3(x, y, z);
-	light->locationX += x;
-	light->locationY += y;
-	light->locationZ += z;
+	light.lightPosition += vec3(x, y, z);
+	light.locationX += x;
+	light.locationY += y;
+	light.locationZ += z;
 	
 	return;
 };

@@ -26,7 +26,7 @@ OBJECTS = src/globalsManager.o src/shader.o src/light.o src/camera.o \
 					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
 					src/WindowManager.o src/fileReader.o src/eventManager.o \
 					src/fpsCounter.o src/imageLoader.o src/imageResize.o src/soundManager.o \
-					src/textManager.o src/fontLoader.o
+					src/textManager.o src/fontLoader.o src/constants.o
 
 run : build
 	$(shell mv src/*.o build/)
@@ -53,6 +53,7 @@ imageLoader.o := /usr/local/include/stb_image.h
 imageResize.o := /usr/local/include/stb_image_resize.h
 textManager.o := include/textManager.h
 fontLoader.o := include/fontLoader.h
+constants.o := include/constants.h
 
 clean : 
 	rm -R lib/ && rm -R build/

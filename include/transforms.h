@@ -46,10 +46,10 @@ class Transform
 		void translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
     	void rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
 
-		void translateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
-		void rotateCameraAsset(shared_ptr<Camera::FixedCamera> &camera, float x, float y, float z);
+		void translateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
+		void rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
 
-		void translateLightAsset(shared_ptr<Light::AmbientLight> &light, float x, float y, float z);
+		void translateLightAsset(Light::AmbientLight &light, float x, float y, float z);
 
 	private:
 		float determineUpVector(float rotation);

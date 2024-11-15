@@ -54,7 +54,7 @@ class Mesh
     public:
         struct TriangulatedMesh
         {
-            int textureId;
+            GLuint textureId;
 
             int numOfVertices;
             int numOfFaces;
@@ -76,7 +76,7 @@ class Mesh
 
             mat4 modelviewMatrix;                                                                                    //  A modelview matrix matrice passed into the shader program as a uniform
 
-            GLuint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
+            GLint modelviewUniformLocation;                                                                        //  The location / index of the modelview matrix inside the vert shader program
             GLint samplerUniformLocation;
             GLint textureLayerUniformLocation;
             GLint is3DUniformLocation;

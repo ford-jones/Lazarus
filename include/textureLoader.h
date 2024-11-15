@@ -47,7 +47,7 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void extendTextureStack(FileReader::Image imageData, GLuint &textureLayer);
+		void extendTextureStack(int maxWidth, int maxHeight, GLuint &textureLayer);
 		void loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer);
 
 		void storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureLayer);

@@ -35,7 +35,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "fileReader.h"
 #include "materialLoader.h"
 
 using std::unique_ptr;
@@ -59,8 +58,6 @@ class MeshLoader
         vector<vec2> tempUvs;
         vector<vec3> tempNormals;
         vector<vec3> tempDiffuse;
-
-        string foundMaterial;
     	
     	MeshLoader();	
     	    
@@ -95,7 +92,6 @@ class MeshLoader
         vec2 uv;
         vec3 normal;
 
-		unique_ptr<FileReader> matFinder;
 		unique_ptr<MaterialLoader> matLoader;
 
         GlobalsManager globals;

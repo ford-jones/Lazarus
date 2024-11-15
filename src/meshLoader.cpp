@@ -25,13 +25,11 @@ MeshLoader::MeshLoader()
 	this->materialIdentifierIndex	=	0;
 	this->triangleCount				=	0;
 
-	this->matFinder 				= 	nullptr;
 	this->matLoader 				=	nullptr;
 };
 
 bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
-	this->matFinder = std::make_unique<FileReader>();
 	this->matLoader = std::make_unique<MaterialLoader>();
 	
     this->materialIdentifierIndex = 0;
@@ -50,20 +48,10 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
     {
         switch (currentLine[0])
         {
-        case 'm':
-            /* ============================================
-                materialPath should be optional.
-                The path / filename can be gathered by
-                reading the file. The materialPath argument
-                should only need to be used as an overide.
-
-                For instance if the filename was changed 
-                since export.
-            ================================================ */
-            this->foundMaterial = matFinder->relativePathToAbsolute(materialPath);
-            break;
-        
         case 'v':
+            /* =============================================
+                v = Vertex Position Coordinates (location)
+            ================================================ */
             if ( currentLine[1] == ' ' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -74,7 +62,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
                 this->tempVertexPositions.push_back(this->vertex);
             } 
-
+            /* =============================================
+                vt = Vertex Texture Coordinates (UV / ST)
+            ================================================ */
             else if ( currentLine[1] == 't' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -84,7 +74,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
 
                 this->tempUvs.push_back(this->uv);
             }
-
+            /* ==============================================
+                vn = Vertex Normal coordinates (direction)
+            ================================================= */
             else if ( currentLine[1] == 'n' )
             {
                 coordinates = splitTokensFromLine(currentLine, ' ');
@@ -96,7 +88,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
                 this->tempNormals.push_back(this->normal);
             }
             break;
-
+        /* ==============================================
+            f = Face
+        ================================================= */
         case 'f':
             this->triangleCount += 1;
 
@@ -106,6 +100,18 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
                 stringstream ssJ(i);
                 string tokenJ;
 
+                /* ============================================
+                    Unlike the other identifiers on the current
+                    line which are folliowed by xyz coordinates; 
+                    values following a face identifier contain 
+                    the indexes describing which v, vt and vn
+                    lines define the properties of *this* face.
+
+                    Note / TODO:
+                    Some editors deliminate face data with a 
+                    dash character '-', others use whitespace
+                    ' '. Blender uses a forward-slash '/'.
+                =============================================== */
                 while(getline(ssJ, tokenJ, '/')) 
                 {
                     if (tokenJ != "f") 
@@ -118,7 +124,9 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
             this->constructTriangle();
 
             break;
-
+        /* ===============================================
+            usemtl = Use material identifier
+        ================================================== */
         case 'u':
             this->materialData = {materialIdentifierIndex, triangleCount};
 			this->materialBuffer.push_back(this->materialData);
@@ -137,16 +145,14 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         file.close();
         this->materialData = {materialIdentifierIndex, triangleCount};
 		this->materialBuffer.push_back(this->materialData);
-        		
-        matFinder.reset();
 
         if((texturePath != LAZARUS_MESH_NOTEX) && ((texturePath != LAZARUS_MESH_ISTEXT)))
         {
-	        matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData, texturePath);
+	        matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData, texturePath);
         } 
         else
         {
-            matLoader->loadMaterial(outDiffuse, materialBuffer, foundMaterial, outTextureId, imageData);
+            matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData);
         }
     }
 
@@ -173,7 +179,7 @@ vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char d
 
 void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes)
 {
-    for( unsigned int i = 0; i < numOfAttributes; i++ )
+    for( int i = 0; i < numOfAttributes; i++ )
     {
 
         unsigned int vertexIndex    =   vertexIndices[i];
