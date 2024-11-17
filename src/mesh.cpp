@@ -173,7 +173,7 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
                 glActiveTexture(GL_TEXTURE3);
             }
 
-            texLoader->loadFromTextureStack(asset.textureData, asset.textureId);
+            texLoader->loadImageToTextureStack(asset.textureData, asset.textureId);
         }
 
         glGenBuffers(1, &this->VBO);

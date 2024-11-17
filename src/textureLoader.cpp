@@ -80,7 +80,7 @@ void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, GLuint &text
 	return;
 };
 
-void TextureLoader::loadFromTextureStack(FileReader::Image imageData, GLuint textureLayer)
+void TextureLoader::loadImageToTextureStack(FileReader::Image imageData, GLuint textureLayer)
 {	
 	this->image.width = imageData.width;
 	this->image.height = imageData.height;
