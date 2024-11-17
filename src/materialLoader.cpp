@@ -28,7 +28,7 @@ MaterialLoader::MaterialLoader()
     texCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, FileReader::Image &imageData, string texturePath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, FileReader::Image imageData, string texturePath)
 {
     diffuseCount = 0;
     texCount = 0;
@@ -117,9 +117,9 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
     if((texturePath != LAZARUS_MESH_NOTEX) && (texturePath != LAZARUS_MESH_ISTEXT))
     {
 	    this->textureLoader = std::make_unique<TextureLoader>();
-        this->fileReader = std::make_unique<FileReader>();
+        // this->fileReader = std::make_unique<FileReader>();
         
-        imageData = fileReader->readFromImage(texturePath);
+        // imageData = fileReader->readFromImage(texturePath);
 		textureLoader->extendTextureStack(imageData.width, imageData.height, textureId);
     } 
     else

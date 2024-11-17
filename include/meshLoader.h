@@ -65,7 +65,7 @@ class MeshLoader
             vector<vec3> &outAttributes,
             vector<vec3> &outDiffuse,
             GLuint &outTextureId,
-            FileReader::Image &imageData,
+            FileReader::Image imageData,
             const char *meshPath,
             const char *materialPath,
             const char *texturePath = ""

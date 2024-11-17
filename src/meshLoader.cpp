@@ -28,7 +28,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image &imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
 {
 	this->matLoader = std::make_unique<MaterialLoader>();
 	

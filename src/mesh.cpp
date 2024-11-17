@@ -51,7 +51,7 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
     this->lookupUniforms(triangulatedMesh);
 
     glUniform1i(triangulatedMesh.samplerUniformLocation, 2);
-
+    
     this->resolveFilepaths(triangulatedMesh, texturePath, materialPath, meshPath);
 
     glActiveTexture(GL_TEXTURE2);
@@ -264,10 +264,12 @@ void Mesh::resolveFilepaths(Mesh::TriangulatedMesh &asset, string texPath, strin
     else if(texPath != "")
     {
 	    asset.textureFilepath = finder->relativePathToAbsolute(texPath);
+        asset.textureData = finder->readFromImage(asset.textureFilepath);
     }
     else
     {
     	asset.textureFilepath = LAZARUS_MESH_NOTEX;
+        asset.textureData = {pixelData: NULL, height: 0, width: 0};
     };
 
     return;
