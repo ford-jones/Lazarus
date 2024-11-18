@@ -66,12 +66,26 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
         triangulatedMesh.textureFilepath.c_str()
     );
 
-    // triangulatedMesh.textureId = this->xyzTextureId;
-
     this->setInherentProperties(triangulatedMesh);
 
     return triangulatedMesh;
 };
+
+/* ========================================================================================
+    Note: There is some strange behaviour with this function.
+    If a single instance of *this* class is responsible for creating quads as well as 3D
+    assets - a texturing artifact will present itself when the user *creates* the quad 
+    prior to creating the 3D assets. (i.e. createQuad is called before create3DAsset).
+
+    At the quads origin in worldspace, a "shadow" of the quad will render using texture 
+    number 1 off of the xyzTextureStack. Not sure why.
+
+    This is *very* similar to the behaviour seen on MacOS and is possibly related. It might
+    just be that the bug doesn't present itself on linux.
+
+    Worth mentioning that this doesn't seem to happen with glyphs - which are wrapped over
+    a quad under the hood.
+=========================================================================================== */
 
 Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string texturePath, float uvXL, float uvXR, float uvY)
 {
@@ -143,7 +157,6 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
         glActiveTexture(GL_TEXTURE3);
 
         texLoader->extendTextureStack(quad.textureData.width, quad.textureData.height, quad.textureId);
-        // quad.textureId = this->xyTextureId;
     };
 
     this->setInherentProperties(quad);
