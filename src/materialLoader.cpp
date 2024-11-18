@@ -114,29 +114,6 @@ bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,s
         }
     };
 
-    if((texturePath != LAZARUS_MESH_NOTEX) && (texturePath != LAZARUS_MESH_ISTEXT))
-    {
-	    this->textureLoader = std::make_unique<TextureLoader>();
-        // this->fileReader = std::make_unique<FileReader>();
-        
-        // imageData = fileReader->readFromImage(texturePath);
-		textureLoader->extendTextureStack(imageData.width, imageData.height, textureId);
-    } 
-    else
-    {
-        /* ========================================
-            Layers of the sampler array are aren't 
-            zero-indexed. Texture id's of 0 are 
-            another indicator that no texture is in
-            use.
-        =========================================== */
-        textureId = 0;
-
-        imageData.width = 0;
-        imageData.height = 0;
-        imageData.pixelData = NULL;
-    }
-
     if (file.eof())
     {
         file.close();

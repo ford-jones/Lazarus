@@ -27,12 +27,8 @@ Mesh::Mesh(GLuint shader)
 	this->finder = std::make_unique<FileReader>();
     this->texLoader = std::make_unique<TextureLoader>();
 
-    this->triangulatedMesh = {};
-
 	meshLoader = nullptr;
-
-    this->vertexAttributes = {};
-    this->diffuseColors = {};
+    this->mesh = {};
     
     this->xyTextureId = 0;
     this->xyzTextureId = 0;
@@ -42,33 +38,33 @@ Mesh::Mesh(GLuint shader)
 
 Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
-    this->triangulatedMesh = {};
+    this->mesh = {};
+    
     this->meshLoader = std::make_unique<MeshLoader>();
 
-    triangulatedMesh.is3D = 1;
-    triangulatedMesh.isGlyph = 0;
+    mesh.is3D = 1;
+    mesh.isGlyph = 0;
 
-    this->lookupUniforms(triangulatedMesh);
+    this->lookupUniforms(mesh);
 
-    glUniform1i(triangulatedMesh.samplerUniformLocation, 2);
+    glUniform1i(mesh.samplerUniformLocation, 2);
     
-    this->resolveFilepaths(triangulatedMesh, texturePath, materialPath, meshPath);
-
     glActiveTexture(GL_TEXTURE2);
+    this->resolveFilepaths(mesh, texturePath, materialPath, meshPath);
     
     meshLoader->parseWavefrontObj(
-        this->vertexAttributes,
-        this->diffuseColors,
-        triangulatedMesh.textureId,
-        triangulatedMesh.textureData,
-        triangulatedMesh.meshFilepath.c_str(),
-        triangulatedMesh.materialFilepath.c_str(),
-        triangulatedMesh.textureFilepath.c_str()
+        mesh.attributes,
+        mesh.diffuse,
+        mesh.textureId,
+        mesh.textureData,
+        mesh.meshFilepath.c_str(),
+        mesh.materialFilepath.c_str(),
+        mesh.textureFilepath.c_str()
     );
 
-    this->setInherentProperties(triangulatedMesh);
+    this->setInherentProperties(mesh);
 
-    return triangulatedMesh;
+    return mesh;
 };
 
 /* ========================================================================================
@@ -89,18 +85,21 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
 
 Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string texturePath, float uvXL, float uvXR, float uvY)
 {
-    quad.is3D = 0;
-    quad.isGlyph = 0;
+    this->mesh = {};
 
-    this->lookupUniforms(quad);
+    mesh.is3D = 0;
+    mesh.isGlyph = 0;
 
-    glUniform1i(quad.samplerUniformLocation, 3);
+    this->lookupUniforms(mesh);
+
+    glUniform1i(mesh.samplerUniformLocation, 3);
     
-    this->resolveFilepaths(quad, texturePath);
+    glActiveTexture(GL_TEXTURE3);
+    this->resolveFilepaths(mesh, texturePath);
 
     /* ==========================================================
         If the UV params aren't their default values (0.0) then
-        this quad is being created for a glyph which needs to be 
+        this mesh is being created for a glyph which needs to be 
         looked up in the texture atlas.
 
         Otherwise it's a generic sprite.
@@ -111,7 +110,7 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
     /* ======================================================================================================
             Vertex positions,           Diffuse colors,             Normals,                    UVs 
     ========================================================================================================= */
-        this->vertexAttributes = {                                                                                          
+        mesh.attributes = {                                                                                          
             vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
             vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
             vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
@@ -131,7 +130,7 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
     }
     else
     {
-        this->vertexAttributes = {
+        mesh.attributes = {
             vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
             vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
             vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 1.0f, 0.0f),
@@ -148,20 +147,11 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
             vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(1.0f, 0.0f, 0.0f),
             vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
         };
-    }
-
-    if((quad.textureFilepath != LAZARUS_MESH_NOTEX) && (quad.textureFilepath != LAZARUS_MESH_ISTEXT))
-    {
-        quad.textureData = finder->readFromImage(quad.textureFilepath);
-
-        glActiveTexture(GL_TEXTURE3);
-
-        texLoader->extendTextureStack(quad.textureData.width, quad.textureData.height, quad.textureId);
     };
 
-    this->setInherentProperties(quad);
+    this->setInherentProperties(mesh);
 
-    return quad;
+    return mesh;
 }
 
 void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
@@ -278,9 +268,17 @@ void Mesh::resolveFilepaths(Mesh::TriangulatedMesh &asset, string texPath, strin
     {
 	    asset.textureFilepath = finder->relativePathToAbsolute(texPath);
         asset.textureData = finder->readFromImage(asset.textureFilepath);
+        texLoader->extendTextureStack(asset.textureData.width, asset.textureData.height, asset.textureId);
     }
     else
     {
+        /* ========================================
+            Layers of the sampler array are aren't 
+            zero-indexed. Texture id's of 0 are 
+            another indicator that no texture is in
+            use.
+        =========================================== */
+        asset.textureId = 0;
     	asset.textureFilepath = LAZARUS_MESH_NOTEX;
         asset.textureData = {pixelData: NULL, height: 0, width: 0};
     };
@@ -290,8 +288,6 @@ void Mesh::resolveFilepaths(Mesh::TriangulatedMesh &asset, string texPath, strin
 
 void Mesh::setInherentProperties(Mesh::TriangulatedMesh &asset)
 {
-    asset.attributes = this->vertexAttributes;
-
     asset.locationX = 0;
     asset.locationY = 0;
     asset.locationZ = 0;

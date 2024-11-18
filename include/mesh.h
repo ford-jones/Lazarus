@@ -58,8 +58,11 @@ class Mesh
 
             int numOfVertices;
             int numOfFaces;
-            //	TODO:
-            //  add material count
+            /* ===============================
+            	TODO | Things to add:
+                - Material count
+                - VBO & VAO (persisted)
+            ================================== */
             
             string meshFilepath;
             string materialFilepath;
@@ -106,9 +109,6 @@ class Mesh
 
         int errorCode;
 
-        vector<vec3> vertexAttributes;
-        vector<vec3> diffuseColors;                                                               //  Buffer to store diffusion color data
-
         GLuint xyzTextureId;
         GLuint xyTextureId;
 
@@ -120,8 +120,7 @@ class Mesh
         unique_ptr<MeshLoader> meshLoader;
         unique_ptr<TextureLoader> texLoader;
         
-        TriangulatedMesh triangulatedMesh;
-        TriangulatedMesh quad;
+        TriangulatedMesh mesh;
 
         GlobalsManager globals;
 
