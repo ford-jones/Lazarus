@@ -68,13 +68,13 @@ class SoundManager
 		SoundManager();
 
 		void initialise();
-		shared_ptr<Audio> createAudio(string filepath, bool is3D = false, int loopCount = 0);
-		void loadAudio(shared_ptr<Audio> &audioIn);
+		Audio createAudio(string filepath, bool is3D = false, int loopCount = 0);
+		void loadAudio(Audio &audioIn);
 
-		void playAudio(shared_ptr<Audio> &audioIn);
-		void pauseAudio(shared_ptr<Audio> &audioIn);
+		void playAudio(Audio &audioIn);
+		void pauseAudio(Audio &audioIn);
 
-		void updateSourceLocation(shared_ptr<Audio> &audioIn, float x, float y, float z);
+		void updateSourceLocation(Audio &audioIn, float x, float y, float z);
 		void updateListenerLocation(float x, float y, float z);
 
 		virtual ~SoundManager();
@@ -111,7 +111,7 @@ class SoundManager
 		vector<AudioData> audioStore;
 		AudioData audioData;
 
-		shared_ptr<Audio> audioOut;
+		Audio audioOut;
 
 		GlobalsManager globals;
 };

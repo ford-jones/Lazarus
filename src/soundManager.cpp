@@ -22,7 +22,7 @@ SoundManager::SoundManager()
 {
     std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
-	this->audioOut = nullptr;
+	this->audioOut = {};
 	this->reader = nullptr;
 	
 	this->system = NULL;
@@ -46,6 +46,10 @@ SoundManager::SoundManager()
 void SoundManager::initialise()
 {
 	this->result = FMOD::System_Create(&this->system);
+	/* ==============================================
+		Initialise the system with a right-handed 
+		coordinate system, the same as OpenGL's
+	================================================= */
 	this->result = system->init(512, FMOD_INIT_3D_RIGHTHANDED, 0);
 
 	this->result = system->createChannelGroup("lazarusGroup", &audioData.group);
@@ -53,32 +57,33 @@ void SoundManager::initialise()
 	this->checkErrors(this->result);
 };
 
-shared_ptr<SoundManager::Audio> SoundManager::createAudio(string filepath, bool is3D, int loopCount)
+SoundManager::Audio SoundManager::createAudio(string filepath, bool is3D, int loopCount)
 {
-	this->audioOut = std::make_shared<SoundManager::Audio>();
+	this->audioOut = {};
+
 	this->reader = std::make_unique<FileReader>();
 
 	srand(time((0)));
-	audioOut->id = 1 + (rand() % 2147483647);
+	audioOut.id = 1 + (rand() % 2147483647);
 
-	audioOut->sourceLocationX = 0.0f;
-	audioOut->sourceLocationY = 0.0f;
-	audioOut->sourceLocationZ = 0.0f;
+	audioOut.sourceLocationX = 0.0f;
+	audioOut.sourceLocationY = 0.0f;
+	audioOut.sourceLocationZ = 0.0f;
 
-	audioOut->path = reader->relativePathToAbsolute(filepath);
-	audioOut->is3D = is3D;
-	audioOut->loopCount = loopCount;
-	audioOut->isPaused = true;
-	audioOut->audioIndex = 0;
+	audioOut.path = reader->relativePathToAbsolute(filepath);
+	audioOut.is3D = is3D;
+	audioOut.loopCount = loopCount;
+	audioOut.isPaused = true;
+	audioOut.audioIndex = 0;
 
 	return audioOut;
 };
 
-void SoundManager::loadAudio(shared_ptr<SoundManager::Audio> &audioIn)
+void SoundManager::loadAudio(SoundManager::Audio &audioIn)
 {	
-	(audioIn->is3D == true) 
-	? this->result = system->createSound(audioIn->path.c_str(), FMOD_3D, NULL, &this->audioData.sound) 
-	: this->result = system->createSound(audioIn->path.c_str(), FMOD_DEFAULT, NULL, &this->audioData.sound);
+	(audioIn.is3D == true) 
+	? this->result = system->createSound(audioIn.path.c_str(), FMOD_3D, NULL, &this->audioData.sound) 
+	: this->result = system->createSound(audioIn.path.c_str(), FMOD_DEFAULT, NULL, &this->audioData.sound);
 	
 	this->checkErrors(this->result);
 	
@@ -86,10 +91,10 @@ void SoundManager::loadAudio(shared_ptr<SoundManager::Audio> &audioIn)
 	{
 		this->result = system->playSound(this->audioData.sound, audioData.group, false, &audioData.channel);
 		
-		if (audioIn->loopCount != 0)
+		if (audioIn.loopCount != 0)
 		{
 			audioData.channel->setMode(FMOD_LOOP_NORMAL);
-			audioData.channel->setLoopCount(audioIn->loopCount);
+			audioData.channel->setLoopCount(audioIn.loopCount);
 		};
 		
 		audioData.channel->setPaused(true);
@@ -104,7 +109,7 @@ void SoundManager::loadAudio(shared_ptr<SoundManager::Audio> &audioIn)
 	this->checkErrors(this->result);
 	
 	this->audioStore.push_back(audioData);
-	audioIn->audioIndex = this->audioStore.size();
+	audioIn.audioIndex = this->audioStore.size();
 
 	audioData.channel = NULL;
 	audioData.group = NULL;
@@ -113,14 +118,14 @@ void SoundManager::loadAudio(shared_ptr<SoundManager::Audio> &audioIn)
 	return;
 };
 
-void SoundManager::playAudio(shared_ptr<SoundManager::Audio> &audioIn)
+void SoundManager::playAudio(SoundManager::Audio &audioIn)
 {
-	this->audioData = this->audioStore[audioIn->audioIndex - 1];
+	this->audioData = this->audioStore[audioIn.audioIndex - 1];
 
-	if(audioIn->isPaused == true)
+	if(audioIn.isPaused == true)
 	{
 		this->result = this->audioData.channel->setPaused(false);
-		audioIn->isPaused = false;
+		audioIn.isPaused = false;
 	}
 
 	this->checkErrors(this->result);
@@ -128,14 +133,14 @@ void SoundManager::playAudio(shared_ptr<SoundManager::Audio> &audioIn)
 	return;
 };
 
-void SoundManager::pauseAudio(shared_ptr<SoundManager::Audio> &audioIn)
+void SoundManager::pauseAudio(SoundManager::Audio &audioIn)
 {
-	this->audioData = this->audioStore[audioIn->audioIndex - 1];
+	this->audioData = this->audioStore[audioIn.audioIndex - 1];
 
-	if(audioIn->isPaused == false)
+	if(audioIn.isPaused == false)
 	{
 		this->result = this->audioData.channel->setPaused(true);
-		audioIn->isPaused = true;
+		audioIn.isPaused = true;
 	}
 
 	this->checkErrors(this->result);
@@ -143,9 +148,9 @@ void SoundManager::pauseAudio(shared_ptr<SoundManager::Audio> &audioIn)
 	return;
 };
 
-void SoundManager::updateSourceLocation(shared_ptr<SoundManager::Audio> &audioIn, float x, float y, float z)
+void SoundManager::updateSourceLocation(SoundManager::Audio &audioIn, float x, float y, float z)
 {
-	AudioData targetAudio = this->audioStore[audioIn->audioIndex - 1];
+	AudioData targetAudio = this->audioStore[audioIn.audioIndex - 1];
 
 	targetAudio.currentSourcePosition = {x, y, z};
 
@@ -164,9 +169,9 @@ void SoundManager::updateSourceLocation(shared_ptr<SoundManager::Audio> &audioIn
 
 	this->checkErrors(this->result);
 
-	audioIn->sourceLocationX = targetAudio.prevSourcePosition.x;
-	audioIn->sourceLocationY = targetAudio.prevSourcePosition.y;
-	audioIn->sourceLocationZ = targetAudio.prevSourcePosition.z;
+	audioIn.sourceLocationX = targetAudio.prevSourcePosition.x;
+	audioIn.sourceLocationY = targetAudio.prevSourcePosition.y;
+	audioIn.sourceLocationZ = targetAudio.prevSourcePosition.z;
 
 	return;
 };
