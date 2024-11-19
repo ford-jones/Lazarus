@@ -54,6 +54,8 @@ class Mesh
     public:
         struct TriangulatedMesh
         {
+            GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
+            GLuint VBO;
             GLuint textureId;
 
             int numOfVertices;
@@ -113,14 +115,13 @@ class Mesh
         GLuint xyTextureId;
 
 		GLuint shaderProgram;
-        GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
-        GLuint VBO;
 
         unique_ptr<FileReader> finder;
         unique_ptr<MeshLoader> meshLoader;
         unique_ptr<TextureLoader> texLoader;
         
         TriangulatedMesh mesh;
+        vector<TriangulatedMesh> meshStore;
 
         GlobalsManager globals;
 

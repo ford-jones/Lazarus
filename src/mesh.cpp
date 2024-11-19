@@ -28,18 +28,21 @@ Mesh::Mesh(GLuint shader)
     this->texLoader = std::make_unique<TextureLoader>();
 
 	meshLoader = nullptr;
+
     this->mesh = {};
+    this->meshStore = {};
     
     this->xyTextureId = 0;
     this->xyzTextureId = 0;
 	
 	this->errorCode = GL_NO_ERROR;
+
 };
 
 Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
     this->mesh = {};
-    
+
     this->meshLoader = std::make_unique<MeshLoader>();
 
     mesh.is3D = 1;
@@ -63,6 +66,7 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
     );
 
     this->setInherentProperties(mesh);
+    this->initialiseMesh(mesh);
 
     return mesh;
 };
@@ -150,16 +154,18 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
     };
 
     this->setInherentProperties(mesh);
+    this->initialiseMesh(mesh);
 
     return mesh;
 }
 
 void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
 {	
+    glGenVertexArrays(1, &asset.VAO);
+   	glBindVertexArray(asset.VAO);
+
     if(asset.modelviewUniformLocation >= 0)
     {
-        glGenVertexArrays(1, &this->VAO);
-    	glBindVertexArray(this->VAO);
 
         if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
         {
@@ -179,8 +185,8 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
             texLoader->loadImageToTextureStack(asset.textureData, asset.textureId);
         }
 
-        glGenBuffers(1, &this->VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+        glGenBuffers(1, &asset.VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
 
         glBufferData(GL_ARRAY_BUFFER, asset.attributes.size() * sizeof(vec3), &asset.attributes[0], GL_STATIC_DRAW);
 
@@ -197,6 +203,8 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
         glEnableVertexAttribArray(3);
 
         this->checkErrors(__PRETTY_FUNCTION__);
+
+        this->meshStore.push_back(asset);
     }
     else
     {
@@ -231,11 +239,30 @@ void Mesh::loadMesh(Mesh::TriangulatedMesh &asset)
 
 void Mesh::drawMesh(Mesh::TriangulatedMesh &asset)
 {
+    glBindVertexArray(asset.VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
+
+    if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
+    {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, asset.textureId);
+    }
+    else if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
+    {
+        if(asset.is3D == 1)
+        {
+            glActiveTexture(GL_TEXTURE2);
+        }
+        else
+        {
+            glActiveTexture(GL_TEXTURE3);
+        }
+        glBindTexture(GL_TEXTURE_2D_ARRAY, asset.textureId);
+    };
+
     glDrawArrays(GL_TRIANGLES, 0, asset.attributes.size());
 
     this->checkErrors(__PRETTY_FUNCTION__);
-
-    this->releaseMesh();
 
     return;
 };
@@ -337,16 +364,19 @@ void Mesh::checkErrors(const char *invoker)
 
 void Mesh::releaseMesh()
 {
-    glDeleteVertexArrays    (1, &this->VAO);
-    glDeleteBuffers         (1, &this->VBO);
-
-    this->checkErrors(__PRETTY_FUNCTION__);
-
     return;
 };
 
 Mesh::~Mesh()
 {
-    this->releaseMesh();
+    for(auto i: meshStore)
+    {
+        glDeleteBuffers         (1, &i.VBO);
+        glDeleteVertexArrays    (1, &i.VAO);
+    };
+
+
+    this->checkErrors(__PRETTY_FUNCTION__);
+
     std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 };

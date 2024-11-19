@@ -151,7 +151,7 @@ void TextManager::drawText(int layoutIndex)
         {            
             cameraBuilder->loadCamera(camera);
 
-            meshLoader->initialiseMesh(quad);
+            // meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
             meshLoader->drawMesh(quad);
             continue;
