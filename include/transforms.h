@@ -55,6 +55,8 @@ class Transform
 		float determineUpVector(float rotation);
 		float up;
 
+		glm::vec3 temp;
+
 		glm::vec3 localCoordinates;
 		glm::vec4 worldCoordinates;
 

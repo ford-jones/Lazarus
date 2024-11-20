@@ -69,6 +69,7 @@ class FileReader
         unsigned char *outResize;
         
 		const char *textData;
+        const char *img;
 
         int resizeStatus;
 		

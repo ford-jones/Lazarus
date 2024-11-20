@@ -29,6 +29,7 @@
 class FpsCounter
 {
 	public:
+		FpsCounter();
 		void calculateFramesPerSec();
 		
 		double framesPerSecond;

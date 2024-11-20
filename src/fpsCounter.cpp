@@ -19,6 +19,17 @@
 
 #include "../include/fpsCounter.h"
 
+FpsCounter::FpsCounter()
+{
+	this->numberOfFrames 		= 0;
+	this->framesPerSecond 		= 0;
+
+	this->currentMs 			= 0.0;
+	this->prevMs 				= 0.0;
+	this->timePassed 			= 0.0;
+	this->durationTillRendered 	= 0.0;
+};
+
 void FpsCounter::calculateFramesPerSec()
 {
 	this->numberOfFrames++;	

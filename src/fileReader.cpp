@@ -34,6 +34,8 @@ FileReader::FileReader()
 	this->x = 0;
 	this->y = 0;
 	this->n = 0;	
+
+    img = NULL;
 };
 
 string FileReader::relativePathToAbsolute(string filename) 
@@ -78,7 +80,10 @@ const char *FileReader::readFromText(string filepath)
 
 FileReader::Image FileReader::readFromImage(string filename)
 {
-	const char *img = filename.c_str();
+    this->imageData = {};
+    this->outResize = {};
+    
+	img = filename.c_str();
 	
     /* ====================================================
         Images should be flipped on load due to the fact that 

@@ -28,6 +28,8 @@ Transform::Transform()
 	this->up = 0.0f;
 	this->localCoordinates = glm::vec3(0.0, 0.0, 0.0);
 	this->worldCoordinates = glm::vec4(localCoordinates, 0.0);
+
+	this->temp = vec3(0.0, 0.0, 0.0);
 };
 
 void Transform::translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z)
@@ -92,6 +94,8 @@ void Transform::translateCameraAsset(Camera::FixedCamera &camera, float x, float
 
 void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z)
 {	
+	temp = vec3(0.0, 0.0, 0.0);
+
 	if((x > 360.0f) || (x < -360.0f))
 	{
 		globals.setExecutionState(LAZARUS_INVALID_RADIANS);
@@ -101,7 +105,6 @@ void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y,
 		this->up = this->determineUpVector(x);
 		camera.upVector = glm::vec3(0.0f, this->up, 0.0f);
 
-		glm::vec3 temp;
 		temp.x = cos(glm::radians(y)) * cos(glm::radians(x));
 		temp.y = sin(glm::radians(-x));
 		temp.z = sin(glm::radians(y)) * cos(glm::radians(x)); 

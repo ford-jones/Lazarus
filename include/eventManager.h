@@ -41,6 +41,9 @@ class EventManager
     public:
     	//	TODO:
     	//	Create a constructor / destructor
+
+        EventManager();
+
     	void initialise();
         void listen();
 

@@ -18,6 +18,20 @@
 /*  LAZARUS ENGINE */
 #include "../include/eventManager.h"
 
+EventManager::EventManager()
+{
+	keyString	= "";
+
+	keyCode 	= 0;
+	osCode 		= 0;
+	mouseCode 	= 0;
+	mouseX 		= 0;
+	mouseY 		= 0;
+	scrollCode 	= 0;
+
+	win 		= NULL;
+};
+
 void EventManager::initialise()
 {
 	win = glfwGetCurrentContext();
