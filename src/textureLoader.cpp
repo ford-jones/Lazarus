@@ -117,6 +117,13 @@ void TextureLoader::loadImageToTextureStack(FileReader::Image imageData, GLuint 
 void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
 {
 	glGenTextures(1, &bitmapTexture);
+	/* ===========================================
+		Hardcoded because this function is used 
+		specifically for glyph loading only. If 
+		that ends up changing then it should be
+		made dynamic. See other similar 
+		glActiveTexture calls.
+	============================================== */
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
 

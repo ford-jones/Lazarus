@@ -110,6 +110,7 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
         quad.isGlyph = 1;
         quad.textureId = this->textureId;
         quad.textureData = this->glyph;
+        quad.textureUnit = GL_TEXTURE1;
 
         transformer.translateMeshAsset(quad, static_cast<float>(posX + this->translation), static_cast<float>(posY), 0.0f);
         this->translation += (this->glyph.width + letterSpacing);
@@ -151,7 +152,6 @@ void TextManager::drawText(int layoutIndex)
         {            
             cameraBuilder->loadCamera(camera);
 
-            // meshLoader->initialiseMesh(quad);
             meshLoader->loadMesh(quad);
             meshLoader->drawMesh(quad);
             continue;

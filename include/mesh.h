@@ -89,6 +89,8 @@ class Mesh
 
             int is3D;
             int isGlyph;
+
+            int textureUnit;
         };
 		
 		Mesh(GLuint shader);
@@ -96,7 +98,6 @@ class Mesh
         TriangulatedMesh create3DAsset(string meshPath, string materialPath, string texturePath = "");
         TriangulatedMesh createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
-        void initialiseMesh(TriangulatedMesh &meshData);
         void loadMesh(TriangulatedMesh &meshData);
         void drawMesh(TriangulatedMesh &meshData);
 
@@ -106,8 +107,9 @@ class Mesh
         void resolveFilepaths(TriangulatedMesh &asset, string texPath = "", string mtlPath = "", string objPath = "");
         void setInherentProperties(TriangulatedMesh &asset);
         void lookupUniforms(TriangulatedMesh &asset);
+        void initialiseMesh(TriangulatedMesh &meshData);
+        
         void checkErrors(const char *invoker);
-        void releaseMesh();
 
         int errorCode;
 

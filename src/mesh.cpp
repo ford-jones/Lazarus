@@ -51,8 +51,10 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
     this->lookupUniforms(mesh);
 
     glUniform1i(mesh.samplerUniformLocation, 2);
-    
-    glActiveTexture(GL_TEXTURE2);
+
+    mesh.textureUnit = GL_TEXTURE2;
+    glActiveTexture(mesh.textureUnit);
+
     this->resolveFilepaths(mesh, texturePath, materialPath, meshPath);
     
     meshLoader->parseWavefrontObj(
@@ -98,7 +100,9 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
 
     glUniform1i(mesh.samplerUniformLocation, 3);
     
-    glActiveTexture(GL_TEXTURE3);
+    mesh.textureUnit = GL_TEXTURE3;
+    glActiveTexture(mesh.textureUnit);
+
     this->resolveFilepaths(mesh, texturePath);
 
     /* ==========================================================
@@ -166,24 +170,12 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
 
     if(asset.modelviewUniformLocation >= 0)
     {
+        glActiveTexture(asset.textureUnit);
 
-        if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
+        if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
         {
-            glActiveTexture(GL_TEXTURE1);
-        }
-        else if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
-        {
-            if(asset.is3D == 1)
-            {
-                glActiveTexture(GL_TEXTURE2);
-            }
-            else
-            {
-                glActiveTexture(GL_TEXTURE3);
-            }
-
             texLoader->loadImageToTextureStack(asset.textureData, asset.textureId);
-        }
+        };
 
         glGenBuffers(1, &asset.VBO);
         glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
@@ -225,7 +217,7 @@ void Mesh::loadMesh(Mesh::TriangulatedMesh &asset)
         if(asset.textureId != 0)
         {
             glUniform1f(asset.textureLayerUniformLocation, (asset.textureId - 1));
-        }
+        };
     
         this->checkErrors(__PRETTY_FUNCTION__);
     }
@@ -242,21 +234,14 @@ void Mesh::drawMesh(Mesh::TriangulatedMesh &asset)
     glBindVertexArray(asset.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
 
+    glActiveTexture(asset.textureUnit);
+
     if((asset.textureFilepath == LAZARUS_MESH_ISTEXT))
     {
-        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, asset.textureId);
     }
     else if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
     {
-        if(asset.is3D == 1)
-        {
-            glActiveTexture(GL_TEXTURE2);
-        }
-        else
-        {
-            glActiveTexture(GL_TEXTURE3);
-        }
         glBindTexture(GL_TEXTURE_2D_ARRAY, asset.textureId);
     };
 
@@ -359,11 +344,6 @@ void Mesh::checkErrors(const char *invoker)
         globals.setExecutionState(LAZARUS_OPENGL_ERROR);
     }
 
-    return;
-};
-
-void Mesh::releaseMesh()
-{
     return;
 };
 
