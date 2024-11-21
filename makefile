@@ -21,12 +21,12 @@ endif
 # Remove whitespace from "lib/ liblazarus.*"
 OUT := $(addprefix lib/,$(TARGET))
 
-OBJECTS = src/globalsManager.o src/shader.o src/light.o src/camera.o \
-					src/mesh.o src/transforms.o \
-					src/meshLoader.o src/materialLoader.o src/textureLoader.o \
-					src/WindowManager.o src/fileReader.o src/eventManager.o \
-					src/fpsCounter.o src/imageLoader.o src/imageResize.o src/soundManager.o \
-					src/textManager.o src/fontLoader.o src/constants.o
+OBJECTS = src/lz_globals_manager.o src/lz_shader.o src/lz_light.o src/lz_camera.o \
+					src/lz_mesh.o src/lz_transforms.o \
+					src/lz_mesh_loader.o src/lz_material_loader.o src/lz_texture_loader.o \
+					src/lz_window_manager.o src/lz_file_reader.o src/lz_event_manager.o \
+					src/lz_fps_counter.o src/lz_image_loader.o src/lz_image_resize.o src/lz_sound_manager.o \
+					src/lz_text_manager.o src/lz_font_loader.o src/lz_constants.o
 
 run : build
 	$(shell mv src/*.o build/)
@@ -35,25 +35,25 @@ build : $(OBJECTS)
 	$(shell mkdir build && mkdir lib)
 	$(CXX) $(CXXFLAGS) -o $(OUT) $(OBJECTS) $(LDFLAGS)
 
-globalsManager.o := include/globalsManager.h
-shader.o := include/shader.h
-light.o := include/light.h
-camera.o := include/camera.h
-mesh.o := include/mesh.h
-transforms.o := include/transforms.h
-meshLoader.o := include/meshLoader.h
-materialLoader.o := include/materialLoader.h
-fileReader.o := include/fileReader.h
-WindowManager.o := include/WindowManager.h
-eventManager.o := include/eventManager.h
-fpsCounter.o := include/fpsCounter.h
-soundManager.o := include/soundManager.h
-textureLoader.o := include/texture.h
-imageLoader.o := /usr/local/include/stb_image.h
-imageResize.o := /usr/local/include/stb_image_resize.h
-textManager.o := include/textManager.h
-fontLoader.o := include/fontLoader.h
-constants.o := include/constants.h
+lz_globals_manager.o := include/lz_globals_manager.h
+lz_shader.o := include/lz_shader.h
+lz_light.o := include/lz_light.h
+lz_camera.o := include/lz_camera.h
+lz_mesh.o := include/lz_mesh.h
+lz_transforms.o := include/lz_transforms.h
+lz_mesh_loader.o := include/lz_mesh_loader.h
+lz_material_loader.o := include/lz_material_loader.h
+lz_file_reader.o := include/lz_file_reader.h
+lz_window_manager.o := include/lz_window_manager.h
+lz_event_manager.o := include/lz_event_manager.h
+lz_fps_counter.o := include/lz_fps_counter.h
+lz_sound_manager.o := include/lz_sound_manager.h
+lz_texture_loader.o := include/lz_texture.h
+lz_image_loader.o := /usr/local/include/stb_image.h
+lz_imageResize.o := /usr/local/include/stb_image_resize.h
+lz_text_manager.o := include/lz_text_manager.h
+lz_font_loader.o := include/lz_font_loader.h
+lz_constants.o := include/lz_constants.h
 
 clean : 
 	rm -R lib/ && rm -R build/
