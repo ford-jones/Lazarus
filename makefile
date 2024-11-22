@@ -35,6 +35,15 @@ build : $(OBJECTS)
 	$(shell mkdir build && mkdir lib)
 	$(CXX) $(CXXFLAGS) -o $(OUT) $(OBJECTS) $(LDFLAGS)
 
+# This is linux specific: 
+# MacOS doesn't need to run ldconfig
+# Windows uses \ Program Files \ instead of /usr/local/*
+install : 
+	sudo cp include/* /usr/local/include && sudo cp lib/liblazarus.so /usr/local/lib && sudo ldconfig
+
+uninstall : 
+	sudo rm /usr/local/include/lz*.h && sudo rm /usr/local/lib/liblazarus.so
+
 lz_globals_manager.o := include/lz_globals_manager.h
 lz_shader.o := include/lz_shader.h
 lz_light.o := include/lz_light.h

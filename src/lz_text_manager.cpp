@@ -106,9 +106,14 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
 int TextManager::loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue, int layoutID)
 {
+    /* =================================================
+        Dereference and re-assign these on each call so
+        as to reduce their internal child trackers from
+        bloating.
+    ==================================================== */
     this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
     this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
-    
+
     if(word.size() > 0)
     {
         this->word.clear();
