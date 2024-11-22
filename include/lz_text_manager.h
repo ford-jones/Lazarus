@@ -51,7 +51,7 @@ class TextManager
     public:
         TextManager(GLuint shader);
         int extendFontStack(std::string filepath, int ptSize = 12);
-        int loadText(std::string targetText, int posX, int posY, int letterSpacing = 1, float red = 0.0f, float green = 0.0f, float blue = 0.0f);
+        int loadText(std::string targetText, int posX, int posY, int letterSpacing = 1, float red = 0.0f, float green = 0.0f, float blue = 0.0f, int layoutID = 0);
         void drawText(int layoutIndex = 0);
         virtual ~TextManager();
 
@@ -77,7 +77,7 @@ class TextManager
         float uvH;
 
         unsigned int fontIndex;
-        unsigned int wordCount;
+        unsigned int layoutIndex;
 
         GLuint textureId;
         GLuint shaderProgram;
@@ -97,6 +97,7 @@ class TextManager
         Camera::FixedCamera camera;
 
         std::vector<Mesh::TriangulatedMesh> word;
+        
         std::map<int, FileReader::Image> textures;
         std::map<int, std::vector<Mesh::TriangulatedMesh>> layout;
         std::pair<int, std::vector<Mesh::TriangulatedMesh>> layoutEntry;

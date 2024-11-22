@@ -33,8 +33,8 @@ TextManager::TextManager(GLuint shader)
 {
     std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
     this->shaderProgram = shader;
-    this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
-    this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
+    this->meshLoader = nullptr;
+    this->cameraBuilder = nullptr;
     
     this->textureLoader = nullptr;
     this->fontLoader = nullptr;
@@ -49,7 +49,7 @@ TextManager::TextManager(GLuint shader)
     this->textColor = glm::vec3(0.0f, 0.0f, 0.0f);
 
     this->fontIndex = 0;
-    this->wordCount = 0;
+    this->layoutIndex = 0;
 
     this->atlasX = 0;
     this->atlasY = 0;
@@ -63,6 +63,19 @@ TextManager::TextManager(GLuint shader)
 
 int TextManager::extendFontStack(std::string filepath, int ptSize)
 {
+    /* ====================================================
+        The name of this function is slightly deceptive.
+        This function extends new glyphs into the existing
+        alphabet texture atlas along the images' x-axis.
+        Essentially adding new columns.
+
+        In concept, it will be more like a stack when a new
+        font is added, a new row (on the y-axis) should be 
+        created. In memory they will all sit on top each-
+        other in one big texture atlas and so in that way
+        it will be like a stack - currently it's just a
+        single row.
+    ======================================================= */
     this->textureLoader = std::make_unique<TextureLoader>();
     this->fontLoader = std::make_unique<FontLoader>();
     
@@ -91,14 +104,16 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
     return fontIndex;
 };
 
-int TextManager::loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue)
+int TextManager::loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue, int layoutID)
 {
-
+    this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
+    this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
+    
     if(word.size() > 0)
     {
         this->word.clear();
     };
-
+    
     this->setTextColor(red, green, blue);
 
     for(unsigned int i = 0; i < targetText.size(); i++)
@@ -118,14 +133,35 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
         this->word.push_back(quad);
     };
 
-    this->wordCount += 1;
+    /* =================================================
+        The layoutID argument exists so that the user  
+        can specify an existing layout object to 
+        update / replace instead of creating anew. This 
+        is useful for text which needs to be updated 
+        inside the render loop - for instance FPS, 
+        entity coordinates or any other string which 
+        might update on-the-fly.
+    ==================================================== */
+    if(layoutID != 0)
+    {
+        layout.erase(layoutID);
+        layout.insert_or_assign(layoutID, this->word);
+        
+        this->translation = 0;
+        
+        return layoutID;
+    }
+    else
+    {
+        this->layoutIndex += 1;
 
-    this->layoutEntry = std::pair<int, std::vector<Mesh::TriangulatedMesh>>(this->wordCount, this->word);
-    layout.insert(this->layoutEntry);
+        this->layoutEntry = std::pair<int, std::vector<Mesh::TriangulatedMesh>>(this->layoutIndex, this->word);
+        layout.insert(this->layoutEntry);
 
-    this->translation = 0;
+        this->translation = 0;
 
-    return this->wordCount;
+        return this->layoutIndex;
+    };
 };
 
 void TextManager::drawText(int layoutIndex)

@@ -197,6 +197,7 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
         this->checkErrors(__PRETTY_FUNCTION__);
 
         this->meshStore.push_back(asset);
+        std::cout << "Mesh::meshStore size: " << this->meshStore.size() << std::endl;
     }
     else
     {
