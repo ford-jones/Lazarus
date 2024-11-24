@@ -233,79 +233,81 @@ Params:
 >	- **width:** *The images pixel-width.. (type: `int`)* 
 >	- **height:** *The images pixel-height. (type: `int`)* 
 >	- **pixelData:** *The actual image data / texels tightly packed in RGBA order. (type: `unsigned char *`)* 
+
+
 ## Transform:
 A class built to handle transformations of different world assets such as mesh, cameras and lights.
 
 ### Functions:
-#### Mesh::TriangulatedMesh translateMeshAsset(Mesh::TriangulatedMesh mesh, float x, float y, float z)
+#### MeshManager::Mesh translateMeshAsset(MeshManager::Mesh mesh, float x, float y, float z)
 Applies a translation transformation (movement) to a mesh asset along the x, y and z axis from an offset of 0.0. \
-Updates the `locationX`, `locationY` and `locationZ` properties of a `Mesh::TriangulatedMesh` object in real time. \
+Updates the `locationX`, `locationY` and `locationZ` properties of a `MeshManager::Mesh` object in real time. \
 Returns a new mesh entity.
 
 Params:
-> **mesh:** *The mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
+> **mesh:** *The mesh asset to be acted upon. (type: `MeshManager::Mesh`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the mesh.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the mesh.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the mesh.*
 
-#### Mesh::TriangulatedMesh rotateMeshAsset(Mesh::TriangulatedMesh mesh, float x, float y, float z)
+#### MeshManager::Mesh rotateMeshAsset(MeshManager::Mesh mesh, float x, float y, float z)
 Applies a rotation transformation to a mesh asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the mesh. Not to be confused with an orbital rotation. \
 Returns a new mesh entity.
 
 Params:
-> **mesh:** *The mesh asset to be acted upon. (type: `std::shared_ptr<Mesh::TriangulatedMesh>`)* \
+> **mesh:** *The mesh asset to be acted upon. (type: `MeshManager::Mesh`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis (yaw) rotational value of the mesh.* \
 > **y:** *A floating point number used to increment / decrement the y-axis (pitch) rotational value of the mesh.* \
 > **z:** *A floating point number used to increment / decrement the z-axis (roll) rotational value of the mesh.*
 
-#### Camera::FixedCamera translateCameraAsset(Camera::FixedCamera camera, float x, float y, float z)
+#### CameraManager::Camera translateCameraAsset(CameraManager::Camera camera, float x, float y, float z)
 Applies a translation transformation (movement) to a camera asset along the x, y and z axis from an offset of 0.0. \
-Updates the `locationX`, `locationY` and `locationZ` properties of a `Camera::FixedCamera` object in real time. \
+Updates the `locationX`, `locationY` and `locationZ` properties of a `CameraManager::Camera` object in real time. \
 Returns a new camera entity.
 
 Params:
-> **camera:** *The camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
+> **camera:** *The camera asset to be acted upon. (type: `CameraManager::Camera`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the camera.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the camera.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the camera.*
 
-#### Camera::FixedCamera rotateCameraAsset(Camera::FixedCamera camera, float x, float y, float z)
+#### CameraManager::Camera rotateCameraAsset(CameraManager::Camera camera, float x, float y, float z)
 Applies a rotation transformation to a camera asset on it's x, y and z axis from an offset of 0.0. \
 This rotation affects the yaw, pitch and roll of the camera. Not to be confused with an orbital rotation. \
 Returns a new camera entity.
 
 Params:
-> **camera:** *The camera asset to be acted upon. (type: `std::shared_ptr<Camera::FixedCamera>`)* \
+> **camera:** *The camera asset to be acted upon. (type: `CameraManager::Camera`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the camera.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the camera.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the camera.*
 
-#### Light::AmbientLight translateLightAsset(Light::AmbientLight light, float x, float y, float z)
+#### LightManager::Light translateLightAsset(LightManager::Light light, float x, float y, float z)
 Applies a translation transformation (movement) to a light asset along the x, y and z axis from an offset of 0.0. \
-Updates the `locationX`, `locationY` and `locationZ` properties of a `Light::AmbientLight` object in real time. \
+Updates the `locationX`, `locationY` and `locationZ` properties of a `LightManager::Light` object in real time. \
 Returns a new light entity.
 
 
 Params:
-> **light:** *The light asset to be acted upon. (type: `std::shared_ptr<Light::AmbientLight>`)* \
+> **light:** *The light asset to be acted upon. (type: `LightManager::Light`)* \
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the light.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the light.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the light.*
 
-## Mesh:
+## MeshManager:
 A management class for mesh assets and their properties.
 
 ### Constructor:
-#### Mesh(GLuint shader)
+#### MeshManager(GLuint shader)
 
 Params:
 > **shader:** *The id of the shader program used to render this mesh. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions:
-#### Mesh::TriangulatedMesh create3DAsset(std::string meshPath, std::string materialPath, std::string texturePath)
+#### MeshManager::Mesh create3DAsset(std::string meshPath, std::string materialPath, std::string texturePath)
 Finds and reads a wavefront (obj) file located at `meshPath`. \
-Creates a new instance of a `TriangulatedMesh`, initialises the values of its properties and returns it. \
+Creates a new instance of a `Mesh`, initialises the values of its properties and returns it. \
 Invokes the `MaterialLoader::loadMaterial()` function and passes on the `materialPath`.
 
 Returns a new mesh entity.
@@ -315,7 +317,7 @@ Params:
 > **materialPath:** *The relative path to the wavefront material asset you wish to render.*
 > **texturePath:** *The relative path to the texture image. (optional)*
 
-#### Mesh::TriangulatedMesh createQuad(float width, float height, std::string texturePath, float uvXL, float uvXR, float uvY)
+#### MeshManager::Mesh createQuad(float width, float height, std::string texturePath, float uvXL, float uvXR, float uvY)
 Creates a quad (2D plane) to the size of the specified height and width. \
 Textures loaded into a quad have their fragments discarded where the texture opacity is 0.0 - used for sprites.
 
@@ -329,25 +331,13 @@ Params:
 > **uvXR:** *The normalised x-axis coordinate of the UV's right-side. Used for text rendering. (optional)*
 > **uvY:** *The normalised y-axis coordinate of the UV's top edge. Used for text rendering. (optional)*
 
-#### Mesh::TriangulatedMesh initialiseMesh(Mesh::TriangulatedMesh meshData)
-Generates a new vertex array object and binds it to the current OpenGL context. \
-Generates and binds a vertex buffer object to the array object for each of the mesh's properties, these are:
-- vertex coordinates
-- vertex normals
-- diffuse colours
-
-Returns a new mesh entity.
-
-Params:
-> **meshData:** *The mesh object who's data you wish to write to buffers.*
-
-#### Mesh::TriangulatedMesh loadMesh(Mesh::TriangulatedMesh meshData)
+#### MeshManager::Mesh loadMesh(MeshManager::Mesh meshData)
 Loads a mesh object's buffer data into their correct GPU uniform positions located inside the shader program that was referenced in the class constructor.
 
 Params:
 > **meshData:** *The mesh object who's buffer data you wish to pass into the shader program.*
 
-#### Mesh::TriangulatedMesh drawMesh(Mesh::TriangulatedMesh meshData)
+#### MeshManager::Mesh drawMesh(MeshManager::Mesh meshData)
 Draws the mesh object contents of the shader program's uniforms onto the render loops back buffer (see: `WindowManager::handleBuffers()`). \
 Be sure to bring the back buffer forward to see the draw result.
 
@@ -355,7 +345,7 @@ Be sure to bring the back buffer forward to see the draw result.
 > **meshData:** *The mesh object you wish to draw.*
 
 ### Members:
-> **TriangulatedMesh:** *A collection of properties which make up a mesh entity. (type: `struct`)* 
+> **Mesh:** *A collection of properties which make up a mesh entity. (type: `struct`)* 
 >	- **textureId:** *The serialised id of the mesh objects texture. The layer depth of the texture. (type: `int`)* 
 >   - **is3D:** *Literal 0 (false) or 1 (true). Flags the shader to treat the mesh as a sprite, discarding fragments with an alpha value higher than 0.1 (type: `int`)*
 >	- **numOfFaces:** *The number of faces that make up the mesh. (type: `int`)* 
@@ -415,7 +405,7 @@ A simple loader class for loading wavefront (obj) files and marshalling their co
 Default-initialises this classes members.
 
 ### Functions: 
-#### bool loadMaterial(std::vector\<glm::vec3> &out, std::vector<std::vector<int>> data, std::string materialPath, GLuint &textureId, FileReader::Image &imageData, std::string texturePath = "")
+#### bool loadMaterial(std::vector\<glm::vec3> &out, std::vector<std::vector<int>> data, std::string materialPath, GLuint &textureId, FileReader::Image imageData, std::string texturePath = "")
 Parses a wavefront material (mtl) file for it's diffuse colour values, which are converted to `float` and stored inside a `glm::vec3`. \
 
 Returns a boolean, if an error occurs or the file cannot be loaded this value will be `false`.
@@ -428,41 +418,19 @@ Params:
 > **imageData:** *A struct containing texel data, image width and height.* \
 > **texturePath:** *The absolute path to this mesh's texture file (optional).*
 
-## TextureLoader:
-A management class for the handling of a mesh's texture assets.
+## CameraManager:
 
 ### Constructor:
 Default initialises this class's members.
 
-### Functions:
-#### void storeTexture(std::string texturePath, GLuint &textureLayer, FileReader::Image &imageData)
-Loads the image file, invokes the generation of a new texture unit and allocates / realocates the programs texture image storage.
-
-Params:
-> **texturePath:** *The absolute path to this mesh's texture file.* \
-> **textureLayer:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
-> **imageData:** *A struct containing texel data, image width and height.* \
-
-#### void loadTexture(FileReader::Image imageData, GLuint textureLayer)
-Passes texel data into the target texture layer, generates a mipmap for it and sets the textures parameters.
-
-Params:
-> **imageData:** *A struct containing texel data, image width and height.* \
-> **textureLayer:** *The serialised ID of a valid named texture. Returns 0 if no textures are used. Otherwise returns an integer used to indicate where the texture is stored in the shader programs texture array.* \
-
-## Camera:
-
-### Constructor:
-Default initialises this class's members.
-
-#### Camera(GLuint shader)
+#### CameraManager(GLuint shader)
 
 Params:
 > **shader:** *The id of the shader program used to render this camera. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions: 
-#### shared_ptr\<FixedCamera> createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
-Creates a new instance of a `FixedCamera`, with a perspective projection matrix. 
+#### CameraManager::Camera createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
+Creates a new instance of a `Camera`, with a perspective projection matrix. 
 
 Returns a new camera entity.
 
@@ -477,8 +445,8 @@ Params:
 > **arY:** *The y-axis aspect ratio / height of the viewport. (Default: `LAZARUS_PRIMARY_DISPLAY_HEIGHT`)* 
 
 ### Functions: 
-#### FixedCamera createOrthoCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
-Creates a new instance of a `FixedCamera`, with an orthographic projection matrix. 
+#### CameraManager::Camera createOrthoCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
+Creates a new instance of a `Camera`, with an orthographic projection matrix. 
 
 Returns a new camera entity.
 
@@ -486,7 +454,7 @@ Params:
 > **arX:** *The x-axis aspect ratio / width of the viewport.*  \
 > **arY:** *The y-axis aspect ratio / height of the viewport.* 
 
-#### shared_ptr\<FixedCamera> loadCamera(shared_ptr\<FixedCamera> cameraData)
+#### CameraManager::Camera loadCamera(CameraManager::Camera cameraData)
 Passes the camera's projection matrix and view matrix into the shader program's corresponding uniform locations.
 
 Returns a new camera entity.
@@ -495,7 +463,7 @@ Params:
 > **cameraData:** *The camera asset you would like to render.*
 
 ### Members:
-> **FixedCamera:** *A collection of properties which make up a camera entity. (type: `struct`)* 
+> **Camera:** *A collection of properties which make up a camera entity. (type: `struct`)* 
 >	- **id:** *This camera's unique id. (type: `int`)* 
 >	- **locationX:** *The x-axis coordinate of the camera's position in world space. (type: `float`)*
 >	- **locationY:** *The y-axis coordinate of the camera's position in world space. (type: `float`)*
@@ -509,18 +477,18 @@ Params:
 >	- **viewMatrix:** *The view matrix to be passed into the shader program at the uniform location of `viewLocation`. (type: `glm::mat4`)*
 >	- **projectionMatrix:** *The projection matrix to be passed into the shader program at the uniform location of `projectionLocation`. (type: `glm::mat4`)*
 
-## Light:
+## LightManager:
 A management class for light assets and their properties. 
 
 ### Constructor:
-#### Light(GLuint shader)
+#### LightManager(GLuint shader)
 
 Params:
 > **shader:** *The id of the shader program used to render this light. Acquired from the return value of `Shader::initialiseShader()`*
 
 ### Functions: 
-#### AmbientLight createAmbientLight(double x, double y, double z, double r, double g, double b)
-Creates a new instance of an `AmbientLight`, initialises the values of its properties and returns it.
+#### LightManager::Light createLightSource(double x, double y, double z, double r, double g, double b)
+Creates a new instance of an `Light`, initialises the values of its properties and returns it.
 
 Returns a new light entity.
 
@@ -532,14 +500,14 @@ Params:
 > **g:** *This light's green colour value.* \
 > **b:** *This light's blue colour value.* 
 
-#### void loadLightSource(AmbientLight &lightData)
+#### void loadLightSource(LightManager::Light &lightData)
 Passes the light object's locative (x,y,z) values into the vertex shader and its' colour (r,g,b) values into the fragment shader.
 
 Params:
 > **lightData:** *A reference to the light asset you would like to render.*
 
 ### Members:
-> **AmbientLight:** *A collection of properties which make up a light entity. (type: `struct`)*
+> **Light:** *A collection of properties which make up a light entity. (type: `struct`)*
 >	- **id:** *This light's unique id. (type: `int`)*
 >	- **locationX:** *The x-axis coordinate of the light's position in world space. (type: `float`)*
 >	- **locationY:** *The y-axis coordinate of the light's position in world space. (type: `float`)*
@@ -549,47 +517,47 @@ Params:
 >	- **lightPositionUniformLocation:** *The location / index of the vertex shader position uniform. (type: `GLuint`)*
 >	- **lightColorUniformLocation:** *The location / index of the fragment shader diffuse uniform. (type: `GLuint`)*
 
-## SoundManager:
+## AudioManager:
 A management class using an `FMOD` backend for loading audio, as well as handling audio locations and listeners. 
 
 ### Constructor:
-#### SoundManager()
+#### AudioManager()
 
 ### Functions:
 #### void initialise()
 Initialises `FMOD` core and instantiates a new system for interfacing with up to 512 unique audio channels. 
 
-#### shared_ptr\<Audio> createAudio(string filepath, bool is3D, int loopCount)
-Creates a new instance of `SoundManager::Audio`, initialises the values of its properties and returns it.
+#### AudioManager::Audio createAudio(string filepath, bool is3D, int loopCount)
+Creates a new instance of `AudioManager::Audio`, initialises the values of its properties and returns it.
 
-Returns a shared pointer to the audio object.
+Returns a new audio object.
 
 Params:
 > **filepath:** *The relative path to the audio (mp3 / wav) asset.* \
 > **is3D:** *Indicates whether the sound has locative properties or it plays ambiently.* \
 > **loopCount:** *The number of times the audio should loop. Use -1 to loop infinitely. (default: `0`)*
 
-#### shared_ptr\<Audio> loadAudio(shared_ptr\<Audio> audioIn)
-Loads an instance of `SoundManager::Audio` into memory and prepares it for playback with `FMOD`.
+#### AudioManager::Audio loadAudio(AudioManager::Audio audioIn)
+Loads a `AudioManager::Audio` object and prepares it for playback with `FMOD`.
 
 Params:
 > **audioIn:** *The audio object you want to load.*
 
-#### shared_ptr\<Audio> playAudio(shared_ptr\<Audio> audioIn)
-Plays a `SoundManager::Audio` instance from memory which has been previously loaded with `SoundManager::loadAudio()`.
+#### AudioManager::Audio playAudio(AudioManager::Audio audioIn)
+Plays a `AudioManager::Audio` object which has been previously loaded with `AudioManager::loadAudio()`.
 
 Params:
 > **audioIn:** *The audio object you want to start playing.*
 
-#### shared_ptr\<Audio> pauseAudio(shared_ptr\<Audio> audioIn)
-Pauses an `SoundManager::Audio` instance from memory which has been previously played with `SoundManager::playAudio()`.
+#### AudioManager::Audio pauseAudio(AudioManager::Audio audioIn)
+Pauses an `AudioManager::Audio` object which has been previously played with `AudioManager::playAudio()`.
 
 Params:
 > **audioIn:** *The audio object you want to pause / stop playing.*
 
 
-#### shared_ptr\<Audio> updateSourceLocation(shared_ptr\<Audio> audioIn, float x, float y, float z)
-Updates the location in 3D of a `SoundManager::Audio` source; using `FMOD` to calculate the sound's doppler, relative to the listener's current positioning (*see*: `SoundManager::listenerLocationX`, `SoundManager::listenerLocationY` and `SoundManager::listenerLocationZ`).
+#### AudioManager::Audio updateSourceLocation(AudioManager::Audio audioIn, float x, float y, float z)
+Updates the location in 3D of a `AudioManager::Audio` source; using `FMOD` to calculate the sound's doppler, relative to the listener's current positioning (*see*: `AudioManager::listenerLocationX`, `AudioManager::listenerLocationY` and `AudioManager::listenerLocationZ`).
 
 Params:
 > **audioIn**: *The audio sample to be updated.* \
@@ -598,7 +566,7 @@ Params:
 > **z**: *The desired audio source location on the z-axis.* 
 
 #### void updateListenerLocation(float x, float y, float z)
-Updates the location in 3D space of the audio's listener; using `FMOD` to calculate the doppler level, relative to the `SoundManager::Audio` current positioning. 
+Updates the location in 3D space of the audio's listener; using `FMOD` to calculate the doppler level, relative to the `AudioManager::Audio` current positioning. 
 
 Params:
 > **x**: *The desired audio listener location on the x-axis.* \
@@ -639,9 +607,11 @@ params:
 > **filepath:** *The relative path to the TrueType `.ttf` font file.* \
 > **ptSize:** *The desired character pt size. (default: `12`)*
 
-#### int loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue)
+#### int loadText(std::string targetText, int posX, int posY, int letterSpacing, float red, float green, float blue, int layoutID)
 Loads the desired text using glyphs from the selected font. Sets the text's colour, position on the screen and letterspacing. It's worth noting \
 here that a space `' '` is equal to `letterSpacing * 8`.
+
+Pushes the text string into *this* `TextManager`' layout container. Optionally overwrite / update the contents of an existing piece of text by specifying an existing `layoutID` / layout index.
 
 Returns the word(s) layout index.
 
@@ -652,7 +622,8 @@ Params:
 > **letterSpacing:** *How much spacing (in pixels) to put between each character. Word spacing is equal to this value * 8. (default: `1`)* \
 > **red:** *Set the decimal value of the text's red colour channel. (default: `0.0`)* \
 > **green:** *Set the decimal value of the text's green colour channel. (default: `0.0`)* \
-> **blue:** *Set the decimal value of the text's blue colour channel. (default: `0.0`)* 
+> **blue:** *Set the decimal value of the text's blue colour channel. (default: `0.0`)* \
+> **layoutID** *The ID of an existing text string in the layout container. (default: `-1`)*
 
 #### void drawText(int layoutIndex)
 Draws text that has been loaded into the layout at `layoutIndex` onto the screen.
@@ -675,6 +646,7 @@ Params:
 - **LAZARUS_FSHADER_COMPILE_FAILURE** *The fragment shader failed to compile. (Code: 203)
 - **LAZARUS_SHADER_LINKING_FAILURE** *OpenGL failed to link the shaders. (Code: 204)*
 - **LAZARUS_UNIFORM_NOT_FOUND** *Lazarus failed to perform a lookup on the desired uniform from the vertex or fragment shader. (Code: 205)*
+- **LAZARUS_MATRIX_LOCATION_ERROR** *Lazarus failed to perform a shader lookup on the desired modelview, projection or view-matrix required to render the target entity. (Code: 206)*
 - **LAZARUS_OPENGL_ERROR** *An error occured in the OpenGL graphics pipeline. (Code: 301)*
 - **LAZARUS_NO_CONTEXT** *Unable to find a window with an active OpenGL context. (Code: 302)*
 - **LAZARUS_WINDOW_ERROR** *An error occured in the GLFW window API. (Code: 303)*
