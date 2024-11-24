@@ -111,8 +111,8 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
         as to reduce their internal child trackers from
         bloating.
     ==================================================== */
-    this->meshLoader = std::make_unique<Mesh>(this->shaderProgram);
-    this->cameraBuilder = std::make_unique<Camera>(this->shaderProgram);
+    this->meshLoader = std::make_unique<MeshManager>(this->shaderProgram);
+    this->cameraBuilder = std::make_unique<CameraManager>(this->shaderProgram);
 
     if(word.size() > 0)
     {
@@ -160,7 +160,7 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
     {
         this->layoutIndex += 1;
 
-        this->layoutEntry = std::pair<int, std::vector<Mesh::TriangulatedMesh>>(this->layoutIndex, this->word);
+        this->layoutEntry = std::pair<int, std::vector<MeshManager::Mesh>>(this->layoutIndex, this->word);
         layout.insert(this->layoutEntry);
 
         this->translation = 0;

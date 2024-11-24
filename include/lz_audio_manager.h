@@ -42,10 +42,10 @@ using std::shared_ptr;
 using std::string;
 using std::vector;
 
-#ifndef LAZARUS_SOUND_MANAGER_H
-#define LAZARUS_SOUND_MANAGER_H
+#ifndef LAZARUS_AUDIO_MANAGER_H
+#define LAZARUS_AUDIO_MANAGER_H
 
-class SoundManager
+class AudioManager
 {
 	public:
 		struct Audio 
@@ -65,7 +65,7 @@ class SoundManager
 			unsigned int audioIndex;
 		};
 
-		SoundManager();
+		AudioManager();
 
 		void initialise();
 		Audio createAudio(string filepath, bool is3D = false, int loopCount = 0);
@@ -77,7 +77,7 @@ class SoundManager
 		void updateSourceLocation(Audio &audioIn, float x, float y, float z);
 		void updateListenerLocation(float x, float y, float z);
 
-		virtual ~SoundManager();
+		virtual ~AudioManager();
 
 		float listenerLocationX;
 		float listenerLocationY;

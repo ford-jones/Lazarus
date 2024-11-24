@@ -49,10 +49,10 @@ using glm::vec2;
 #ifndef LAZARUS_MESH_H
 #define LAZARUS_MESH_H
 
-class Mesh
+class MeshManager
 {
     public:
-        struct TriangulatedMesh
+        struct Mesh
         {
             GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
             GLuint VBO;
@@ -93,21 +93,21 @@ class Mesh
             int textureUnit;
         };
 		
-		Mesh(GLuint shader);
+		MeshManager(GLuint shader);
 		
-        TriangulatedMesh create3DAsset(string meshPath, string materialPath, string texturePath = "");
-        TriangulatedMesh createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
+        Mesh create3DAsset(string meshPath, string materialPath, string texturePath = "");
+        Mesh createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
-        void loadMesh(TriangulatedMesh &meshData);
-        void drawMesh(TriangulatedMesh &meshData);
+        void loadMesh(Mesh &meshData);
+        void drawMesh(Mesh &meshData);
 
-        virtual ~Mesh();
+        virtual ~MeshManager();
 
     private:
-        void resolveFilepaths(TriangulatedMesh &asset, string texPath = "", string mtlPath = "", string objPath = "");
-        void setInherentProperties(TriangulatedMesh &asset);
-        void lookupUniforms(TriangulatedMesh &asset);
-        void initialiseMesh(TriangulatedMesh &meshData);
+        void resolveFilepaths(Mesh &asset, string texPath = "", string mtlPath = "", string objPath = "");
+        void setInherentProperties(Mesh &asset);
+        void lookupUniforms(Mesh &asset);
+        void initialiseMesh(Mesh &meshData);
         
         void checkErrors(const char *invoker);
 
@@ -122,8 +122,8 @@ class Mesh
         unique_ptr<MeshLoader> meshLoader;
         unique_ptr<TextureLoader> texLoader;
         
-        TriangulatedMesh mesh;
-        vector<TriangulatedMesh> meshStore;
+        Mesh mesh;
+        vector<Mesh> meshStore;
 
         GlobalsManager globals;
 

@@ -32,7 +32,7 @@ Transform::Transform()
 	this->temp = vec3(0.0, 0.0, 0.0);
 };
 
-void Transform::translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z)
+void Transform::translateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z)
 {
 	this->localCoordinates = glm::vec3(x, y, z);
     mesh.modelviewMatrix = glm::translate(mesh.modelviewMatrix, this->localCoordinates);
@@ -53,7 +53,7 @@ void Transform::translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float 
 	return;
 };
 
-void Transform::rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z)
+void Transform::rotateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z)
 {	
     mesh.modelviewMatrix = glm::rotate(mesh.modelviewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
     mesh.modelviewMatrix = glm::rotate(mesh.modelviewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
@@ -62,7 +62,7 @@ void Transform::rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, 
     return;
 };
 
-void Transform::translateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z)
+void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, float y, float z)
 {
 	/* =========================================
 		TODO:
@@ -92,7 +92,7 @@ void Transform::translateCameraAsset(Camera::FixedCamera &camera, float x, float
 	return;
 };
 
-void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z)
+void Transform::rotateCameraAsset(CameraManager::Camera &camera, float x, float y, float z)
 {	
 	temp = vec3(0.0, 0.0, 0.0);
 
@@ -117,7 +117,7 @@ void Transform::rotateCameraAsset(Camera::FixedCamera &camera, float x, float y,
 	return;
 };
 
-void Transform::translateLightAsset(Light::AmbientLight &light, float x, float y, float z)
+void Transform::translateLightAsset(LightManager::Light &light, float x, float y, float z)
 {
 	light.lightPosition += vec3(x, y, z);
 	light.locationX += x;

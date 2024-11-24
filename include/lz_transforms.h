@@ -43,13 +43,13 @@ class Transform
 {	
     public:
 		Transform();
-		void translateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
-    	void rotateMeshAsset(Mesh::TriangulatedMesh &mesh, float x, float y, float z);
+		void translateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z);
+    	void rotateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z);
 
-		void translateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
-		void rotateCameraAsset(Camera::FixedCamera &camera, float x, float y, float z);
+		void translateCameraAsset(CameraManager::Camera &camera, float x, float y, float z);
+		void rotateCameraAsset(CameraManager::Camera &camera, float x, float y, float z);
 
-		void translateLightAsset(Light::AmbientLight &light, float x, float y, float z);
+		void translateLightAsset(LightManager::Light &light, float x, float y, float z);
 
 	private:
 		float determineUpVector(float rotation);

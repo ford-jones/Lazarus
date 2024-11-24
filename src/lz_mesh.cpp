@@ -19,7 +19,7 @@
 
 #include "../include/lz_mesh.h"
 
-Mesh::Mesh(GLuint shader)
+MeshManager::MeshManager(GLuint shader)
 {
 	std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	this->shaderProgram = shader;
@@ -39,7 +39,7 @@ Mesh::Mesh(GLuint shader)
 
 };
 
-Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath, string texturePath)
+MeshManager::Mesh MeshManager::create3DAsset(string meshPath, string materialPath, string texturePath)
 {
     this->mesh = {};
 
@@ -89,7 +89,7 @@ Mesh::TriangulatedMesh Mesh::create3DAsset(string meshPath, string materialPath,
     a quad under the hood.
 =========================================================================================== */
 
-Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string texturePath, float uvXL, float uvXR, float uvY)
+MeshManager::Mesh MeshManager::createQuad(float width, float height, string texturePath, float uvXL, float uvXR, float uvY)
 {
     this->mesh = {};
 
@@ -163,7 +163,7 @@ Mesh::TriangulatedMesh Mesh::createQuad(float width, float height, string textur
     return mesh;
 }
 
-void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
+void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
 {	
     glGenVertexArrays(1, &asset.VAO);
    	glBindVertexArray(asset.VAO);
@@ -197,7 +197,7 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
         this->checkErrors(__PRETTY_FUNCTION__);
 
         this->meshStore.push_back(asset);
-        std::cout << "Mesh::meshStore size: " << this->meshStore.size() << std::endl;
+        std::cout << "MeshManager::meshStore size: " << this->meshStore.size() << std::endl;
     }
     else
     {
@@ -207,7 +207,7 @@ void Mesh::initialiseMesh(Mesh::TriangulatedMesh &asset)
     return;
 };
 
-void Mesh::loadMesh(Mesh::TriangulatedMesh &asset)
+void MeshManager::loadMesh(MeshManager::Mesh &asset)
 {
     if(asset.modelviewUniformLocation >= 0)
     {
@@ -230,7 +230,7 @@ void Mesh::loadMesh(Mesh::TriangulatedMesh &asset)
     return;
 };
 
-void Mesh::drawMesh(Mesh::TriangulatedMesh &asset)
+void MeshManager::drawMesh(MeshManager::Mesh &asset)
 {
     glBindVertexArray(asset.VAO);
     glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
@@ -253,7 +253,7 @@ void Mesh::drawMesh(Mesh::TriangulatedMesh &asset)
     return;
 };
 
-void Mesh::resolveFilepaths(Mesh::TriangulatedMesh &asset, string texPath, string mtlPath, string objPath)
+void MeshManager::resolveFilepaths(MeshManager::Mesh &asset, string texPath, string mtlPath, string objPath)
 {
     if(objPath != "") 
     {
@@ -299,7 +299,7 @@ void Mesh::resolveFilepaths(Mesh::TriangulatedMesh &asset, string texPath, strin
     return;
 };
 
-void Mesh::setInherentProperties(Mesh::TriangulatedMesh &asset)
+void MeshManager::setInherentProperties(MeshManager::Mesh &asset)
 {
     asset.locationX = 0;
     asset.locationY = 0;
@@ -313,7 +313,7 @@ void Mesh::setInherentProperties(Mesh::TriangulatedMesh &asset)
    return;
 }
 
-void Mesh::lookupUniforms(Mesh::TriangulatedMesh &asset)
+void MeshManager::lookupUniforms(MeshManager::Mesh &asset)
 {
     asset.modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");
     asset.is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
@@ -333,7 +333,7 @@ void Mesh::lookupUniforms(Mesh::TriangulatedMesh &asset)
     return;
 };
 
-void Mesh::checkErrors(const char *invoker)
+void MeshManager::checkErrors(const char *invoker)
 {
     this->errorCode = glGetError();
     
@@ -348,7 +348,7 @@ void Mesh::checkErrors(const char *invoker)
     return;
 };
 
-Mesh::~Mesh()
+MeshManager::~MeshManager()
 {
     for(auto i: meshStore)
     {

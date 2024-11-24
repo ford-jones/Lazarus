@@ -88,19 +88,19 @@ class TextManager
         GlobalsManager globals;
         FileReader::Image glyph;
 
-        std::unique_ptr<Mesh> meshLoader;
+        std::unique_ptr<MeshManager> meshLoader;
         std::unique_ptr<TextureLoader> textureLoader;
         std::unique_ptr<FontLoader> fontLoader;
-        std::unique_ptr<Camera> cameraBuilder;
+        std::unique_ptr<CameraManager> cameraBuilder;
 
-        Mesh::TriangulatedMesh quad;
-        Camera::FixedCamera camera;
+        MeshManager::Mesh quad;
+        CameraManager::Camera camera;
 
-        std::vector<Mesh::TriangulatedMesh> word;
+        std::vector<MeshManager::Mesh> word;
         
         std::map<int, FileReader::Image> textures;
-        std::map<int, std::vector<Mesh::TriangulatedMesh>> layout;
-        std::pair<int, std::vector<Mesh::TriangulatedMesh>> layoutEntry;
+        std::map<int, std::vector<MeshManager::Mesh>> layout;
+        std::pair<int, std::vector<MeshManager::Mesh>> layoutEntry;
 };
 
 #endif

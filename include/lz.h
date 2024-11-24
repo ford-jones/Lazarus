@@ -31,7 +31,7 @@
 #include "lz_camera.h"
 #include "lz_fps_counter.h"
 #include "lz_file_reader.h"
-#include "lz_sound_manager.h"
+#include "lz_audio_manager.h"
 #include "lz_text_manager.h"
 
 #ifndef LAZARUS_H
@@ -43,14 +43,14 @@ namespace Lazarus
     using ::GlobalsManager;
     using ::WindowManager;
     using ::EventManager;
-    using ::Mesh;
+    using ::MeshManager;
     using ::Transform;
     using ::Shader;
-    using ::Light;
-    using ::Camera;
+    using ::LightManager;
+    using ::CameraManager;
     using ::FpsCounter;
     using ::FileReader;
-    using ::SoundManager;
+    using ::AudioManager;
 }
 
 #endif

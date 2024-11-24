@@ -25,7 +25,7 @@ OBJECTS = src/lz_globals_manager.o src/lz_shader.o src/lz_light.o src/lz_camera.
 					src/lz_mesh.o src/lz_transforms.o \
 					src/lz_mesh_loader.o src/lz_material_loader.o src/lz_texture_loader.o \
 					src/lz_window_manager.o src/lz_file_reader.o src/lz_event_manager.o \
-					src/lz_fps_counter.o src/lz_image_loader.o src/lz_image_resize.o src/lz_sound_manager.o \
+					src/lz_fps_counter.o src/lz_image_loader.o src/lz_image_resize.o src/lz_audio_manager.o \
 					src/lz_text_manager.o src/lz_font_loader.o src/lz_constants.o
 
 run : build
@@ -56,7 +56,7 @@ lz_file_reader.o := include/lz_file_reader.h
 lz_window_manager.o := include/lz_window_manager.h
 lz_event_manager.o := include/lz_event_manager.h
 lz_fps_counter.o := include/lz_fps_counter.h
-lz_sound_manager.o := include/lz_sound_manager.h
+lz_audio_manager.o := include/lz_audio_manager.h
 lz_texture_loader.o := include/lz_texture.h
 lz_image_loader.o := /usr/local/include/stb_image.h
 lz_imageResize.o := /usr/local/include/stb_image_resize.h

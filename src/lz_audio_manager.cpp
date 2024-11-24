@@ -16,9 +16,9 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
-#include "../include/lz_sound_manager.h"
+#include "../include/lz_audio_manager.h"
 
-SoundManager::SoundManager() 
+AudioManager::AudioManager() 
 {
     std::cout << GREEN_TEXT << "Calling constructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
@@ -43,7 +43,7 @@ SoundManager::SoundManager()
 	this->listenerUp = {0.0f, 1.0f, 0.0f};
 };
 
-void SoundManager::initialise()
+void AudioManager::initialise()
 {
 	this->result = FMOD::System_Create(&this->system);
 	/* ==============================================
@@ -57,7 +57,7 @@ void SoundManager::initialise()
 	this->checkErrors(this->result);
 };
 
-SoundManager::Audio SoundManager::createAudio(string filepath, bool is3D, int loopCount)
+AudioManager::Audio AudioManager::createAudio(string filepath, bool is3D, int loopCount)
 {
 	this->audioOut = {};
 
@@ -79,7 +79,7 @@ SoundManager::Audio SoundManager::createAudio(string filepath, bool is3D, int lo
 	return audioOut;
 };
 
-void SoundManager::loadAudio(SoundManager::Audio &audioIn)
+void AudioManager::loadAudio(AudioManager::Audio &audioIn)
 {	
 	(audioIn.is3D == true) 
 	? this->result = system->createSound(audioIn.path.c_str(), FMOD_3D, NULL, &this->audioData.sound) 
@@ -118,7 +118,7 @@ void SoundManager::loadAudio(SoundManager::Audio &audioIn)
 	return;
 };
 
-void SoundManager::playAudio(SoundManager::Audio &audioIn)
+void AudioManager::playAudio(AudioManager::Audio &audioIn)
 {
 	this->audioData = this->audioStore[audioIn.audioIndex - 1];
 
@@ -133,7 +133,7 @@ void SoundManager::playAudio(SoundManager::Audio &audioIn)
 	return;
 };
 
-void SoundManager::pauseAudio(SoundManager::Audio &audioIn)
+void AudioManager::pauseAudio(AudioManager::Audio &audioIn)
 {
 	this->audioData = this->audioStore[audioIn.audioIndex - 1];
 
@@ -148,7 +148,7 @@ void SoundManager::pauseAudio(SoundManager::Audio &audioIn)
 	return;
 };
 
-void SoundManager::updateSourceLocation(SoundManager::Audio &audioIn, float x, float y, float z)
+void AudioManager::updateSourceLocation(AudioManager::Audio &audioIn, float x, float y, float z)
 {
 	AudioData targetAudio = this->audioStore[audioIn.audioIndex - 1];
 
@@ -176,7 +176,7 @@ void SoundManager::updateSourceLocation(SoundManager::Audio &audioIn, float x, f
 	return;
 };
 
-void SoundManager::updateListenerLocation(float x, float y, float z)
+void AudioManager::updateListenerLocation(float x, float y, float z)
 {
 	this->currentListenerPosition = {x, y, z};
 
@@ -211,7 +211,7 @@ void SoundManager::updateListenerLocation(float x, float y, float z)
 	this->listenerLocationZ = this->prevListenerPosition.z;
 };
 
-void SoundManager::checkErrors(FMOD_RESULT res) 
+void AudioManager::checkErrors(FMOD_RESULT res) 
 {
 	if(res != FMOD_OK)
 	{
@@ -221,13 +221,13 @@ void SoundManager::checkErrors(FMOD_RESULT res)
 	};
 };
 
-SoundManager::~SoundManager()
+AudioManager::~AudioManager()
 {
     std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 	
 	for(unsigned int i = 0; i < this->audioStore.size(); i++)
 	{
-		SoundManager::AudioData data = this->audioStore[i];
+		AudioManager::AudioData data = this->audioStore[i];
 
 		data.sound->release();
 		data.group->release();

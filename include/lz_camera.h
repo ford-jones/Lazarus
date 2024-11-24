@@ -38,11 +38,11 @@ using glm::mat4;
 #ifndef LAZARUS_CAMERA_H
 #define LAZARUS_CAMERA_H
 
-class Camera
+class CameraManager
 {
     public:
-        Camera(GLuint shader);
-        struct FixedCamera                                                                     //  Static Camera values represented in key-value pairs
+        CameraManager(GLuint shader);
+        struct Camera                                                                     //  Static Camera values represented in key-value pairs
         {
             int id;
 			float locationX;
@@ -65,11 +65,11 @@ class Camera
             int usesPerspective;
         };
 		
-        FixedCamera createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX = 0, int arY = 0);
-        FixedCamera createOrthoCam(int arX, int arY);
-        void loadCamera(FixedCamera &cameraData);
+        Camera createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX = 0, int arY = 0);
+        Camera createOrthoCam(int arX, int arY);
+        void loadCamera(Camera &cameraData);
 
-        virtual ~Camera();
+        virtual ~CameraManager();
 
     private:
         GlobalsManager globals;
@@ -77,7 +77,7 @@ class Camera
         int monitorY;
 
         GLuint shader;
-        FixedCamera fixedCamera;
+        Camera camera;
 };
 
 #endif

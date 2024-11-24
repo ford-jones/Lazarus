@@ -38,10 +38,10 @@ using glm::vec3;
 //	TODO:
 //	Create a funciton which allows users to functionally change the light color
 
-class Light
+class LightManager
 {
     public:
-        struct AmbientLight
+        struct Light
         {
             int id;
             
@@ -56,15 +56,15 @@ class Light
             GLuint lightColorUniformLocation;       //  The location / index of the light color uniform inside the frag shader
         };
         
-        Light(GLuint shader);
-        virtual ~Light();
+        LightManager(GLuint shader);
+        virtual ~LightManager();
 
-        AmbientLight createAmbientLight(double x, double y, double z, double r, double g, double b);
-        void loadLightSource(AmbientLight &lightData);
+        Light createLightSource(double x, double y, double z, double r, double g, double b);
+        void loadLightSource(Light &lightData);
 
     private:
     	GLuint shaderProgram;
-        AmbientLight ambientLight;
+        Light light;
         
 };
 
