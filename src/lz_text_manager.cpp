@@ -147,7 +147,7 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
         entity coordinates or any other string which 
         might update on-the-fly.
     ==================================================== */
-    if(layoutID != 0)
+    if(layoutID != -1)
     {
         layout.erase(layoutID);
         layout.insert_or_assign(layoutID, this->word);
