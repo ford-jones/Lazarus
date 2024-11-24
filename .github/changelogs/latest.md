@@ -1,5 +1,6 @@
-# Version: 2024.11.24015130
+# Version: 2024.11.24015438
 
+* [5746bdd](https://github.com/ford-jones/Lazarus/commit/5746bdd5a75ee3b510502aeb97f6229fa61716a1): [Changelog CI] Add Changelog for Version 2024.11.24015130
 * [5bf9a2e](https://github.com/ford-jones/Lazarus/commit/5bf9a2e40bc11b2513d7d0f189636b59204b44af): Docs: Update API-reference and object naming conventions
 * [05e796a](https://github.com/ford-jones/Lazarus/commit/05e796a455a278d38c7622e5ee9f3c8828a3cb25): Clean: Update text-load function params
 * [78afe47](https://github.com/ford-jones/Lazarus/commit/78afe47e1ec8885e543da7fbc0282a5d3fb816f7): Feat: Linux installation makefile script
