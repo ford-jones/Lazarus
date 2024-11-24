@@ -9,10 +9,9 @@ on:
       tags:
         description: 'Test scenario tags'  
         
-  pull_request:
-    types:
-      - 'opened'
-      - 'reopened'
+  push:
+    branches:
+      - 'main'
 
 jobs:
   create-changelog:
