@@ -26,7 +26,8 @@ jobs:
           gh release create "$tag" \
               --repo="$GITHUB_REPOSITORY" \
               --title="$tag#v" \
-              --generate-notes
+              --notes="Release Notes: https://lazarusengine.xyz/changeLogs" \
+              --latest
 
   update-blog:
     name: Update lazarusengine.xyz
