@@ -5,6 +5,7 @@ in vec3 diffuseColor;
 in vec3 normalCoordinate;
 in vec2 textureCoordinate;
 
+flat in float textureId;
 flat in int isUnderPerspective;
 
 uniform vec3 lightPosition;
@@ -14,9 +15,6 @@ uniform vec3 textColor;
 
 uniform int spriteAsset;
 uniform int glyphAsset;
-
-uniform float xyzTexLayerIndex;
-uniform float xyTexLayerIndex;
 
 uniform sampler2D fontStack;
 uniform sampler2DArray xyzAssetTextures;
@@ -57,12 +55,12 @@ vec4 interpretColorData ()
     {
         if( spriteAsset == 1 )
         {
-            vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, xyzTexLayerIndex));
+            vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, textureId));
             return tex;
         } 
         else if( glyphAsset == 1)
         {
-            vec4 tex = texture(fontStack, textureCoordinate);
+            vec4 tex = texture(fontStack, textureCoordinate.xy);
             
             vec4 sampled = vec4(1.0, 1.0, 1.0, tex.r);
             vec4 text = vec4(textColor, 1.0) * sampled;
@@ -77,7 +75,7 @@ vec4 interpretColorData ()
         }
         else
         {
-            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
+            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, textureId));
 
             if(tex.a < 0.1)
             {

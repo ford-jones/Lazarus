@@ -156,7 +156,7 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         }
     }
 
-    this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size());
+    this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size(), outTextureId);
 
     return true;
 };
@@ -177,7 +177,7 @@ vector<string> MeshLoader::splitTokensFromLine(const char *wavefrontData, char d
     return tokenStore;
 }
 
-void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes)
+void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, int numOfAttributes, int textureId)
 {
     for( int i = 0; i < numOfAttributes; i++ )
     {
@@ -193,12 +193,25 @@ void MeshLoader::interleaveBufferData(vector<vec3> &outAttributes, vector<vec3> 
             
             i.e: (4 * sizeof(vec3)) = 12
 
-            Once in the shaders it is disregarded. 
+            Once in the shaders the z value is used 
+            to traverse the texture array, or used 
+            for the y-value (height) lookup in a 
+            texture atlas. If the mesh doesn't use 
+            a texture then it is disregarded.
         ============================================ */
         vec3 vertex                 =   tempVertexPositions[vertexIndex - 1];
         vec3 diffuse                =   outDiffuse[i];
         vec3 normal                 =   tempNormals[normalIndex - 1];
-        vec3 uv                     =   vec3(tempUvs[uvIndex - 1].x, tempUvs[uvIndex - 1].y, 0.0f);
+        vec3 uv                     =   vec3(0.0, 0.0, 0.0);
+
+        if(textureId == 0)
+        {
+            uv = vec3(tempUvs[uvIndex - 1].x, tempUvs[uvIndex - 1].y, 0.0f);
+        }
+        else 
+        {
+            uv = vec3(tempUvs[uvIndex - 1].x, tempUvs[uvIndex - 1].y, static_cast<float>(textureId));
+        };
 
         outAttributes.push_back(vertex);
         outAttributes.push_back(diffuse);

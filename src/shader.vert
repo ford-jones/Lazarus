@@ -17,6 +17,8 @@ out vec3 diffuseColor;
 out vec3 normalCoordinate;
 out vec2 textureCoordinate;
 
+flat out float textureId;
+
 flat out int isUnderPerspective;
 
 void main ()
@@ -36,6 +38,7 @@ void main ()
    }
    
    textureCoordinate = vec2(inTexCoord.x, inTexCoord.y);
+   textureId = inTexCoord.z;
    diffuseColor = inDiffuse;
    isUnderPerspective = usesPerspective;
 }

@@ -115,25 +115,28 @@ MeshManager::Mesh MeshManager::createQuad(float width, float height, string text
 
     if((uvXL || uvXR || uvY) > 0.0 )
     {
-    /* ======================================================================================================
-            Vertex positions,           Diffuse colors,             Normals,                    UVs 
-    ========================================================================================================= */
+        float textureIndex = static_cast<float>(mesh.textureId);
+
+        /* ======================================================================================================
+                Vertex positions,           Diffuse colors,             Normals,                    UVs 
+        ========================================================================================================= */
+
         mesh.attributes = {                                                                                          
-            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
-            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, textureIndex),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, textureIndex), 
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, textureIndex),
 
-            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),
-            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, textureIndex),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, textureIndex),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, textureIndex),
 
-            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f),
-            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, 0.0f),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, textureIndex),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, textureIndex),
+            vec3(width, height, 0.0f),  vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, uvY, textureIndex),
 
-            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, 0.0f),
-            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, 0.0f), 
-            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, 0.0f),
+            vec3(0.0f, height, 0.0f),   vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, uvY, textureIndex),
+            vec3(width, 0.0f, 0.0f),    vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXR, 0.0f, textureIndex), 
+            vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(uvXL, 0.0f, textureIndex),
         };
     }
     else
@@ -174,6 +177,7 @@ void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
 
         if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
         {
+            // ?
             texLoader->loadImageToTextureStack(asset.textureData, asset.textureId);
         };
 
@@ -214,11 +218,6 @@ void MeshManager::loadMesh(MeshManager::Mesh &asset)
         glUniformMatrix4fv(asset.modelviewUniformLocation, 1, GL_FALSE, &asset.modelviewMatrix[0][0]);
         glUniform1i(asset.is3DUniformLocation, asset.is3D);
         glUniform1i(asset.isGlyphUniformLocation, asset.isGlyph);
-    
-        if(asset.textureId != 0)
-        {
-            glUniform1f(asset.textureLayerUniformLocation, (asset.textureId - 1));
-        };
     
         this->checkErrors(__PRETTY_FUNCTION__);
     }
@@ -322,12 +321,10 @@ void MeshManager::lookupUniforms(MeshManager::Mesh &asset)
     if(asset.is3D == 1)
     {
         asset.samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
-        asset.textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
     }
     else 
     {
         asset.samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
-        asset.textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
     }
 
     return;
