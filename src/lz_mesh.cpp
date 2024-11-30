@@ -60,11 +60,8 @@ MeshManager::Mesh MeshManager::create3DAsset(string meshPath, string materialPat
     meshLoader->parseWavefrontObj(
         mesh.attributes,
         mesh.diffuse,
-        mesh.textureId,
-        mesh.textureData,
         mesh.meshFilepath.c_str(),
-        mesh.materialFilepath.c_str(),
-        mesh.textureFilepath.c_str()
+        mesh.materialFilepath.c_str()
     );
 
     this->setInherentProperties(mesh);
