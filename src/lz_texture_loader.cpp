@@ -28,17 +28,25 @@ TextureLoader::TextureLoader()
 	this->image = {pixelData: NULL, height: 0, width: 0};
 	this->textures = {};
 	this->bitmapTexture = 0;
+	this->textureStack = 0;
 
 	this->x = 0;
 	this->y = 0;
 	this->loopCount = 0;
 	this->mipCount = 0;
+	// this->layerCount = 0;
 	this->errorCode = 0;
 	
 	this->offset = 0;
+
+	glGenTextures(1, &this->textureStack);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->textureStack);
+
+	// glGenTextures(1, &bitmapTexture);
+	// glBindTexture(GL_TEXTURE_2D, this->bitmapTexture);
 };
 
-void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, GLuint &textureLayer)
+void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, int textureLayers)
 {
 	/* =========================================================================
 		Note that the value given to textureLayer by glGenTextures serves a 
@@ -53,18 +61,24 @@ void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, GLuint &text
 		   traverse the z-axis of the array (subnote: the array is a cube).
 		i.e. size, index position & uniform value
 	============================================================================ */
-	glGenTextures(1, &textureLayer);
-	glBindTexture(GL_TEXTURE_2D_ARRAY, textureLayer);
 
-	this->mipCount = this->calculateMipLevels(maxWidth, maxHeight);
+	// glGenTextures(1, &textureLayer);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, this->textureStack);
 
-	glTexStorage3D(
-		GL_TEXTURE_2D_ARRAY, 								//	target
-		this->mipCount, 									//	the expected number of levels (mips) found in each layer
-		GL_RGBA8, 											//	gl internal size to store texel data
-		maxWidth, maxHeight, 				// 	expected (max) image width and height
-		textureLayer 										// 	the number of layers to store (max array size)
-	);
+	// this->layerCount += 1;
+	// textureLayer = this->layerCount;
+	// textureId = this->textureStack;
+
+	// this->mipCount = this->calculateMipLevels(maxWidth, maxHeight);
+	
+	// glTexStorage3D(
+	// 	GL_TEXTURE_2D_ARRAY, 								//	target
+	// 	this->mipCount, 									//	the expected number of levels (mips) found in each layer
+	// 	GL_RGBA8, 											//	gl internal size to store texel data
+	// 	maxWidth, maxHeight, 				// 	expected (max) image width and height
+	// 	textureLayer 										// 	the number of layers to store (max array size)
+	// );
+	glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, globals.getMaxImageWidth(), globals.getMaxImageHeight(), textureLayers, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 	/* ======================================
 		Indexing through this texture vector 
 		could become expensive at large sizes.
@@ -72,8 +86,8 @@ void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, GLuint &text
 		A better implementation might make use
 		of std::map (i.e. red-black BST).
 	========================================= */
-	
-	this->textures.push_back(textureLayer);
+
+	// this->textures.push_back(textureLayer);
 
 	this->checkErrors(__PRETTY_FUNCTION__);
 
@@ -116,7 +130,6 @@ void TextureLoader::loadImageToTextureStack(FileReader::Image imageData, GLuint 
 
 void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureId)
 {
-	glGenTextures(1, &bitmapTexture);
 	/* ===========================================
 		Hardcoded because this function is used 
 		specifically for glyph loading only. If 
@@ -125,7 +138,8 @@ void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight, GLuint &text
 		glActiveTexture calls.
 	============================================== */
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, bitmapTexture);
+	glGenTextures(1, &bitmapTexture);
+	glBindTexture(GL_TEXTURE_2D, this->bitmapTexture);
 
 	textureId = this->bitmapTexture;
 	/* ========================================================================================
@@ -234,19 +248,20 @@ TextureLoader::~TextureLoader()
 {
 	std::cout << GREEN_TEXT << "Calling destructor @: " << __PRETTY_FUNCTION__ << RESET_TEXT << std::endl;
 
-	for(unsigned int i = 0; i < this->textures.size(); i++) 
-	{
-		/* ========================================
-			I dont *think* that index 0 of the
-			textures vector should / would ever 
-			actually be literal (int 0) but the 
-			old code used to check for it so I've 
-			left it here just in case.
-		=========================================== */
-		if(textures[0] != 0)
-		{
-			glDeleteTextures(1, &textures[i]);
-		}
-	}
+	// for(unsigned int i = 0; i < this->textures.size(); i++) 
+	// {
+	// 	/* ========================================
+	// 		I dont *think* that index 0 of the
+	// 		textures vector should / would ever 
+	// 		actually be literal (int 0) but the 
+	// 		old code used to check for it so I've 
+	// 		left it here just in case.
+	// 	=========================================== */
+	// 	if(textures[0] != 0)
+	// 	{
+	// 		glDeleteTextures(1, &textures[i]);
+	// 	}
+	// }
+	glDeleteTextures(1, &textureStack);
 	glDeleteTextures(1, &bitmapTexture);
 };

@@ -47,7 +47,7 @@ class TextureLoader
 {
 	public:
 		TextureLoader();
-		void extendTextureStack(int maxWidth, int maxHeight, GLuint &textureLayer);
+		void extendTextureStack(int maxWidth, int maxHeight, int textureLayers);
 		void loadImageToTextureStack(FileReader::Image imageData, GLuint textureLayer);
 
 		void storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureLayer);
@@ -55,8 +55,12 @@ class TextureLoader
 
 		virtual ~TextureLoader();
 		
+		GLuint bitmapTexture;
+		GLuint textureStack;
+
 	private:
 		int calculateMipLevels(int width, int height);
+		
 		void checkErrors(const char *invoker);
 
 		shared_ptr<FileReader> loader;
@@ -64,7 +68,6 @@ class TextureLoader
 		FileReader::Image image;
 		
 		vector<GLuint> textures;
-		GLuint bitmapTexture;
 
 		GLenum errorCode;
 		

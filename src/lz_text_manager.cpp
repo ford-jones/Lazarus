@@ -85,7 +85,7 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
     this->identifyAlphabetDimensions();
 
-    glUniform1i(glGetUniformLocation(this->shaderProgram, "fontStack"), 1);
+    glUniform1i(glGetUniformLocation(this->shaderProgram, "textureAtlas"), 1);
     textureLoader->storeBitmapTexture(atlasX, atlasY, this->textureId);
     /* ===========================================================================
         The expression (n - 33) AKA (i = 33 && i < 128) occurs in several places 

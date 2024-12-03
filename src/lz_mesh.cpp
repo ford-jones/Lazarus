@@ -31,12 +31,10 @@ MeshManager::MeshManager(GLuint shader)
 
     this->mesh = {};
     this->meshStore = {};
-    
-    this->xyTextureId = 0;
-    this->xyzTextureId = 0;
 	
 	this->errorCode = GL_NO_ERROR;
 
+    this->layerCount = 0;
 };
 
 MeshManager::Mesh MeshManager::create3DAsset(string meshPath, string materialPath, string texturePath)
@@ -95,9 +93,9 @@ MeshManager::Mesh MeshManager::createQuad(float width, float height, string text
 
     this->lookupUniforms(mesh);
 
-    glUniform1i(mesh.samplerUniformLocation, 3);
+    glUniform1i(mesh.samplerUniformLocation, 2);
     
-    mesh.textureUnit = GL_TEXTURE3;
+    mesh.textureUnit = GL_TEXTURE2;
     glActiveTexture(mesh.textureUnit);
 
     this->resolveFilepaths(mesh, texturePath);
@@ -153,8 +151,7 @@ MeshManager::Mesh MeshManager::createQuad(float width, float height, string text
             vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
         };
     };
-
-    this->setInherentProperties(mesh);
+ 
     this->initialiseMesh(mesh);
 
     return mesh;
@@ -167,12 +164,12 @@ void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
 
     if(asset.modelviewUniformLocation >= 0)
     {
-        glActiveTexture(asset.textureUnit);
+        // glActiveTexture(asset.textureUnit);
 
-        if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
-        {
-            texLoader->loadImageToTextureStack(asset.textureData, asset.textureId);
-        };
+        // if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
+        // {
+        //     texLoader->loadImageToTextureStack(asset.textureData, asset.textureLayer);
+        // };
 
         glGenBuffers(1, &asset.VBO);
         glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
@@ -194,13 +191,31 @@ void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
         this->checkErrors(__PRETTY_FUNCTION__);
 
         this->meshStore.push_back(asset);
-        std::cout << "MeshManager::meshStore size: " << this->meshStore.size() << std::endl;
+        this->prepareTextures();
     }
     else
     {
         globals.setExecutionState(LAZARUS_MATRIX_LOCATION_ERROR);
     };
 	
+    return;
+};
+
+void MeshManager::prepareTextures()
+{
+    texLoader->extendTextureStack(globals.getMaxImageWidth(), globals.getMaxImageHeight(), this->layerCount);
+
+    for(auto i: meshStore)
+    {
+        glActiveTexture(i.textureUnit);
+    
+        if((i.textureFilepath != LAZARUS_MESH_NOTEX))
+        {
+            std::cout << "ID: [" << i.textureId << "] Layer: [" << i.textureLayer << "] Unit: [" << i.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
+            texLoader->loadImageToTextureStack(i.textureData, i.textureLayer);
+        };
+    };
+
     return;
 };
 
@@ -214,7 +229,7 @@ void MeshManager::loadMesh(MeshManager::Mesh &asset)
     
         if(asset.textureId != 0)
         {
-            glUniform1f(asset.textureLayerUniformLocation, (asset.textureId - 1));
+            glUniform1f(asset.textureLayerUniformLocation, (asset.textureLayer - 1));
         };
     
         this->checkErrors(__PRETTY_FUNCTION__);
@@ -242,6 +257,7 @@ void MeshManager::drawMesh(MeshManager::Mesh &asset)
     {
         glBindTexture(GL_TEXTURE_2D_ARRAY, asset.textureId);
     };
+    std::cout << "ID: [" << asset.textureId << "] Layer: [" << asset.textureLayer << "] Unit: [" << asset.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
 
     glDrawArrays(GL_TRIANGLES, 0, asset.attributes.size());
 
@@ -276,9 +292,15 @@ void MeshManager::resolveFilepaths(MeshManager::Mesh &asset, string texPath, str
     }
     else if(texPath != "")
     {
+        this->layerCount += 1;
+
 	    asset.textureFilepath = finder->relativePathToAbsolute(texPath);
         asset.textureData = finder->readFromImage(asset.textureFilepath);
-        texLoader->extendTextureStack(asset.textureData.width, asset.textureData.height, asset.textureId);
+        
+        asset.textureLayer = this->layerCount;
+        asset.textureId = texLoader->textureStack;
+        std::cout << "ID: [" << asset.textureId << "] Layer: [" << asset.textureLayer << "] Unit: [" << asset.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
+        // texLoader->extendTextureStack(asset.textureData.width, asset.textureData.height, asset.textureLayer);
     }
     else
     {
@@ -288,6 +310,7 @@ void MeshManager::resolveFilepaths(MeshManager::Mesh &asset, string texPath, str
             another indicator that no texture is in
             use.
         =========================================== */
+        asset.textureLayer = 0;
         asset.textureId = 0;
     	asset.textureFilepath = LAZARUS_MESH_NOTEX;
         asset.textureData = {pixelData: NULL, height: 0, width: 0};
@@ -316,16 +339,8 @@ void MeshManager::lookupUniforms(MeshManager::Mesh &asset)
     asset.is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
     asset.isGlyphUniformLocation = glGetUniformLocation(this->shaderProgram, "glyphAsset");
 
-    if(asset.is3D == 1)
-    {
-        asset.samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzAssetTextures");
-        asset.textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyzTexLayerIndex");    
-    }
-    else 
-    {
-        asset.samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyAssetTextures");
-        asset.textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "xyTexLayerIndex");
-    }
+    asset.samplerUniformLocation = glGetUniformLocation(this->shaderProgram, "textureArray");
+    asset.textureLayerUniformLocation = glGetUniformLocation(this->shaderProgram, "textureLayer");    
 
     return;
 };
