@@ -87,8 +87,6 @@ class FileReader
         int maxWidth;
         int maxHeight;
 
-        int callCount;
-
         GlobalsManager globals;
 };
 

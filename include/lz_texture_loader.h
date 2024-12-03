@@ -32,13 +32,11 @@
 #include <string>
 #include <memory>
 #include <cmath>
-#include <vector>
 
 #include "lz_file_reader.h"
 
 using std::string;
 using std::shared_ptr;
-using std::vector;
 
 #ifndef LAZARUS_TEXTURE_LOADER_H
 #define LAZARUS_TEXTURE_LOADER_H
@@ -50,7 +48,7 @@ class TextureLoader
 		void extendTextureStack(int maxWidth, int maxHeight, int textureLayers);
 		void loadImageToTextureStack(FileReader::Image imageData, GLuint textureLayer);
 
-		void storeBitmapTexture(int maxWidth, int maxHeight, GLuint &textureLayer);
+		void storeBitmapTexture(int maxWidth, int maxHeight);
 		void loadBitmapToTexture(FileReader::Image imageData);
 
 		virtual ~TextureLoader();
@@ -58,16 +56,12 @@ class TextureLoader
 		GLuint bitmapTexture;
 		GLuint textureStack;
 
-	private:
-		int calculateMipLevels(int width, int height);
-		
+	private:		
 		void checkErrors(const char *invoker);
 
 		shared_ptr<FileReader> loader;
 
 		FileReader::Image image;
-		
-		vector<GLuint> textures;
 
 		GLenum errorCode;
 		

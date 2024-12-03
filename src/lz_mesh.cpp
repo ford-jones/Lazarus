@@ -151,7 +151,8 @@ MeshManager::Mesh MeshManager::createQuad(float width, float height, string text
             vec3(0.0f, 0.0f, 0.0f),     vec3(-0.1f, -0.1f, -0.1f),     vec3(0.0f, 0.0f, 1.0f),     vec3(0.0f, 0.0f, 0.0f),
         };
     };
- 
+
+    this->setInherentProperties(mesh);
     this->initialiseMesh(mesh);
 
     return mesh;
@@ -164,13 +165,6 @@ void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
 
     if(asset.modelviewUniformLocation >= 0)
     {
-        // glActiveTexture(asset.textureUnit);
-
-        // if((asset.textureFilepath != LAZARUS_MESH_NOTEX))
-        // {
-        //     texLoader->loadImageToTextureStack(asset.textureData, asset.textureLayer);
-        // };
-
         glGenBuffers(1, &asset.VBO);
         glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
 
@@ -211,7 +205,6 @@ void MeshManager::prepareTextures()
     
         if((i.textureFilepath != LAZARUS_MESH_NOTEX))
         {
-            std::cout << "ID: [" << i.textureId << "] Layer: [" << i.textureLayer << "] Unit: [" << i.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
             texLoader->loadImageToTextureStack(i.textureData, i.textureLayer);
         };
     };
@@ -257,7 +250,6 @@ void MeshManager::drawMesh(MeshManager::Mesh &asset)
     {
         glBindTexture(GL_TEXTURE_2D_ARRAY, asset.textureId);
     };
-    std::cout << "ID: [" << asset.textureId << "] Layer: [" << asset.textureLayer << "] Unit: [" << asset.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
 
     glDrawArrays(GL_TRIANGLES, 0, asset.attributes.size());
 
@@ -299,8 +291,6 @@ void MeshManager::resolveFilepaths(MeshManager::Mesh &asset, string texPath, str
         
         asset.textureLayer = this->layerCount;
         asset.textureId = texLoader->textureStack;
-        std::cout << "ID: [" << asset.textureId << "] Layer: [" << asset.textureLayer << "] Unit: [" << asset.textureUnit << "] @" << __PRETTY_FUNCTION__ << std::endl;
-        // texLoader->extendTextureStack(asset.textureData.width, asset.textureData.height, asset.textureLayer);
     }
     else
     {
