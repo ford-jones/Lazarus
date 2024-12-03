@@ -85,8 +85,10 @@ int TextManager::extendFontStack(std::string filepath, int ptSize)
 
     this->identifyAlphabetDimensions();
 
-    glUniform1i(glGetUniformLocation(this->shaderProgram, "fontStack"), 1);
-    textureLoader->storeBitmapTexture(atlasX, atlasY, this->textureId);
+    glUniform1i(glGetUniformLocation(this->shaderProgram, "textureAtlas"), 1);
+    textureLoader->storeBitmapTexture(atlasX, atlasY);
+
+    this->textureId = textureLoader->bitmapTexture;
     /* ===========================================================================
         The expression (n - 33) AKA (i = 33 && i < 128) occurs in several places 
         and is used to skip control keys as well as calculate the span offset for 
@@ -129,6 +131,7 @@ int TextManager::loadText(std::string targetText, int posX, int posY, int letter
         
         quad.isGlyph = 1;
         quad.textureId = this->textureId;
+        quad.textureLayer = 0;
         quad.textureData = this->glyph;
         quad.textureUnit = GL_TEXTURE1;
 

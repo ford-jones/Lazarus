@@ -64,11 +64,8 @@ class MeshLoader
         bool parseWavefrontObj(
             vector<vec3> &outAttributes,
             vector<vec3> &outDiffuse,
-            GLuint &outTextureId,
-            FileReader::Image imageData,
             const char *meshPath,
-            const char *materialPath,
-            const char *texturePath = ""
+            const char *materialPath
         );
         
         virtual ~MeshLoader();

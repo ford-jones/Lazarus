@@ -28,7 +28,7 @@ MeshLoader::MeshLoader()
 	this->matLoader 				=	nullptr;
 };
 
-bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, GLuint &outTextureId, FileReader::Image imageData, const char* meshPath, const char* materialPath, const char* texturePath) 
+bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &outDiffuse, const char* meshPath, const char* materialPath) 
 {
 	this->matLoader = std::make_unique<MaterialLoader>();
 	
@@ -145,15 +145,8 @@ bool MeshLoader::parseWavefrontObj(vector<vec3> &outAttributes, vector<vec3> &ou
         file.close();
         this->materialData = {materialIdentifierIndex, triangleCount};
 		this->materialBuffer.push_back(this->materialData);
-
-        if((texturePath != LAZARUS_MESH_NOTEX) && ((texturePath != LAZARUS_MESH_ISTEXT)))
-        {
-	        matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData, texturePath);
-        } 
-        else
-        {
-            matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath, outTextureId, imageData);
-        }
+        
+        matLoader->loadMaterial(outDiffuse, materialBuffer, materialPath);
     }
 
     this->interleaveBufferData(outAttributes, outDiffuse, this->vertexIndices.size());

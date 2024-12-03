@@ -35,8 +35,6 @@ FileReader::FileReader()
 	this->y = 0;
 	this->n = 0;	
 
-    this-> callCount = 0;
-
     img = NULL;
 };
 
@@ -85,7 +83,6 @@ FileReader::Image FileReader::readFromImage(string filename)
     this->imageData = {};
     this->outResize = {};
 
-    this->callCount += 1;
     
 	img = filename.c_str();
 	
@@ -170,8 +167,6 @@ FileReader::Image FileReader::readFromImage(string filename)
 		std::cerr << RED_TEXT << "LAZARUS::ERROR::FILEREADER::IMAGE_LOADER " << stbi_failure_reason() << RESET_TEXT << std::endl;
         globals.setExecutionState(LAZARUS_IMAGE_LOAD_FAILURE);
 	};
-
-    std::cout << "FileReader::callCount = " << this->callCount << std::endl;
 	
 	return outImage;
 };

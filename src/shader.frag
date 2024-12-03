@@ -15,12 +15,10 @@ uniform vec3 textColor;
 uniform int spriteAsset;
 uniform int glyphAsset;
 
-uniform float xyzTexLayerIndex;
-uniform float xyTexLayerIndex;
+uniform float textureLayer;
 
-uniform sampler2D fontStack;
-uniform sampler2DArray xyzAssetTextures;
-uniform sampler2DArray xyAssetTextures;
+uniform sampler2D textureAtlas;
+uniform sampler2DArray textureArray;
 
 out vec4 outFragment;
 
@@ -57,12 +55,12 @@ vec4 interpretColorData ()
     {
         if( spriteAsset == 1 )
         {
-            vec4 tex = texture(xyzAssetTextures, vec3(textureCoordinate.xy, xyzTexLayerIndex));
+            vec4 tex = texture(textureArray, vec3(textureCoordinate.xy, textureLayer));
             return tex;
         } 
         else if( glyphAsset == 1)
         {
-            vec4 tex = texture(fontStack, textureCoordinate);
+            vec4 tex = texture(textureAtlas, textureCoordinate);
             
             vec4 sampled = vec4(1.0, 1.0, 1.0, tex.r);
             vec4 text = vec4(textColor, 1.0) * sampled;
@@ -77,7 +75,7 @@ vec4 interpretColorData ()
         }
         else
         {
-            vec4 tex = texture(xyAssetTextures, vec3(textureCoordinate.xy, xyTexLayerIndex));
+            vec4 tex = texture(textureArray, vec3(textureCoordinate.xy, textureLayer));
 
             if(tex.a < 0.1)
             {

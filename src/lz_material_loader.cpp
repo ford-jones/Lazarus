@@ -28,7 +28,7 @@ MaterialLoader::MaterialLoader()
     texCount = 0;
 };
 
-bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath, GLuint &textureId, FileReader::Image imageData, string texturePath)
+bool MaterialLoader::loadMaterial(vector<vec3> &out, vector<vector<int>> data ,string materialPath)
 {
     diffuseCount = 0;
     texCount = 0;

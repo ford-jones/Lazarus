@@ -57,6 +57,7 @@ class MeshManager
             GLuint VAO;                                                                         //  The OpenGL Vertex Array Object
             GLuint VBO;
             GLuint textureId;
+            GLuint textureLayer;
 
             int numOfVertices;
             int numOfFaces;
@@ -98,6 +99,8 @@ class MeshManager
         Mesh create3DAsset(string meshPath, string materialPath, string texturePath = "");
         Mesh createQuad(float width, float height, string texturePath = "", float uvXL = 0.0, float uvXR = 0.0, float uvY = 0.0);
 
+        void prepareTextures();
+
         void loadMesh(Mesh &meshData);
         void drawMesh(Mesh &meshData);
 
@@ -112,9 +115,7 @@ class MeshManager
         void checkErrors(const char *invoker);
 
         int errorCode;
-
-        GLuint xyzTextureId;
-        GLuint xyTextureId;
+        int layerCount;
 
 		GLuint shaderProgram;
 
