@@ -62,7 +62,7 @@ void Transform::rotateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float
     return;
 };
 
-void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, float y, float z)
+void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, float y, float z, float velocity)
 {
 	/* =========================================
 		TODO:
@@ -71,16 +71,33 @@ void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, flo
 		Speed usage here is silly, make it a user input
 		glm::lookAt() helper function
 	============================================ */
-
-	float speed = x + y + z;
+	float speed = 0;
 
 	if(x != 0.0)
 	{
+		if(x < 0)
+		{
+			speed = velocity - (velocity * 2);		
+		}
+		else
+		{
+			speed = velocity;
+		};
+
 		camera.position += (glm::normalize(glm::cross(camera.direction, camera.upVector)) * speed);
 	}
 
 	if(z != 0.0)
 	{
+		if(z < 0)
+		{
+			speed = velocity - (velocity * 2);		
+		}
+		else
+		{
+			speed = velocity;
+		};
+
 		camera.position += (speed * camera.direction);
 	}
 
