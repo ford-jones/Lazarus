@@ -71,23 +71,20 @@ void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, flo
 		Speed usage here is silly, make it a user input
 		glm::lookAt() helper function
 	============================================ */
-	camera.locationX += x;
-	camera.locationY += y;
-	camera.locationZ += z;
 
 	float speed = x + y + z;
 
 	if(x != 0.0)
 	{
-		camera.cameraPosition += (glm::normalize(glm::cross(camera.direction, camera.upVector)) * speed);
+		camera.position += (glm::normalize(glm::cross(camera.direction, camera.upVector)) * speed);
 	}
 
 	if(z != 0.0)
 	{
-		camera.cameraPosition += (speed * camera.direction);
+		camera.position += (speed * camera.direction);
 	}
 
-	camera.viewMatrix = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);
+	camera.viewMatrix = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);
 	
 	return;
 };
@@ -111,7 +108,7 @@ void Transform::rotateCameraAsset(CameraManager::Camera &camera, float x, float 
 
 		camera.direction = temp;
 
-		camera.viewMatrix = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties	
+		camera.viewMatrix = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties	
 	}
 	
 	return;
