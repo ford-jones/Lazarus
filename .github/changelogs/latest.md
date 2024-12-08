@@ -1,6 +1,6 @@
-# Version: 2024.12.03063058
+# Version: 2024.12.08000609
 
-* [76a65d2](https://github.com/ford-jones/Lazarus/commit/76a65d2a06d6c657aeeba4c1977102232bdf5a15): Clean: Trivial changes - remove code comments and logs
-* [76704f3](https://github.com/ford-jones/Lazarus/commit/76704f338cdf9a579c59fbb6cd4f3f499dee0d53): Fix: Use mutable texture storage for texture array allocation and clean unhandled array creation
-* [658a506](https://github.com/ford-jones/Lazarus/commit/658a5065db6d2726f032a309f5b5adbf6391aeca): Clean: Remove texture parameters from mesh loader pipeline
-* [feb8f7f](https://github.com/ford-jones/Lazarus/commit/feb8f7f44703211125bc0cc9f8006cbe6b73063d): Update release.yml
+* [d2944cb](https://github.com/ford-jones/lazarus/commit/d2944cb2ffa3a173847cc1c9aedfa8836a7e9f06): Docs: Document velocity controls
+* [e1e0777](https://github.com/ford-jones/lazarus/commit/e1e0777dc17c51189dd12f24bb9d04bd6f60241f): Feat: Adjustable velocity on camera translations
+* [ab9e8ef](https://github.com/ford-jones/lazarus/commit/ab9e8efc124f9f934b1f3a1967e8f57bf93e5def): Clean: Remove red-herring location state variables from public interface
+* [5904c41](https://github.com/ford-jones/lazarus/commit/5904c41828e584dbe80649a1dcc91bcc2d83896c): Fix: Trivial changes - ammend typo
