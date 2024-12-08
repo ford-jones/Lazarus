@@ -261,7 +261,7 @@ Params:
 > **y:** *A floating point number used to increment / decrement the y-axis (pitch) rotational value of the mesh.* \
 > **z:** *A floating point number used to increment / decrement the z-axis (roll) rotational value of the mesh.*
 
-#### CameraManager::Camera translateCameraAsset(CameraManager::Camera camera, float x, float y, float z)
+#### CameraManager::Camera translateCameraAsset(CameraManager::Camera camera, float x, float y, float z, float velocity)
 Applies a translation transformation (movement) to a camera asset along the x, y and z axis from an offset of 0.0. \
 Updates the `locationX`, `locationY` and `locationZ` properties of a `CameraManager::Camera` object in real time. \
 Returns a new camera entity.
@@ -271,6 +271,7 @@ Params:
 > **x:** *A floating point number used to increment / decrement the x-axis locative value of the camera.* \
 > **y:** *A floating point number used to increment / decrement the y-axis locative value of the camera.* \
 > **z:** *A floating point number used to increment / decrement the z-axis locative value of the camera.*
+> **velocity:** *The speed at which the camera should translate through space per update. (default: `0.1`)*
 
 #### CameraManager::Camera rotateCameraAsset(CameraManager::Camera camera, float x, float y, float z)
 Applies a rotation transformation to a camera asset on it's x, y and z axis from an offset of 0.0. \
@@ -465,11 +466,9 @@ Params:
 ### Members:
 > **Camera:** *A collection of properties which make up a camera entity. (type: `struct`)* 
 >	- **id:** *This camera's unique id. (type: `int`)* 
->	- **locationX:** *The x-axis coordinate of the camera's position in world space. (type: `float`)*
->	- **locationY:** *The y-axis coordinate of the camera's position in world space. (type: `float`)*
->	- **locationZ:** *The z-axis coordinate of the camera's position in world space. (type: `float`)*
->	- **cameraPosition:** *The x, y, z location of the camera. (type: `glm::vec3`)*
->	- **targetPosition:** *The x, y, z location of the camera's target. (type: `glm::vec3`)*
+>	- **position:** *The x, y, z location of the camera. (type: `glm::vec3`)*
+>	- **direction:** *The x, y, z location of where the camera is facing. (type: `glm::vec3`)*
+>	- **target:** *The x, y, z location of the camera's target. (type: `glm::vec3`)*
 >	- **upVector:** *Which way is considered up. (type: `glm::vec3`)*
 >	- **aspectRatio:** *The camera's aspect ratio. (type: `float`)*
 >	- **viewLocation:** *The uniform location / index vert shader's view matrice. (type: `GLuint`)*

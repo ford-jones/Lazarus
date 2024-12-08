@@ -26,7 +26,6 @@ TextureLoader::TextureLoader()
 	this->loader = nullptr;	
 
 	this->image = {pixelData: NULL, height: 0, width: 0};
-	this->textures = {};
 	this->bitmapTexture = 0;
 	this->textureStack = 0;
 

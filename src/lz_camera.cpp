@@ -26,13 +26,18 @@ CameraManager::CameraManager(GLuint shader)
 
     this->monitorX = globals.getDisplayWidth();
     this->monitorY = globals.getDisplayHeight();
-}
+};
 
 CameraManager::Camera CameraManager::createPerspectiveCam(double pX, double pY, double pZ, double tX, double tY, double tZ, int arX, int arY)
 {
     srand(time((0)));
     camera.id                   = 1 + (rand() % 2147483647);
 
+    /* ===============================================
+        If a target aspect ratio has been defined then
+        use that. Otherwise use the dimensions 
+        returned from the machine's primary monitor.
+    ================================================== */
     if((arX + arY) > 0)
     {
         camera.aspectRatio      = static_cast<float>(arX) / static_cast<float>(arY);                                                                             //  Cast the screens aspect ratio as a float
@@ -41,17 +46,13 @@ CameraManager::Camera CameraManager::createPerspectiveCam(double pX, double pY, 
     {
         camera.aspectRatio      = static_cast<float>(monitorX) / static_cast<float>(monitorY);                                                                             //  Cast the screens aspect ratio as a float
     };
-    
-    camera.locationX			= pX;
-    camera.locationY			= pY;
-    camera.locationZ            = pZ;
 
-    camera.cameraPosition       = vec3(camera.locationX, camera.locationY, camera.locationZ);                                                                                          //  Define the camera's position
-    camera.targetPosition		= vec3(tX, tY, tZ);
-    camera.direction            = glm::normalize(camera.cameraPosition - camera.targetPosition);
+    camera.position             = vec3(pX, pY, pZ);                                                                                          //  Define the camera's position
+    camera.target		        = vec3(tX, tY, tZ);
+    camera.direction            = glm::normalize(camera.position - camera.target);
     camera.upVector             = vec3(0.0, 1.0, 0.0);                                                                                          //  Define the tilt / rotation of the camera
     
-    camera.viewMatrix           = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties
+    camera.viewMatrix           = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties
     camera.projectionMatrix     = glm::perspective(glm::radians(45.0f), camera.aspectRatio, 0.1f, 100.0f);                             //  Define the projection matrix, responsible for depth and perspective
 
     camera.viewLocation         = glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 
@@ -75,17 +76,17 @@ CameraManager::Camera CameraManager::createOrthoCam(int arX, int arY)
     {
         camera.aspectRatio      = static_cast<float>(monitorX) / static_cast<float>(monitorY);                                                                             //  Cast the screens aspect ratio as a float
     };
-    
-    camera.locationX			= 0.0f;
-    camera.locationY			= 0.0f;
-    camera.locationZ            = -1.0f;
 
-    camera.cameraPosition       = vec3(camera.locationX, camera.locationY, camera.locationZ);                                                                                          //  Define the camera's position
-    camera.targetPosition		= vec3(0.0f, 0.0f, 0.0f);
-    camera.direction            = glm::normalize(camera.cameraPosition - camera.targetPosition);
+    /* ================================================
+        Negative Z so as to be "back" from the viewing
+        plane.
+    =================================================== */
+    camera.position             = vec3(0.0f, 0.0f, -1.0f);
+    camera.target		        = vec3(0.0f, 0.0f, 0.0f);
+    camera.direction            = glm::normalize(camera.position - camera.target);
     camera.upVector             = vec3(0.0f, 1.0f, 0.0f);                                                                                          //  Define the tilt / rotation of the camera
     
-    camera.viewMatrix           = glm::lookAt(camera.cameraPosition, (camera.cameraPosition + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties
+    camera.viewMatrix           = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties
     camera.projectionMatrix     = glm::ortho(0.0f, static_cast<float>(arX), 0.0f, static_cast<float>(arY));
 
     camera.viewLocation         = glGetUniformLocation(shader, "viewMatrix");                                                                //  Returns the shader program's view-matrix index position OR -1 upon encountering an error 
