@@ -68,36 +68,46 @@ void Transform::translateCameraAsset(CameraManager::Camera &camera, float x, flo
 		TODO:
 		Handle camera roll
 		Restore orbit / handle both camera cases
-		Speed usage here is silly, make it a user input
-		glm::lookAt() helper function
 	============================================ */
+
 	float speed = 0;
+
+	/* =============================================
+		Aggregate inputs to a single value and check
+		the sign (-/+). 
+
+		If the number is negative (i.e. 0.0f is
+		higher than the aggregate value), then apply
+		negation to the velocity input. (i.e. apply
+		a conversion for speed when moving either
+		left or backwards). 
+	================================================ */
+	float positiveSign = std::max(0.0f, (x + y + z));
+
+	if(positiveSign == 0.0f)
+	{
+		speed = velocity - (velocity * 2);		
+	}
+	else
+	{
+		speed = velocity;
+	};
 
 	if(x != 0.0)
 	{
-		if(x < 0)
-		{
-			speed = velocity - (velocity * 2);		
-		}
-		else
-		{
-			speed = velocity;
-		};
-
+		/* ============================================
+			Note the coordinate system is right-handed.
+			If the value of speed is negative, the 
+			camera is moving to the left by a multiple
+			of the -1 to 1 clamped value of the camera's 
+			upward orientation vs direction. If pos,
+			we go right.
+		=============================================== */
 		camera.position += (glm::normalize(glm::cross(camera.direction, camera.upVector)) * speed);
 	}
 
 	if(z != 0.0)
 	{
-		if(z < 0)
-		{
-			speed = velocity - (velocity * 2);		
-		}
-		else
-		{
-			speed = velocity;
-		};
-
 		camera.position += (speed * camera.direction);
 	}
 
@@ -125,7 +135,7 @@ void Transform::rotateCameraAsset(CameraManager::Camera &camera, float x, float 
 
 		camera.direction = temp;
 
-		camera.viewMatrix = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);              //  Define the view-matrix through the camera properties	
+		camera.viewMatrix = glm::lookAt(camera.position, (camera.position + camera.direction), camera.upVector);
 	}
 	
 	return;
