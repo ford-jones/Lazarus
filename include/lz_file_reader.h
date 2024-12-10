@@ -35,7 +35,7 @@
 #include <stb_image.h>
 #include <stb_image_resize.h>
 
-namespace fs = std::filesystem;
+// namespace fs = std::filesystem;
 
 using std::ifstream;
 using std::string;
@@ -74,7 +74,7 @@ class FileReader
         int resizeStatus;
 		
         std::stringstream stringstream;
-        fs::path path;
+        std::filesystem::path path;
         
         string contents;
         string absolutePath;
