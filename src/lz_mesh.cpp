@@ -163,7 +163,7 @@ void MeshManager::initialiseMesh(MeshManager::Mesh &asset)
     glGenVertexArrays(1, &asset.VAO);
    	glBindVertexArray(asset.VAO);
 
-    if(asset.modelviewUniformLocation >= 0)
+    if(asset.modelMatrixUniformLocation >= 0)
     {
         glGenBuffers(1, &asset.VBO);
         glBindBuffer(GL_ARRAY_BUFFER, asset.VBO);
@@ -214,9 +214,9 @@ void MeshManager::prepareTextures()
 
 void MeshManager::loadMesh(MeshManager::Mesh &asset)
 {
-    if(asset.modelviewUniformLocation >= 0)
+    if(asset.modelMatrixUniformLocation >= 0)
     {
-        glUniformMatrix4fv(asset.modelviewUniformLocation, 1, GL_FALSE, &asset.modelviewMatrix[0][0]);
+        glUniformMatrix4fv(asset.modelMatrixUniformLocation, 1, GL_FALSE, &asset.modelMatrix[0][0]);
         glUniform1i(asset.is3DUniformLocation, asset.is3D);
         glUniform1i(asset.isGlyphUniformLocation, asset.isGlyph);
     
@@ -315,7 +315,7 @@ void MeshManager::setInherentProperties(MeshManager::Mesh &asset)
     asset.locationY = 0;
     asset.locationZ = 0;
 
-    asset.modelviewMatrix = mat4(1.0f);
+    asset.modelMatrix = mat4(1.0f);
 
     asset.numOfVertices = asset.attributes.size() / 4;
     asset.numOfFaces = (asset.numOfVertices) / 3;
@@ -325,7 +325,7 @@ void MeshManager::setInherentProperties(MeshManager::Mesh &asset)
 
 void MeshManager::lookupUniforms(MeshManager::Mesh &asset)
 {
-    asset.modelviewUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");
+    asset.modelMatrixUniformLocation = glGetUniformLocation(this->shaderProgram, "modelMatrix");
     asset.is3DUniformLocation = glGetUniformLocation(this->shaderProgram, "spriteAsset");
     asset.isGlyphUniformLocation = glGetUniformLocation(this->shaderProgram, "glyphAsset");
 

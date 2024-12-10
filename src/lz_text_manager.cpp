@@ -192,7 +192,7 @@ void TextManager::drawText(int layoutIndex)
     {
         quad = i;
 
-        if((quad.modelviewUniformLocation >= 0) && (camera.projectionLocation >= 0))
+        if((quad.modelMatrixUniformLocation >= 0) && (camera.projectionLocation >= 0))
         {            
             cameraBuilder->loadCamera(camera);
 
