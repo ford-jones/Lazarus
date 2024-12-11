@@ -40,14 +40,14 @@ FileReader::FileReader()
 
 string FileReader::relativePathToAbsolute(string filename) 
 {
-    this->filenameString      =   fs::absolute(filename).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
+    this->filenameString      =   std::filesystem::absolute(filename).string();                                              //  Find the absolute path from root (/) to the mesh asset and convert to std::string
 
     return this->filenameString;                                         //  Return the absolute path to the asset, exit the thread
 };
 
 const char *FileReader::readFromText(string filepath) 
 {
-    if(fs::exists(filepath))
+    if(std::filesystem::exists(filepath))
     {
         this->absolutePath = this->relativePathToAbsolute(filepath);
         ifstream fileStream(absolutePath);

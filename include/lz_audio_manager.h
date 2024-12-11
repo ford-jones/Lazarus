@@ -71,6 +71,7 @@ class AudioManager
 		Audio createAudio(string filepath, bool is3D = false, int loopCount = 0);
 		void loadAudio(Audio &audioIn);
 
+		void setPlaybackCursor(Audio &audioIn, int seconds);
 		void playAudio(Audio &audioIn);
 		void pauseAudio(Audio &audioIn);
 

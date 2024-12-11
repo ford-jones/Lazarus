@@ -79,6 +79,18 @@ AudioManager::Audio AudioManager::createAudio(string filepath, bool is3D, int lo
 	return audioOut;
 };
 
+void AudioManager::setPlaybackCursor(AudioManager::Audio &audioIn, int milliseconds)
+{
+	this->audioData = this->audioStore[audioIn.audioIndex - 1];
+
+	this->result = this->audioData.channel->setPosition(milliseconds, FMOD_TIMEUNIT_MS);
+
+	if(result != FMOD_OK)
+	{
+		globals.setExecutionState(LAZARUS_AUDIO_PLAYBACK_POSITION_ERROR);
+	};
+};
+
 void AudioManager::loadAudio(AudioManager::Audio &audioIn)
 {	
 	(audioIn.is3D == true) 

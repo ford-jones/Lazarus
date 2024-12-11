@@ -35,7 +35,7 @@ Transform::Transform()
 void Transform::translateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z)
 {
 	this->localCoordinates = glm::vec3(x, y, z);
-    mesh.modelviewMatrix = glm::translate(mesh.modelviewMatrix, this->localCoordinates);
+    mesh.modelMatrix = glm::translate(mesh.modelMatrix, this->localCoordinates);
 
 	/* ===========================================================================
 		Find worldspace coordinates by multiplying object-space coordinates by the 
@@ -44,7 +44,7 @@ void Transform::translateMeshAsset(MeshManager::Mesh &mesh, float x, float y, fl
 		See: https://learnopengl.com/img/getting-started/coordinate_systems.png
 	=============================================================================== */
 	
-	this->worldCoordinates = mesh.modelviewMatrix * glm::vec4(this->localCoordinates, 1.0);
+	this->worldCoordinates = mesh.modelMatrix * glm::vec4(this->localCoordinates, 1.0);
 
     mesh.locationX = this->worldCoordinates.x;
     mesh.locationY = this->worldCoordinates.y;
@@ -55,9 +55,9 @@ void Transform::translateMeshAsset(MeshManager::Mesh &mesh, float x, float y, fl
 
 void Transform::rotateMeshAsset(MeshManager::Mesh &mesh, float x, float y, float z)
 {	
-    mesh.modelviewMatrix = glm::rotate(mesh.modelviewMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
-    mesh.modelviewMatrix = glm::rotate(mesh.modelviewMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
-	mesh.modelviewMatrix = glm::rotate(mesh.modelviewMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
+    mesh.modelMatrix = glm::rotate(mesh.modelMatrix, glm::radians(x), glm::vec3(1.0f, 0.0f, 0.0f));
+    mesh.modelMatrix = glm::rotate(mesh.modelMatrix, glm::radians(y), glm::vec3(0.0f, 1.0f, 0.0f));
+	mesh.modelMatrix = glm::rotate(mesh.modelMatrix, glm::radians(z), glm::vec3(0.0f, 0.0f, 1.0f));
 	
     return;
 };
