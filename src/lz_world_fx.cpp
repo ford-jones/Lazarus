@@ -16,66 +16,40 @@
 //               (.           .,,,,,                                                                                        .*#%%(                      
 //                                                                                                      .***,.   . .,/##%###(/.  ...,,.      
 /*  LAZARUS ENGINE */
-#ifndef LAZARUS_GL_INCLUDES_H
-    #include "lz_gl_includes.h"
-#endif
 
-#ifndef LAZARUS_CONSTANTS_H
-	#include "lz_constants.h"
-#endif
+#include "lz_world_fx.h"
 
-#ifndef LAZARUS_GLOBALS_MANAGER_H
-	#include "lz_globals_manager.h"
-#endif
-
-#include <iostream>
-#include <string>
-#include <memory>
-#include <cmath>
-
-#include "lz_file_reader.h"
-
-using std::string;
-using std::shared_ptr;
-
-#ifndef LAZARUS_TEXTURE_LOADER_H
-#define LAZARUS_TEXTURE_LOADER_H
-
-class TextureLoader
+WorldFX::WorldFX()
 {
-	public:
-		TextureLoader();
-		void extendTextureStack(int maxWidth, int maxHeight, int textureLayers);
-		void loadImageToTextureStack(FileReader::Image imageData, GLuint textureLayer);
-
-		void storeCubeMap(int width, int height);
-		void loadCubeMap(std::vector<FileReader::Image> faces);
-
-		void storeBitmapTexture(int maxWidth, int maxHeight);
-		void loadBitmapToTexture(FileReader::Image imageData);
-
-		virtual ~TextureLoader();
-		
-		GLuint bitmapTexture;
-		GLuint textureStack;
-		GLuint cubeMapTexture;
-
-	private:		
-		void checkErrors(const char *invoker);
-
-		shared_ptr<FileReader> loader;
-
-		FileReader::Image image;
-
-		GLenum errorCode;
-		
-		int mipCount;
-		int loopCount;
-		int x, y;
-
-		int offset;
-
-		GlobalsManager globals;
+    //  Defaults etc
 };
 
-#endif
+WorldFX::SkyBox WorldFX::createSkyBox(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath)
+{
+    //  Create and bind vertex objects
+    //  Call private members to load / create stuff
+    //  Construct this->skyBox
+};
+
+void WorldFX::drawSkyBox(WorldFX::SkyBox sky)
+{
+    //  Set slot / Bind texture
+    //  Set uniform values (add uniform stuff to skybox struct too)
+    //  Draw arrays
+};
+
+void WorldFX::buildCube()
+{
+    //  Basically hardcode vertex attributes and anything else that might entail
+};
+
+void WorldFX::loadSkyMap(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath)
+{
+    //  Do texture loading (i.e. parse filepaths / allocate tex storage / load to store)
+    //  Texture id handover to skybox struct
+};
+
+WorldFX::~WorldFX()
+{
+    //  Cleanup etc
+};

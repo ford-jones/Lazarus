@@ -29,53 +29,47 @@
 #endif
 
 #include <iostream>
-#include <string>
 #include <memory>
-#include <cmath>
+#include <string>
 
+#include "lz_texture_loader.h"
 #include "lz_file_reader.h"
 
-using std::string;
-using std::shared_ptr;
+#ifndef LAZARUS_WORLD_FX_H
+#define LAZARUS_WORLD_FX_H
 
-#ifndef LAZARUS_TEXTURE_LOADER_H
-#define LAZARUS_TEXTURE_LOADER_H
-
-class TextureLoader
+class WorldFX 
 {
-	public:
-		TextureLoader();
-		void extendTextureStack(int maxWidth, int maxHeight, int textureLayers);
-		void loadImageToTextureStack(FileReader::Image imageData, GLuint textureLayer);
+    public:
+        WorldFX();
 
-		void storeCubeMap(int width, int height);
-		void loadCubeMap(std::vector<FileReader::Image> faces);
+        struct SkyBox
+        {
+            int textureId;
+            GLuint VAO;
+            GLuint VBO;
 
-		void storeBitmapTexture(int maxWidth, int maxHeight);
-		void loadBitmapToTexture(FileReader::Image imageData);
+            //            +x    -x   +y   -y    +z     -z
+            std::string right, left, up, down, front, back;
 
-		virtual ~TextureLoader();
-		
-		GLuint bitmapTexture;
-		GLuint textureStack;
-		GLuint cubeMapTexture;
+            std::vector<glm::vec3> attributes;
+        };
 
-	private:		
-		void checkErrors(const char *invoker);
+        SkyBox createSkyBox(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath);
+        void drawSkyBox(SkyBox sky);
 
-		shared_ptr<FileReader> loader;
+        virtual ~WorldFX();
 
-		FileReader::Image image;
+    private:
+        void buildCube();
+        void loadSkyMap(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath);
 
-		GLenum errorCode;
-		
-		int mipCount;
-		int loopCount;
-		int x, y;
+        SkyBox skyBox;
 
-		int offset;
+        std::unique_ptr<TextureLoader> textureLoader;
+        std::unique_ptr<FileReader> imageLoader;
 
-		GlobalsManager globals;
+        FileReader::Image cubeMap[6];
 };
 
 #endif
