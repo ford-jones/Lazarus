@@ -33,7 +33,7 @@ WorldFX::WorldFX(GLuint shaderProgram)
 
 WorldFX::SkyBox WorldFX::createSkyBox(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath)
 {
-    this->skyBox.cube = meshLoader->createCube(2.0f);
+    this->skyBox.cube = meshLoader->createCube(10.0f);
     this->skyBox.paths = {rightPath, leftPath, upPath, downPath, frontPath, backPath};
 
     this->loadSkyMap();
@@ -53,11 +53,9 @@ WorldFX::SkyBox WorldFX::createSkyBox(std::string rightPath, std::string leftPat
 
 void WorldFX::drawSkyBox(WorldFX::SkyBox sky)
 {
-    meshLoader->loadMesh(sky.cube);
-    
-    glUniform1i(glGetUniformLocation(this->shader, "isSkyBox"), 1);
     glDepthMask(GL_FALSE);
 
+    meshLoader->loadMesh(sky.cube);
     meshLoader->drawMesh(sky.cube);
     
     glDepthMask(GL_TRUE);

@@ -87,9 +87,11 @@ class MeshManager
             GLint textureLayerUniformLocation;
             GLint is3DUniformLocation;
             GLint isGlyphUniformLocation;
+            GLint isSkyBoxUniformLocation;
 
             int is3D;
             int isGlyph;
+            int isSkybox;
 
             int textureUnit;
         };

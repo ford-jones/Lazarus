@@ -112,13 +112,17 @@ void TextureLoader::storeCubeMap(int width, int height)
 	glActiveTexture(GL_TEXTURE3);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
 
-	glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	// glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	
+	this->checkErrors(__PRETTY_FUNCTION__);
 };
 
 void TextureLoader::loadCubeMap(std::vector<FileReader::Image> faces)
 {
-	glActiveTexture(GL_TEXTURE3);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
+	// glActiveTexture(GL_TEXTURE3);
+	// glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
+	
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 
 	if(faces.size() > 6)
 	{
@@ -126,17 +130,14 @@ void TextureLoader::loadCubeMap(std::vector<FileReader::Image> faces)
 	}
 	else
 	{
-		for(int i = 0; i < 6; i++)
+		for(unsigned int i = 0; i < 6; i++)
 		{
-			GLenum target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
-
-			glTexSubImage3D(
-				target,
+			glTexImage2D(
+				(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i),
 				0,
-				0, 0,
-				i,
+				GL_RGBA8,
 				faces[0].width, faces[0].height,
-				1,
+				0,
 				GL_RGBA,
 				GL_UNSIGNED_BYTE,
 				(const void *)faces[i].pixelData
@@ -144,6 +145,16 @@ void TextureLoader::loadCubeMap(std::vector<FileReader::Image> faces)
 
 			this->checkErrors(__PRETTY_FUNCTION__);
 		};
+
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		this->checkErrors(__PRETTY_FUNCTION__);
 	};
 };
 
