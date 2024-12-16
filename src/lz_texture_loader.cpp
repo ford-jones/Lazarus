@@ -44,7 +44,7 @@ TextureLoader::TextureLoader()
 	glBindTexture(GL_TEXTURE_2D, this->bitmapTexture);
 
 	glGenTextures(1, &this->cubeMapTexture);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, this->bitmapTexture);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
 };
 
 void TextureLoader::extendTextureStack(int maxWidth, int maxHeight, int textureLayers)
@@ -110,7 +110,6 @@ void TextureLoader::loadImageToTextureStack(FileReader::Image imageData, GLuint 
 void TextureLoader::storeCubeMap(int width, int height)
 {
 	glActiveTexture(GL_TEXTURE3);
-	
 	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
 
 	glTexImage2D(GL_TEXTURE_CUBE_MAP, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
@@ -118,7 +117,34 @@ void TextureLoader::storeCubeMap(int width, int height)
 
 void TextureLoader::loadCubeMap(std::vector<FileReader::Image> faces)
 {
-	
+	glActiveTexture(GL_TEXTURE3);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, this->cubeMapTexture);
+
+	if(faces.size() > 6)
+	{
+		globals.setExecutionState(LAZARUS_INVALID_CUBEMAP);
+	}
+	else
+	{
+		for(int i = 0; i < 6; i++)
+		{
+			GLenum target = GL_TEXTURE_CUBE_MAP_POSITIVE_X + i;
+
+			glTexSubImage3D(
+				target,
+				0,
+				0, 0,
+				i,
+				faces[0].width, faces[0].height,
+				1,
+				GL_RGBA,
+				GL_UNSIGNED_BYTE,
+				(const void *)faces[i].pixelData
+			);
+
+			this->checkErrors(__PRETTY_FUNCTION__);
+		};
+	};
 };
 
 void TextureLoader::storeBitmapTexture(int maxWidth, int maxHeight)

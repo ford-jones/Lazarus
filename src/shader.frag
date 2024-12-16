@@ -14,11 +14,13 @@ uniform vec3 textColor;
 
 uniform int spriteAsset;
 uniform int glyphAsset;
+uniform int isSkyBox;
 
 uniform float textureLayer;
 
 uniform sampler2D textureAtlas;
 uniform sampler2DArray textureArray;
+uniform samplerCube textureCube;
 
 out vec4 outFragment;
 
@@ -70,8 +72,12 @@ vec4 interpretColorData ()
                 discard;
             }
 
-            return text;
-            
+            return text;           
+        }
+        else if( isSkyBox == 1 )
+        {
+            vec4 tex = texture(textureCube, textureCoordinate);
+            return tex;
         }
         else
         {

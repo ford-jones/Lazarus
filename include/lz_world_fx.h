@@ -34,6 +34,7 @@
 
 #include "lz_texture_loader.h"
 #include "lz_file_reader.h"
+#include "lz_mesh.h"
 
 #ifndef LAZARUS_WORLD_FX_H
 #define LAZARUS_WORLD_FX_H
@@ -41,18 +42,16 @@
 class WorldFX 
 {
     public:
-        WorldFX();
+        WorldFX(GLuint shaderProgram);
 
         struct SkyBox
         {
-            int textureId;
-            GLuint VAO;
-            GLuint VBO;
+            // +x -x +y -y +z -z
 
-            //            +x    -x   +y   -y    +z     -z
-            std::string right, left, up, down, front, back;
+            std::vector<std::string> paths;
+            std::vector<FileReader::Image> cubeMap;
 
-            std::vector<glm::vec3> attributes;
+            MeshManager::Mesh cube;
         };
 
         SkyBox createSkyBox(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath);
@@ -61,15 +60,17 @@ class WorldFX
         virtual ~WorldFX();
 
     private:
-        void buildCube();
-        void loadSkyMap(std::string rightPath, std::string leftPath, std::string upPath, std::string downPath, std::string frontPath, std::string backPath);
+        void loadSkyMap();
 
         SkyBox skyBox;
 
-        std::unique_ptr<TextureLoader> textureLoader;
+        std::unique_ptr<MeshManager> meshLoader;
         std::unique_ptr<FileReader> imageLoader;
+        std::unique_ptr<TextureLoader> textureLoader;
 
-        FileReader::Image cubeMap[6];
+        GlobalsManager globals;
+
+        GLuint shader;
 };
 
 #endif
