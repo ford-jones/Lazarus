@@ -33,12 +33,14 @@
 #include "lz_file_reader.h"
 #include "lz_audio_manager.h"
 #include "lz_text_manager.h"
+#include "lz_world_fx.h"
 
 #ifndef LAZARUS_H
 #define LAZARUS_H
 
 namespace Lazarus
 {
+    using ::WorldFX;
     using ::TextManager;
     using ::GlobalsManager;
     using ::WindowManager;
