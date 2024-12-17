@@ -51,14 +51,33 @@ WorldFX::SkyBox WorldFX::createSkyBox(std::string rightPath, std::string leftPat
     return this->skyBox;
 };
 
-void WorldFX::drawSkyBox(WorldFX::SkyBox sky)
+void WorldFX::drawSkyBox(WorldFX::SkyBox sky, CameraManager::Camera camera)
 {
+    /* ===========================================================
+        For the illusion of infinite depth of the skybox  tp work, 
+        the translation transform needs to be culled from the
+        viewing matrix (the result of the glm::lookAt() operation 
+        called by CameraManager::create*Cam(...)). 
+        
+        This is done by converting the 4x4 matrix to a 3x3 and 
+        back again. This truncates the row from the matrix which
+        describes the vertex position from the origin and replaces
+        it with 0's (essentially back at the origin). It's then
+        changed back again afterwards.
+    ============================================================== */
+    glm::mat4 viewFromOrigin = glm::mat4(glm::mat3(camera.viewMatrix)); 
+    GLuint uniform = glGetUniformLocation(this->shader, "viewMatrix");
+
+    glUniformMatrix4fv(uniform, 1, GL_FALSE, &viewFromOrigin[0][0]);
+
     glDepthMask(GL_FALSE);
 
     meshLoader->loadMesh(sky.cube);
     meshLoader->drawMesh(sky.cube);
     
     glDepthMask(GL_TRUE);
+
+    glUniformMatrix4fv(uniform, 1, GL_FALSE, &camera.viewMatrix[0][0]);
 };
 
 void WorldFX::loadSkyMap()
@@ -72,7 +91,14 @@ void WorldFX::loadSkyMap()
         
         /* =======================================================
             Validate that the image inputs for the cubemap are 
-            each of the same size.
+            each of the same size. 
+
+            (OpenGL actually already does this and will surface a 
+            GL_INVALID_ENUM error if the check returns false). 
+            Would be good to move this check to the loadCubeMap 
+            func so that this execution state isn't overwritten 
+            with 301 (LAZARUS_OPENGL_ERROR) by the textureLoader's 
+            checkErrors subroutine.
         ========================================================== */
         if(this->skyBox.cubeMap.size() > 0 && (image.width != image.height || image.width != this->skyBox.cubeMap[0].width))
         {
